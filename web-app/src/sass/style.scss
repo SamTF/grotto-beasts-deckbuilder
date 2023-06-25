@@ -1,0 +1,88 @@
+// Variables
+@import 'FONTS';
+@import 'COLOURS';
+@import 'ICONS';
+// Elements
+@import 'Deck';
+@import 'DeckHeader';
+@import 'DeckStatsBar';
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+// Global styles
+:root {
+    font-size: $font-size;
+    font-family: $font-family;
+    color: $text-colour;
+    background-color: $colour-light;
+}
+
+html {
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+header {
+    height: 4rem;
+    background-color: $colour-dark;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+
+    img {
+        height: 3rem;
+    }
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    // background-color: green;
+
+    height: 100%;
+    // width: 66%;
+
+    a {
+        text-decoration: none;
+        color: $colour-accent;
+        font-weight: bold;
+    }
+}
+footer {
+    // position
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    overflow-x: hidden;
+
+    // size
+    width: 100%;
+    height: 4rem;
+
+    // display
+    display: grid;
+    place-items: center;
+    grid-auto-flow: column;
+
+    // design
+    background: $colour-dark;
+    color: $colour-accent;
+    font-weight: 300;
+    font-size: 1rem;
+}
+
+.center {
+    display: grid;
+    place-items: center;
+}
