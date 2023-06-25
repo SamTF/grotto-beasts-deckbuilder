@@ -1,0 +1,149 @@
+// Mixins
+@mixin text-icon($icon) {
+    &::before {
+        content: $icon;
+        margin-right: 0.5rem;
+    }
+}
+
+// The Main Container for the Deck and Preview
+.deck-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    align-items: center;
+    align-items: start;
+
+    // background-color: blue;
+
+    // margins
+    margin-bottom: 5rem;
+}
+
+// The Container for the list of cards
+.deck {
+    // Design
+    // background-color: $colour-accent;
+
+    // Margins
+    margin-top: 1rem;
+
+    // Method 1: Flex
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    // justify-content: start;
+    // width: 80%;
+    // height: fit-content;
+
+    // Method 2: GRID
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 80%;
+    height: fit-content;
+
+    // Method 3: Compact Flex
+    // display: flex;
+    // flex-direction: column;
+    // flex-wrap: wrap;
+    // justify-content: start;
+
+    // Size
+    gap: 3rem;
+    width: 80%;
+    height: 400px;
+    height: fit-content;
+    
+}
+
+// The Card Preview
+.card-preview {
+    // size
+    height: 350px;
+
+    // grid alignment
+    align-self: start;
+    justify-self: center;
+
+    // background-color: orange;
+
+    img {
+        max-height: 350px;
+        object-fit: scale-down;
+        object-position: top;
+    }
+}
+
+
+// Each Card Type section within the Deck
+.deck-section {
+    // position
+    position: relative;
+    
+    // display
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    // size
+    width: 30ch;
+
+    // margins
+    // margin-bottom: 2rem;
+
+    .header {
+        // size
+        padding: 4px 0px;
+        margin-bottom: 0.5rem;
+
+        // font
+        font-weight: bold;
+
+        // design
+        border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+
+        // Displaying Icons for each card type
+        &.header-challenger {
+            @include text-icon($icon-challenger)
+        }
+        &.header-beast {
+            @include text-icon($icon-beast)
+        }
+        &.header-grotto {
+            @include text-icon($icon-grotto)
+        }
+        &.header-wish {
+            @include text-icon($icon-wish)
+        }
+    }
+
+    .card-item {
+        // font
+        font-weight: 500;
+
+        // size
+        padding: 4px 8px;
+        gap: 0.5rem;
+
+        // design
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        
+        // display
+        display: grid;
+        grid-template-columns: 10% 1fr;
+
+        // make the quantity number bold
+        span:first-child {
+            font-weight: bold;
+        }
+
+        // reset hyperlink styling
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        &:last-of-type {
+            border: none;
+        }
+    }
+}
