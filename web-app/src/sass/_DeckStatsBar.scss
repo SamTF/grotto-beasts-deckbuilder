@@ -1,0 +1,52 @@
+// Contains a basic summary of info about the deck
+
+.deck-stats-bar {
+    // position
+    // position: fixed;
+    // bottom: 0;
+    // left: 0;
+    // z-index: 10;
+    // width: 100vw;
+
+    // display
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    // size
+    height: 4rem;
+
+    // design
+    background: $colour-orange;
+    
+    // design
+    background-color: darken($color: $colour-light, $amount: 15%);
+    border-bottom: 2px solid $colour-accent;
+    border-top: 2px solid $colour-accent;
+
+    // text
+    color: white;
+    font-size: 1rem;
+    font-weight: 400;
+
+    // left panel
+    .left {
+
+    }
+
+    // right panel containing card count by type
+    .right {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+
+        font-weight: bold;
+
+        // Card Type icons
+        span[data-card-type="challenger"] { @include text-icon($icon-challenger); }
+        span[data-card-type="beast"] { @include text-icon($icon-beast); }
+        span[data-card-type="grotto"] { @include text-icon($icon-grotto); }
+        span[data-card-type="wish"] { @include text-icon($icon-wish); }
+        
+    }
+}
