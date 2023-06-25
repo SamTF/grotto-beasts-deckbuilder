@@ -1,0 +1,86 @@
+// A Header for the Deck View below the website header and above the Deck.
+// Contains the Deck's name, author name, and image of a card from the deck
+
+$blue-green-gradient: linear-gradient(0deg, rgba(184,233,131,1) 0%, rgba(46,219,246,1) 100%);
+$blue-blue-green-gradient: linear-gradient(0deg, rgba(173,233,133,1) 0%, rgba(109,227,191,1) 33%, rgba(45,220,248,1) 100%);
+$green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,229,113,1) 100%);
+
+.deck-header {
+    display: grid;
+    place-items: center;
+
+    // Size
+    height: 12rem;
+    position: static;
+    
+    // Design
+    // fading out gradient
+    // background-image: linear-gradient(0deg, rgba(184,233,131,0.25) 0%, rgba(151,230,159,0.66) 24%, rgba(46,219,246,1) 100%), url("/images/cards/back.webp");
+    // solid gradient
+    background: $blue-blue-green-gradient;
+    
+    // 
+    // background image
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 90%;
+
+    // Borders
+    border-top: 2px solid $colour-accent;
+    border-bottom: 2px solid $colour-accent;
+
+    // Div container for the deck info
+    .info-container {
+        width: 80vw;
+
+        // Deck name
+        h1 {
+            font-weight: 900;
+            font-size: 3rem;
+            color: white;
+        }
+
+        // Deck Author
+        a.deck-author {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: $colour-blue-dark;
+        }
+
+        // Tags
+        ul.deck-tags {
+            // display
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+
+            // size & margins
+            margin-top: 0.5rem;
+
+            // design
+            list-style: none;
+            font-weight: 300;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+
+            // each tag item
+            li {
+                color: white;
+                background-color: fade-out($color: $colour-blue-dark, $amount: 0.75);
+                padding: 2px 8px;
+                border-radius: 8px;
+            }
+        }
+    }
+}
+
+// Divider between the header and the deck
+.header-divider {
+    // size & margins
+    height: 4rem;
+    margin-bottom: 2rem;
+
+    // design
+    background-color: darken($color: $colour-light, $amount: 15%);
+    border-bottom: 2px solid $colour-accent;
+}
