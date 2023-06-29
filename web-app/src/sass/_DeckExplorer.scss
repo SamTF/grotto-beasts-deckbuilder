@@ -1,0 +1,136 @@
+// Styles for the Deck Explorer page
+.explorer-filters {
+    // display
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    
+    // size
+    // width: 60vw;
+    width: 100%;
+    padding-top: 1rem;
+
+    // design
+    background: $blue-blue-green-gradient;
+    border-bottom: 2px solid $colour-accent;
+    
+
+    h1 {
+        color: white;
+        font-weight: 900;
+        font-size: 3rem;
+    }
+}
+
+.deck-types {
+    width: 100%;
+}
+
+.btn-tags {
+    // display
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    // justify-content: space-around;
+
+    // size
+    width: 100%;
+    margin-bottom: 1rem;
+
+    // design
+    list-style: none;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 1rem;
+
+    // each tag item
+    li {
+        color: white;
+        background-color: fade-out($color: $colour-dark, $amount: 0.75);
+        padding: 2px 8px;
+        border-radius: 8px;
+
+        &:hover, &:active, &.selected {
+            background-color: $colour-dark;
+        }
+    }
+}
+
+.deck-search {
+    display: flex;
+    justify-content: space-around;
+    
+    width: 100%;
+
+    display: none;
+}
+
+.deck-explorer-container {
+    // display
+    display: grid;
+    place-items: center;
+
+    // size
+    // padding: 0rem 6rem;
+
+    .deck-grid {
+        // display
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 200px;
+        place-items: center;
+        gap: 3rem;
+
+        // size
+        width: 80%;
+        margin-top: 2rem;
+        margin-bottom: 6rem;
+
+        .deck-grid-item {
+            // display
+            display: grid;
+            grid-template-rows: 2rem 2rem 1fr;
+
+            // size
+            width: 100%;
+            height: 100%;
+            padding: 0.75rem 1rem;
+
+            // design
+            border-radius: 1rem;
+            background-color: $colour-accent;
+            background-image: url("images/cards/360/1. Glueman.webp");
+            background-repeat: no-repeat;
+            background-position: 100%;
+            background-position-y: top;
+            
+            
+            // background-image: linear-gradient(to bottom, $colour-accent 0%,rgba(130,91,0,0.9) 100%),
+            // background-image: linear-gradient(to bottom, $colour-accent 0%, transparentize($color: $colour-dark, $amount: 0.25) 100%),
+            // background-image: linear-gradient(to bottom, $colour-accent 0%, transparentize($color: $colour-blue-light, $amount: 0.25) 100%),
+            background-image: linear-gradient(to bottom, $colour-accent 0%, transparentize($color: $colour-accent, $amount: 0.25) 100%),
+                                var(--bg-image, url("images/cards/360/1. Glueman.webp"));
+                                // getting the image URL from a CSS variable defined in the component!
+
+            // name of the deck
+            .deck-item-name {
+                font-size: 1.75rem;
+            }
+            
+            // name of the user who created the deck
+            .deck-item-author {
+                font-size: 1.25rem;
+                color: rgba(255, 255, 255, 0.75);
+            }
+
+            // info like tags or views (bottom right aligned)
+            .deck-item-info {
+                justify-self: end;
+                align-self: end;
+            }
+        }
+    }
+}
