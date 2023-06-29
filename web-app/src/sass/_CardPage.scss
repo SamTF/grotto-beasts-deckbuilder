@@ -1,0 +1,193 @@
+// CARD PAGE
+
+@mixin icon-number($colour) {
+    // display
+    display: grid;
+    place-items: center;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    // font
+    font-size: 4rem;
+    font-weight: 900;
+    color: white;
+
+    // design
+    height: 5rem;
+    width: 5rem;
+    background-color: $colour;
+    outline: 4px solid white;
+    border-radius: 100%;
+}
+
+.card-page-container {
+    // display
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 2fr;
+    justify-content: center;
+
+    // Image scan of the card
+    .card-image {
+        max-height: 480px;
+        height: 50vh;
+
+        img {
+            height: 100%;
+        }
+        
+    }
+
+    // All the text and iconography info related to the card
+    .card-info {
+        // display
+        display: grid;
+        grid-template-rows: 6rem 1fr auto;
+        
+        // size
+        height: 100%;
+        width: 100%;
+
+        // Top line containing card name and type
+        .header {
+            // display
+            display: grid;
+            grid-template-columns: 8rem 1fr 8rem;
+            justify-content: center;
+            align-items: center;
+
+            // design
+            background-color: $colour-orange;
+
+            // The summoning cost of the card
+            .card-cost {
+                // display
+                display: grid;
+                place-items: center;
+                position: relative;
+
+                // the actual icon
+                span {
+                    @include icon-number($colour-blue-dark);
+                    z-index: 10;
+                }
+
+                .icon {
+                    display: none;
+                    
+                    position: absolute;
+                    top: auto;
+                    left: auto;
+                    z-index: 1;
+
+                    // design
+                    font-size: 6rem;
+                }
+            }
+
+            .card-power {
+                // display
+                display: grid;
+                place-items: center;
+
+                // the actual icon
+                span {
+                    @include icon-number($colour-dark)
+                }
+            }
+
+            .card-goal {
+                // display
+                display: grid;
+                place-items: center;
+
+                // the actual icon
+                span {
+                    @include icon-number($colour-red)
+                }
+            }
+
+            // The Name and Type of the card
+            .text {
+                // display
+                display: flex;
+                flex-direction: column;
+                // align-items: center;
+                grid-template-rows: 1fr 1fr;
+
+                // .card-name {
+                //     background-color: lighten($color: $colour-orange, $amount: 12%);
+                // }
+
+                // .card-type {
+                //     background-color: darken($color: $colour-accent, $amount: 20%);
+                // }
+
+                .card-name {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    align-items: center;
+
+                    .card-number {
+                        font-size: 1.5rem;
+                        color: $colour-dark;
+                        text-align: end;
+                        opacity: 0.5;
+                    }
+                }
+
+                h1 {
+                    font-size: 3rem;
+                    font-weight: bold;
+                }
+    
+                h2 {
+                    color: $colour-dark;
+                    font-style: italic;
+                    opacity: 0.5;
+                }
+            }
+            
+        }
+
+        .card-effect {
+            // display
+            display: flex;
+            align-items: center;
+            // justify-content: center;
+            
+            // text
+            font-size: 1.5rem;
+
+            // margin
+            margin: 0 4rem;
+
+            // \n = new line
+            white-space: pre-line;
+        }
+
+        .flavour-text {
+            // display
+            display: grid;
+            place-items: center;
+
+            // margin
+            margin: 0 2rem;
+
+            // text
+            font-size: 1.25rem;
+            font-style: italic;
+
+            hr {
+                // size
+                width: 75%;
+                margin: 0.5rem 0;
+
+                // design
+                border-color: $colour-dark;
+                opacity: 0.5;
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@
 @import 'DeckHeader';
 @import 'DeckStatsBar';
 @import 'DeckExplorer';
+@import 'CardPage';
 
 * {
     box-sizing: border-box;
@@ -86,4 +87,17 @@ footer {
 .center {
     display: grid;
     place-items: center;
+}
+
+.page-body {
+    // display
+    display: grid;
+    // place-items: center;
+
+    // size
+    width: 66vw;
+}
+
+.debug-outline {
+    // outline: 4px solid $colour-dark;
 }
