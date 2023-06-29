@@ -4,14 +4,17 @@ import { json, error, redirect } from "@sveltejs/kit";
 export async function load({ url, params}) {
     console.log(`URL SLUG : ${params.deck}`)
 
-    const result = await pb.collection("decks").getList(1, 50, {
-        sort: 'created',
-        expand: 'cards_relational'
-    });
+    // Load Deck data if a deck exists with the given ID
+    try {
+        const result = await pb.collection("decks").getOne(params.deck, {
+            expand: 'challenger, author'
+        })
 
-    // console.log(result)
+        return { deck: result }
+    }
     
-    let deck = result.items[0]
-
-    return { deck: deck }
+    // if no deck was found with the given ID, redirect to deck explorer
+    catch (error) {
+        throw redirect(303, '/decks')
+    }
 }
