@@ -18,5 +18,5 @@
 <!-- HTML -->
 <div class="card-item" on:mouseenter={onHover}>
     <span>{quantity}x</span>
-    <span><a href="/images/cards/{id}. {name}.webp">{name}</a></span>
+    <span><a href="/card/{name}">{name}</a></span>
 </div>
