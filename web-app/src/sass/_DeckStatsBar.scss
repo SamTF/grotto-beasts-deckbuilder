@@ -31,7 +31,9 @@
 
     // left panel
     .left {
-
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
     }
 
     // right panel containing card count by type
