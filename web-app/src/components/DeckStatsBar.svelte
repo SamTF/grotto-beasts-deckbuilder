@@ -6,7 +6,7 @@
     export let deck = []
 
     // Vars
-    let totalCards = deck.length
+    let totalCards = deck.reduce((total, item) => total + item.quantity, 0)
     let challengerNum = countCardType(deck, CardTypes.CHALLENGER)
     let beastNum = countCardType(deck, CardTypes.BEAST)
     let grottoNum = countCardType(deck, CardTypes.GROTTO)
@@ -18,6 +18,8 @@
     <!-- left panel contaning deck general info -->
     <div class="left">
         <span>{totalCards} total cards</span>
+        <span>/</span>
+        <span>{deck.length} unique cards</span>
     </div>
 
     <!-- right panel containing card count by type -->
