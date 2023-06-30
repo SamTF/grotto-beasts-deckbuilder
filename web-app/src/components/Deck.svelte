@@ -20,7 +20,7 @@
 <!-- HTML -->
 <div class="deck-container">
     <!-- PREVIEW -->
-    <div class="card-preview">
+    <div class="card-preview card-image">
         <img src={`/images/cards/${previewImg}`} alt="Card Preview" on:error={() => previewImg = "back.webp"}>
 
         <!-- <img src={`/images/cards/${previewImg}`} alt="Card Preview"> -->
