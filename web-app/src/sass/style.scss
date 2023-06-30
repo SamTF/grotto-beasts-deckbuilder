@@ -101,3 +101,15 @@ footer {
 .debug-outline {
     // outline: 4px solid $colour-dark;
 }
+
+
+// Realistic card styling for all card images
+.card-image {
+    img {
+        border-radius: 20px;
+        // border-radius: 2cqh;
+        filter: drop-shadow(0 0 0.75rem $colour-dark);
+        outline: 1px solid transparentize($color: $colour-dark, $amount: 0.5);
+        outline-offset: -1px;
+    }
+}
