@@ -1,9 +1,24 @@
 <!-- JS -->
 <script>
-    export let data
+    // Imports
+    import { CardTypes } from "$lib/cardUtils"
 
-    const cardImg = `${data.card.number}. ${data.card.name}.webp`
+    // Receive data from API
+    export let data
     console.log(data)
+
+    // image file name
+    const cardImg = `${data.card.number}. ${data.card.name}.webp`
+
+    // card tags
+    const cardTags = data.card.tags.split(",")
+
+    // Delete last column from header if card has no Attack value
+    let headerStyle = ""
+    if (data.card.type == CardTypes.GROTTO || data.card.type == CardTypes.WISH) {
+        headerStyle = "grid-column: span 2;"
+    }
+    
 </script>
 
 <!-- HTML -->
@@ -35,9 +50,8 @@
                         </div>
                     {/if}
                     
-
                     <!-- Name and Type -->
-                    <div class="text debug-outline">
+                    <div class="text debug-outline" style={headerStyle}>
                         <div class="card-name">
                             <h1>{data.card.name}</h1>
                             <span class="card-number">#{data.card.number}</span>
@@ -48,12 +62,19 @@
 
                     <!-- Power -->
                     {#if data.card.type == "Challenger" || data.card.type == "Beast"}
-                    <div class="card-power debug-outline">
-                        <span>{data.card.power}</span>
-                    </div>
+                        <div class="card-power debug-outline">
+                            <span>{data.card.power}</span>
+                        </div>
                     {/if}
                     
                 </div>
+
+                <!-- Card Tags -->
+                <ul class="btn-tags card-tags">
+                    {#each cardTags as tag}
+                        <li><a href="/decks">{tag}</a></li>
+                    {/each}
+                </ul>
 
                 <!-- Card Effect -->
                 <div class="card-effect debug-outline">
