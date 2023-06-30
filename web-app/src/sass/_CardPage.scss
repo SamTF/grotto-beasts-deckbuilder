@@ -43,7 +43,8 @@
     .card-info {
         // display
         display: grid;
-        grid-template-rows: 6rem 1fr auto;
+        grid-template-rows: 6rem auto 1fr auto;
+        // header | tags | card effect | flavour text
         
         // size
         height: 100%;
@@ -53,7 +54,7 @@
         .header {
             // display
             display: grid;
-            grid-template-columns: 8rem 1fr 8rem;
+            grid-template-columns: 7rem 1fr 7rem;
             justify-content: center;
             align-items: center;
 
@@ -130,10 +131,16 @@
                     align-items: center;
 
                     .card-number {
+                        // text
                         font-size: 1.5rem;
-                        color: $colour-dark;
                         text-align: end;
+
+                        // design
+                        color: $colour-dark;
                         opacity: 0.5;
+
+                        // margin
+                        margin-right: 1rem;
                     }
                 }
 
@@ -188,6 +195,18 @@
                 border-color: $colour-dark;
                 opacity: 0.5;
             }
+        }
+
+        // tags
+        .card-tags {
+            // display
+            justify-content: start;
+
+            // size
+            margin: 0.5rem 0;
+
+            // text
+            text-transform: capitalize;
         }
     }
 }
