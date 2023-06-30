@@ -1,0 +1,75 @@
+// A preview of 6 cards you could draw when playing with a deck
+
+.starting-hand-container {
+    // display
+    display: grid;
+    place-items: center;
+
+    // margin
+    margin-top: 1rem;
+    margin-bottom: 12rem;
+
+    // Section Header
+    h2 {
+        margin-bottom: 1rem;
+    }
+
+    // Buttons
+    .buttons {
+        // display
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 2rem;
+
+        button {
+            // text
+            font-size: 0.8rem;
+            color: white;
+            font-weight: bold;
+            
+            // design
+            background-color: fade-out($color: $colour-dark, $amount: 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 2px solid $colour-accent;
+
+            // cursor
+            cursor: pointer;
+
+            // animations
+            transition: transform 200ms;
+
+            &:hover {
+                background-color: $colour-accent;
+                color: $colour-dark;
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+.starting-hand {
+    // display
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    // overflow-x: hidden;
+    /* gap: 1rem; */
+
+    // size
+    height: 200px;
+    margin-bottom: 2rem;
+    max-width: 80vw;
+
+    // Container for cards
+    .card-image {
+        width: 100px;
+        max-height: 200px;
+
+        img {
+            height: 100%;
+            border-radius: 8px;
+        }
+    }
+}
