@@ -8,6 +8,7 @@
 @import 'DeckStatsBar';
 @import 'DeckExplorer';
 @import 'CardPage';
+@import 'HandPreview';
 
 * {
     box-sizing: border-box;
@@ -105,6 +106,8 @@ footer {
 
 // Realistic card styling for all card images
 .card-image {
+    transition: all 200ms;
+    
     img {
         border-radius: 20px;
         // border-radius: 2cqh;
@@ -112,4 +115,21 @@ footer {
         outline: 1px solid transparentize($color: $colour-dark, $amount: 0.5);
         outline-offset: -1px;
     }
+
+    // Hover: grow and move to the foreground
+    &:hover {
+        cursor: pointer;
+        z-index: 10;
+        transform: scale(1.2);
+
+        img {
+            filter: drop-shadow(0 0 0.33rem $colour-dark);
+        }
+        
+    }
+}
+
+button {
+    background: none;
+    border: none;
 }
