@@ -4,6 +4,7 @@
     import Deck from '$components/Deck.svelte';
     import DeckHeader from "$components/DeckHeader.svelte";
     import DeckStatsBar from "$components/DeckStatsBar.svelte";
+    import HandPreview from "$components/Deck/HandPreview.svelte";
 
     //  Local Data
     // import { deck } from '$lib/test_deck.js'
@@ -17,7 +18,7 @@
 </script>
 
 <!-- HTML -->
-<DeckHeader name={data.deck.name} author={data.deck.expand.author.name} tags="cool" />
+<DeckHeader name={data.deck.name} author={data.deck.expand.author.name} tags={data.deck.tags} />
 
 <!-- DECK -->
 <div class="center">
@@ -26,3 +27,6 @@
 
 <!-- Stats Bar -->
 <DeckStatsBar {deck} />
+
+<!-- Starting Hand Preview -->
+<HandPreview cards={deck} />
