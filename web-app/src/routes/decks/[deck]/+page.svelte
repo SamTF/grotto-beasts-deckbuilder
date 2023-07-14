@@ -1,8 +1,8 @@
 <!-- JS -->
 <script>
-    import Deck from '$components/Deck.svelte';
-    import DeckHeader from "$components/DeckHeader.svelte";
-    import DeckStatsBar from "$components/DeckStatsBar.svelte";
+    import Deck from '$components/Deck/Deck.svelte';
+    import DeckHeader from "$components/Deck/DeckHeader.svelte";
+    import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte";
     import HandPreview from "$components/Deck/HandPreview.svelte";
     import DeckGraphs from "$components/Deck/DeckGraphs.svelte";
 
