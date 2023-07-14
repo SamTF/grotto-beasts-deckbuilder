@@ -1,0 +1,26 @@
+// Section of the Deck page that displays statistic graphs
+
+.deck-graphs-container {
+    // display
+    display: grid;
+    place-items: center;
+
+    // margin
+    margin-top: 1rem;
+    margin-bottom: 12rem;
+
+    // Section Header
+    h2 {
+        margin-bottom: 1rem;
+    }
+
+    .graphs-container {
+        // display
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        // size
+        width: 50vw;
+    }
+}
