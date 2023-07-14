@@ -39,7 +39,7 @@ export const populateDeck = (cards) => {
 }
 
 // Counts the number of cards at each mana cost
-const GetManaCurve = (fullCards) => {
+export const GetManaCurve = (fullCards) => {
     let manaCurve = {}
 
     fullCards.forEach(card => {
@@ -54,4 +54,18 @@ const GetManaCurve = (fullCards) => {
     });
 
     return manaCurve
+}
+
+// Count the number of beasts of each type present in the deck
+export const CountBeastTypes = (fullCards) => {
+    let beastTypes = {}
+
+    fullCards.forEach(card => {
+        if (card.type != CardTypes.BEAST)   return
+
+        if (card.subtype in beastTypes)     beastTypes[card.subtype] += card.quantity
+        else                                beastTypes[card.subtype] = card.quantity
+    })
+
+    return beastTypes
 }
