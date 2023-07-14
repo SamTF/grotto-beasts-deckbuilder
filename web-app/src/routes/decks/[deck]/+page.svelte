@@ -1,10 +1,10 @@
 <!-- JS -->
 <script>
-    import { countCardType } from "$lib/cardUtils"
     import Deck from '$components/Deck.svelte';
     import DeckHeader from "$components/DeckHeader.svelte";
     import DeckStatsBar from "$components/DeckStatsBar.svelte";
     import HandPreview from "$components/Deck/HandPreview.svelte";
+    import DeckGraphs from "$components/Deck/DeckGraphs.svelte";
 
     //  Local Data
     // import { deck } from '$lib/test_deck.js'
@@ -13,8 +13,10 @@
     // Receive props from API
     export let data
 
+    // Constants
     const cards = data.deck.cards_json
     const deck = cards.deck
+    const fullCards = data.fullCards
 </script>
 
 <!-- HTML -->
@@ -30,3 +32,7 @@
 
 <!-- Starting Hand Preview -->
 <HandPreview cards={deck} />
+
+<!-- Graphs -->
+<div class="header-divider"></div>
+<DeckGraphs {fullCards} />
