@@ -2,5 +2,5 @@
 
 <footer>
     <span>Grotto Beasts! © Elbertson and Sons 2022</span>
-    <span>Website made by Sam :)</span>
+    <span><a href="https://sam.freelancepolice.org" target="_blank">Website made by Sam :)</a></span>
 </footer>
