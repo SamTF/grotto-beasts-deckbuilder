@@ -57,7 +57,7 @@
                             <span class="card-number">#{data.card.number}</span>
                         </div>
 
-                        <h2 class="card-type">{data.card.type}</h2>
+                        <h2 class="card-type">{data.card.subtype} {data.card.type}</h2>
                     </div>
 
                     <!-- Power -->
