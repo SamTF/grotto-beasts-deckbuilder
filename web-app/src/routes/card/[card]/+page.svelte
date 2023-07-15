@@ -72,7 +72,7 @@
                 <!-- Card Tags -->
                 <ul class="btn-tags card-tags">
                     {#each cardTags as tag}
-                        <li><a href="/decks">{tag}</a></li>
+                        <li><a href={`/cards?tags=${tag.trim()}`}>{tag}</a></li>
                     {/each}
                 </ul>
 
