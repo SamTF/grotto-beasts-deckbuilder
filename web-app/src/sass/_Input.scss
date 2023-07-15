@@ -1,0 +1,110 @@
+// Text input fields and buttons
+
+input {
+    text-decoration: none;
+    color: $text-colour;
+    font-size: 1.25rem;
+    font-family: $font-family;
+    font-weight: bold;
+
+    border: none;
+    background-color: none;
+    background: transparentize($color: $colour-dark, $amount: 0.5);
+
+    border-radius: 50px;
+    background: #e2bd9d;
+    box-shadow: inset 20px 20px 50px #c0a185,
+                inset -20px -20px 50px #ffd9b5;
+
+    &[type="text"] {
+        // width: 50%;
+        width: 100%;
+        padding: 1rem 1rem;
+    }
+}
+
+// Card Search Input Field
+.search-bar {
+    width: 50%;
+    position: relative;
+    margin-bottom: 2rem;
+
+    button {
+        // position
+        position: absolute;
+        right: 1rem;
+        top: 0;
+
+        font-size: 2.5rem;
+        color: $colour-dark;
+        
+        &:hover {
+            cursor: pointer;
+            color: $colour-accent;
+            transform: scale(1.1);
+            text-shadow: 1px 1px 10px black;
+        }
+    }
+}
+
+// General button style
+%btn {
+    // text
+    font-size: 0.8rem;
+    color: white;
+    font-weight: bold;
+    
+    // design
+    background-color: fade-out($color: $colour-dark, $amount: 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid $colour-accent;
+
+    // cursor
+    cursor: pointer;
+}
+
+// Normal button - has hover effects
+.btn {
+    @extend %btn;
+
+    // animations
+    transition: transform 200ms;
+
+    &:hover {
+        background-color: $colour-accent;
+        color: $colour-dark;
+        transform: scale(1.1);
+    }
+}
+
+// Toggle Buttons - can be toggle on or off
+.btn-toggle {
+    @extend %btn;
+
+    opacity: 0.8;
+
+    // background
+    background-color: $colour-mid-light;
+
+    &:hover {
+        background-color: lighten($color: $colour-accent, $amount: 6);
+        border-color: $colour-mid-light;
+        transform: scale(1.1);
+    }
+
+    // when the button is active
+    &.active {
+        opacity: 1.0;
+        background-color: $colour-accent;
+        color: $colour-dark;
+    }
+}
+
+
+// Icons
+[data-card-type="challenger"] { @include text-icon($icon-challenger); }
+[data-card-type="beast"] { @include text-icon($icon-beast); }
+[data-card-type="grotto"] { @include text-icon($icon-grotto); }
+[data-card-type="wish"] { @include text-icon($icon-wish); }
+[data-card-type="all"] { @include text-icon($icon-all); }
