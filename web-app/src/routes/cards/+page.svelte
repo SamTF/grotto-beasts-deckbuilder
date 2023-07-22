@@ -3,6 +3,7 @@
     // Imports
     import Card from '$components/Cards/Card.svelte';
     import BtnToggle from '$components/BtnToggle.svelte';
+    import TagFilters from '$components/TagFilters.svelte';
     import { createSearchStore, searchHandlerAdvance } from '$lib/stores/search'
 	import { onDestroy } from 'svelte';
     import { goto } from "$app/navigation";
@@ -30,6 +31,7 @@
 
 
     // FILTERS
+    // Filtering by Type
     let typeFilters = {
         challenger : false,
         beast: false,
@@ -37,6 +39,11 @@
         wish: false
     }
 
+    // Filtering by Tags
+    let tagFilters = []
+    $: $searchStore.tags = tagFilters
+
+    // SEARCH FUNCTION
     // Filter search by the card types selected. Reset filter if none are selected
     $: if ( Object.values(typeFilters).some(element => element == true) ) {
         let types = []
@@ -70,6 +77,28 @@
         Object.keys(typeFilters).forEach(v => typeFilters[v] = false)
     }
 
+    // print all tags
+    const getAllTags = () => {
+        let tags = []
+        $searchStore.filtered.forEach(x => {
+            const cardTags = x.tags.split(',').map(x => x.trim())
+
+            for (const i in cardTags) {
+                const t = cardTags[i]
+                if (tags.includes(t)) {
+                    continue
+                } else {
+                    tags.push(t)
+                }
+            }
+        })
+
+        tags.sort()
+        console.log(tags)
+    }
+
+    // getAllTags()
+
 
 </script>
 
@@ -91,30 +120,18 @@
     </div>
 
     <div class="type-filters">
-        <!-- <BtnToggle bind:toggle={toggle} text={'ALL'} cardType={'all'} /> -->
         <BtnToggle bind:toggle={typeFilters.challenger} text={'Challengers'}    cardType={'challenger'} onClick={() => typeFilters.challenger != typeFilters.challenger} />
         <BtnToggle bind:toggle={typeFilters.beast}      text={'Beasts'}         cardType={'beast'}/>
         <BtnToggle bind:toggle={typeFilters.grotto}     text={'Grottos'}        cardType={'grotto'} />
         <BtnToggle bind:toggle={typeFilters.wish}       text={'Wishes'}         cardType={'wish'} />
 
-        <!-- <span class="btn" data-card-type="challenger">Challengers</span>
-        <span class="btn" data-card-type="beast">Beasts</span>
-        <span class="btn" data-card-type="grotto">Grottos</span>
-        <span class="btn" data-card-type="wish">Wishes</span> -->
     </div>
 
-    <!-- <div class="type-filters">
-        <label class="toggle">
-            <input type="checkbox">
-            <span class="labels" data-on="ON" data-off="OFF">ALL</span>
-        </label>
-    </div> -->
+    <TagFilters bind:tagFilters={tagFilters} />
 
     <div class="card-grid">
-        <!-- {#each data.cards as card} -->
         {#each $searchStore.filtered as card}
             <Card {card} />
-            <!-- <div>{card.number} | {card.name}</div> -->
         {/each}
     </div>
 </div>
@@ -151,6 +168,6 @@
         display: flex;
         flex-direction: row;
         gap: 1rem;
-        margin-bottom: 4rem;
+        margin-bottom: 2rem;
     }
 </style>
