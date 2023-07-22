@@ -9,7 +9,8 @@ export const createSearchStore = (data) => {
         data: data,
         filtered: data,
         search: '',
-        types: []
+        types: [],
+        tags: []
     })
 
     return {
@@ -34,12 +35,12 @@ export const searchHandler = (store) => {
 export const searchHandlerAdvance = (store) => {
     const searchTerm = store.search.toLowerCase().trim() || ''
     const typesFilter = store.types
-    console.log(typesFilter)
-    console.log(typesFilter.length)
+    const tagFilters = store.tags
+
+    console.log(tagFilters)
 
     // filter by card type
     if (typesFilter.length >= 1) {
-        console.log("LET'S GOOOO")
         store.filtered = store.data
             .filter(card => {
                 console.log(card.type)
@@ -49,18 +50,23 @@ export const searchHandlerAdvance = (store) => {
         store.filtered = store.data
     }
 
+    // filter by tags
+    if (tagFilters.length >= 1) {
+        store.filtered = store.filtered.filter(card => {
+            const cardTags = card.tags.split(',').map(x => x.trim())
+            return cardTags.some(tag => tagFilters.includes(tag))
+        })
+    }
+
     // search tags
     if (searchTerm.includes('#')) {
-        console.log("FILTERING BY TAGS")
 
         store.filtered = store.data
             .filter(item => {
                 // const searchTags = searchTerm.replace('#', '').split(',')
                 const searchTags = searchTerm.split('#').filter(x => x != '' )
-                console.log(searchTags)
 
                 const tags = item.tags.split(',').map(x => x.toLowerCase().trim())
-                // console.log(tags)
 
                 // return tags.includes(searchTags)
                 return tags.some( tag => searchTags.includes(tag) )
