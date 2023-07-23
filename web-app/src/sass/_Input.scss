@@ -50,7 +50,8 @@ input {
 // General button style
 %btn {
     // text
-    font-size: 0.8rem;
+    font-family: $font-family;
+    font-size: 1rem;
     color: white;
     font-weight: bold;
     
@@ -101,6 +102,16 @@ input {
     }
 }
 
+// Negative Button - Like removing, subtracting, clearing, cancelling
+.btn-negative {
+    background-color: $colour-red
+}
+
+// Positive Button - Like adding, incrementing, approving, confirming
+.btn-positive {
+    background-color: $colour-green-light;
+    color: $colour-green-dark;
+}
 
 // Icons
 [data-card-type="challenger"] { @include text-icon($icon-challenger); }
