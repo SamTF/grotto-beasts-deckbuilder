@@ -1,0 +1,24 @@
+// General Use Mixins go here!
+
+// Circle with bold number inside it!
+@mixin icon-number($colour, $size: 5rem) {
+    // display
+    display: grid;
+    place-items: center;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    // font
+    font-size: $size * 0.75;
+    // font-size: $size/1.25;
+    font-weight: 900;
+    color: white;
+
+    // design
+    height: $size;
+    width: $size;
+    background-color: $colour;
+    outline: 4px solid white;
+    border-radius: 100%;
+}

@@ -1,26 +1,5 @@
 // CARD PAGE
 
-@mixin icon-number($colour) {
-    // display
-    display: grid;
-    place-items: center;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-
-    // font
-    font-size: 4rem;
-    font-weight: 900;
-    color: white;
-
-    // design
-    height: 5rem;
-    width: 5rem;
-    background-color: $colour;
-    outline: 4px solid white;
-    border-radius: 100%;
-}
-
 .card-page-container {
     // display
     display: grid;
