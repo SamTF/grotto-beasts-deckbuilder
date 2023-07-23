@@ -72,6 +72,9 @@
         // reset search type filter
         let types = []
         $searchStore.types = types
+        // reset tag filters
+        tagFilters = []
+        $searchStore.tags = tagFilters
 
         // reset button values
         Object.keys(typeFilters).forEach(v => typeFilters[v] = false)
