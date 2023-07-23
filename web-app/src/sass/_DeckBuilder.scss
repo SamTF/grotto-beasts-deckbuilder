@@ -1,0 +1,208 @@
+// Deckbuilder stuff
+
+// Sidebar displaying all cards currently added to the deck
+.deck-list-sidebar {
+    position: sticky;
+    // top: 10rem;
+    top: 2rem;
+    right: 4rem;
+
+    /* display */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+
+    // display: grid;
+    // grid-template-rows: 4rem 1fr 3rem;
+    // justify-content: flex-start;
+    // align-items: center;
+
+    /* size */
+    // width: 90%;
+    // height: clamp(80vh, fit-content, 100vh);
+    // min-height: 80vh;
+    // max-height: 90vh;
+    // height: fit-content;
+
+    height: 80vh;
+    width: 20vw;
+
+
+    // design
+    background-color: $colour-mid-light;
+    border-radius: 16px;
+
+    .decklist-wrapper {
+        width: 100%;
+        height: 100%;
+
+        display: grid;
+        grid-template-rows: 6rem 1fr 4rem;
+    }
+
+
+    // Deckist Header
+    .decklist-header {
+        // display
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        // size
+        height: 4rem;
+        width: 100%;
+
+        // margins
+        padding: 3rem 0;
+        // margin-bottom: 1rem;
+
+        // background
+        background: $blue-blue-green-gradient;
+        
+        // borders
+        border-radius: 16px 16px 0 0;
+        // border-top: 2px solid $colour-accent;
+        border-bottom: 2px solid $colour-accent;
+
+        // title
+        h1 {
+            margin: 0;
+            font-weight: 900;
+            color: white;
+        }
+
+        // number of cards in deck
+        p.card-count {
+            color: $colour-green-dark;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+    }
+
+
+    // wrapper for the card list container
+    .deck-list-container {
+        display: flex;
+        flex-direction: column;
+        // place-items: center;
+        justify-content: flex-start;
+        align-items: center;
+
+        // size
+        width: 100%;
+        height: 100%;
+
+        // overflow
+        overflow-y: auto;
+
+        // actual flex container for the Card Items
+        .deck-list {
+            // display
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            // size
+            width: 80%;
+
+            // adding margin to the first item to avoid clipping
+            &:first-child {
+                margin-top: 0.5rem;
+            }
+            &:last-child {
+                margin-bottom: 1rem;
+            }
+        }
+
+        // Sorting Buttons
+        .sorting-btns {
+            // display
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+
+            // always display them before the cards
+            order: -2;
+        }
+    }
+
+    // Footer
+    .decklist-footer {
+        // display
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+
+        // size
+        width: 100%;
+
+        // design
+        border-radius: 0 0 16px 16px;
+        border-top: 2px solid $colour-accent;
+        background-color: $colour-dark;
+
+        button, a, .btn {
+            height: fit-content;
+        }
+    }
+}
+
+// Items inside the Deck List
+.decklist-item {
+    // display
+    display: grid;
+    grid-template-columns: 3rem 1fr 3rem;
+    place-items: center;
+    
+    // size
+    width: 100%;
+    height: 2rem;
+
+    // design
+    background-color: $colour-light;
+    border-radius: 16px;
+
+    // font
+    color: white;
+
+    // mouse
+    cursor: pointer;
+    user-select: none;
+
+    // card quantity in deck
+    .quantity {
+        @include icon-number($colour-accent, 2rem);
+        justify-self: flex-start;
+    }
+    // summoning cost
+    .cost {
+        @include icon-number($colour-blue-light, 2rem);
+        justify-self: flex-end;
+    }
+    // challenger goal
+    .goal {
+        @include icon-number($colour-red, 2rem);
+        justify-self: flex-end; 
+    }
+
+    // card name
+    .name {
+        font-weight: bold;
+        justify-self: flex-start;
+    }
+
+    // Colour each card item according to their card type borders
+    &[data-card-type="challenger" i] {
+        background-color: $colour-challenger;
+        border: 2px solid $colour-accent;
+
+        // ALWAYS order the Challenger before all other cards
+        order: -1;
+    }
+    &[data-card-type="beast" i] { background-color: $colour-beast; }
+    &[data-card-type="grotto" i] { background-color: $colour-grotto; }
+    &[data-card-type="wish" i] { background-color: $colour-wish; }
+}
