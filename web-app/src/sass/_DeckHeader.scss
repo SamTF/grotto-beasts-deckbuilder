@@ -84,3 +84,132 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
     background-color: darken($color: $colour-light, $amount: 15%);
     border-bottom: 2px solid $colour-accent;
 }
+
+// Same header but with extra options and buttons
+.deck-builder-header {
+    // @extend .deck-header;
+
+    // display
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+
+    // size
+    width: 80%;
+
+    // width fixed to grid cell size
+    .info-container {
+        width: 100%;
+    }
+
+    // buttons
+    .header-btns {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        // General button style
+        .btn {
+            // size
+            height: 8rem;
+            width: 12rem;
+
+            // design
+            background-color: $colour-blue-dark;
+            background-color: fade-out($color: $colour-blue-dark, $amount: 0.75);
+            border-width: 0;
+            // padding: 1rem 0;
+
+            // font
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-align: center;
+            vertical-align: middle;
+
+            &:hover {
+                background-color: $colour-accent;
+            }
+        }
+
+        // PLUS Icon to add more cards
+        .btn-add-cards {
+            // display
+            display: grid;
+            place-items: center;
+            gap: 0;
+
+            // font
+            text-transform: uppercase;
+
+            span:first-child {
+                margin-top: -2rem;
+                font-size: 6rem;
+            }
+            span:last-child {
+                margin-top: -2rem;
+                font-size: 0.8rem;
+                font-weight: 900;
+            }
+        }
+
+        // SAVE icon to publish deck
+        .btn-save-deck {
+            // display
+            display: grid;
+            place-items: center;
+            gap: 0;
+
+            // font
+            text-transform: uppercase;
+
+            span:first-child {
+                font-size: 3.5rem;
+            }
+            span:last-child {
+                margin-top: -1rem;
+                font-size: 0.8rem;
+                font-weight: 900;
+            }
+        }
+    }
+
+    // INPUT FIELDS
+    input[type="text"] {
+        // reset everything
+        width: fit-content !important;
+        background: none;
+        background-color: none;
+        border: none;
+        box-shadow: none;
+        padding: 0rem 0rem !important;
+        border-radius: 0;
+
+        // animation
+        transition: all 100ms;
+
+        // style when receving input
+        &:focus {
+            transition: all 100ms;
+
+            border: 4px solid $colour-accent;
+            padding: 0.5rem 1rem !important;
+            border-radius: 2rem;
+        }
+    }
+
+    // DECK NAME
+    .input-deck-name {
+        // font
+        font-weight: 900;
+        font-size: 3rem;
+        color: white;
+    }
+
+    // USER NAME
+    .input-deck-author {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: $colour-blue-dark;
+    }
+}
+
