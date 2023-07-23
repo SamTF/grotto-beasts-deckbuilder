@@ -80,10 +80,6 @@
         margin-top: 1rem;
     }
 
-    .card-tag-filters button {
-        background-color: var(--colour-blue-light);
-    }
-
     .buttons {
         display: flex;
         flex-direction: column;
