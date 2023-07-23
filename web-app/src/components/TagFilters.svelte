@@ -10,8 +10,6 @@
     export let visible = false
     export let tagFilters = []
 
-    $: console.log(tagFilters)
-
     const toggleFilters = (toggle) => {
         visible = toggle
     }
@@ -36,8 +34,6 @@
         // to make the svelte reactive thing work
         tagFilters = tagFilters
     }
-
-    console.log(cardTags)
 </script>
 
 <!-- HTML -->
