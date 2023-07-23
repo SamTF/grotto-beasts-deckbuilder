@@ -37,8 +37,6 @@ export const searchHandlerAdvance = (store) => {
     const typesFilter = store.types
     const tagFilters = store.tags
 
-    console.log(tagFilters)
-
     // filter by card type
     if (typesFilter.length >= 1) {
         store.filtered = store.data
