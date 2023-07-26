@@ -120,7 +120,7 @@
             {#if showHelp}
                 <div class="help">
                     <ul class="help-list">
-                        <li>Decks must have <b>40 cards</b> & <b>1 Challenger</b></li>
+                        <li>Decks must have <b>40 cards</b> + <b>1 Challenger</b></li>
                         <li>Maximum of <b>3 copies</b> of any card.</li>
                         <li>Your deck list is displayed on the sidebar on the right.</li>
                         <li>Click the <b>+</b>/<b>-</b> buttons to add/subtract cards from your list.</li>
