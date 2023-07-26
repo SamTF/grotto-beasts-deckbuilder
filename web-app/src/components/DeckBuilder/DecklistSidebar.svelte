@@ -33,7 +33,11 @@
     // Count cards in decklist
     const CardsInDecklist = () => {
         const sum = $decklistAdvance.reduce((total, card) => total + card.quantity, 0)
-        return sum
+        return decklistAdvance.sum($decklistAdvance)
+    }
+    // Count Challengers in deck list
+    const ChallengersInDecklist = () => {
+        return decklistAdvance.challenger($decklistAdvance)
     }
 
     // Sorting cards in deck list
@@ -68,6 +72,7 @@
 
         {#key $decklistAdvance}
             <p class="card-count">{CardsInDecklist()}/40 Cards</p>
+            <p class="card-count" style="font-size: 0.9rem;">{ChallengersInDecklist()}/1 Challenger</p>
         {/key}
     </div>
     

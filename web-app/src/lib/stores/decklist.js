@@ -78,8 +78,20 @@ export const createDecklist = () => {
 
             // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
         }),
-        // Total number of cards in the deck list
-        sum: (cards) => (cards.reduce((total, card) => total + card.quantity, 0))
+        // Total number of cards in the deck list (minus challenger)
+        sum: (cards) => (
+            cards.filter(({ type }) => type != 'Challenger').reduce((total, card) => total + card.quantity, 0)
+        ),
+        // Number of Challengers in deck
+        challenger: (cards) => (
+            cards
+                .filter(({ type }) => type === 'Challenger')
+                .reduce((total, card) => total + card.quantity, 0)
+        ),
+        // Get the ID of the Challenger
+        challengerID: (cards) => {
+            cards.find(x => x.type === 'Challenger').id
+        }
     }
 }
 
