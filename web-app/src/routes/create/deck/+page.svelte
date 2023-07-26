@@ -46,7 +46,7 @@
 
 <!-- HTML -->
 <!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.name} tags={data.deck.tags} /> -->
-<DeckHeader name='' author='' tags={['add tag...']} />
+<DeckHeader />
 
 <!-- DECK -->
 <div class="center">
