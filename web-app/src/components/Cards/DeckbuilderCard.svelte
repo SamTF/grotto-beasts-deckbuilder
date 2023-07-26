@@ -13,6 +13,20 @@
     let quantity = 0
     let maxQuantity = card.type != 'Challenger' ? 3 : 1
 
+    // Update quantity when removing cards via clicking in the Decklisr Sidebar
+    $: if ($decklistAdvance.length > 1) {
+        const i = $decklistAdvance.findIndex(x => x.name == card.name)
+        
+        // if the card was found in the decklist, fetch its quantity
+        if (i >= 0) { 
+            quantity = $decklistAdvance[i].quantity
+        }
+        // if not found, set quantity to 0
+        else {
+            quantity = 0
+        }
+    }
+
     if ($decklistAdvance.some(x => x.name == card.name)) {
         const i = $decklistAdvance.findIndex(x => x.name == card.name)
         quantity = $decklistAdvance[i].quantity
@@ -51,7 +65,12 @@
 
     // Check if the deck has reached maximum capacity
     const deckMaxCapacity = () => {
-        return (decklistAdvance.sum($decklistAdvance) >= 40)
+        if (card.type == CardTypes.CHALLENGER) {
+            return (decklistAdvance.challenger($decklistAdvance) >= 1)
+        } else {
+            return (decklistAdvance.sum($decklistAdvance) >= 40)
+        }
+        
     }
 
     // Check if the deck already has a Challenger
