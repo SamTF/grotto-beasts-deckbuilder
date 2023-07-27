@@ -1,7 +1,19 @@
 // Contains all icons used
 
-$icon-challenger: "👑";
-$icon-beast: "🐾";
-$icon-grotto: "⛰️";
-$icon-wish: "🪄";
+// $icon-challenger: "👑";
+$icon-challenger: url("/images/icons/challenger.svg");
+// $icon-beast: "🐾";
+$icon-beast: url("/images/icons/beast.svg");
+// $icon-grotto: "⛰️";
+$icon-grotto: url("/images/icons/grotto.svg");
+// $icon-wish: "🪄";
+$icon-wish: url("/images/icons/wish.svg");
 $icon-all: "⭐";
+
+// CSS Vars
+:root {
+    --icon-challenger: url("/images/icons/challenger.svg");
+    --icon-beast: url("/images/icons/beast.svg");
+    --icon-grotto: url("/images/icons/grotto.svg");
+    --icon-wish: url("/images/icons/wish.svg");
+}
