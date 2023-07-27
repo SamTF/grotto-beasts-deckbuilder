@@ -113,6 +113,23 @@ input {
     color: $colour-green-dark;
 }
 
+.btn-active {
+    @extend %btn;
+
+    background-color: $colour-accent;
+    color: $colour-dark;
+
+    // animations
+    transition: transform 200ms;
+
+    &:hover {
+        background-color: $colour-blue-light !important;
+        border-color: $colour-blue-dark;
+        color: $colour-dark;
+        transform: scale(1.1);
+    }
+}
+
 // Icons
 [data-card-type="challenger"] { @include text-icon($icon-challenger); }
 [data-card-type="beast"] { @include text-icon($icon-beast); }
