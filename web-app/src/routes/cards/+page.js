@@ -19,14 +19,14 @@ export async function load({ url, params}) {
     let cards = await res.json()
 
     // Filter Data by Tags (if any were given)
-    if (searchTags?.length >= 1) {
-        cards = cards.filter(card => {
-            const tags = card.tags.split(',').map(x => x.toLowerCase().trim())
+    // if (searchTags?.length >= 1) {
+    //     cards = cards.filter(card => {
+    //         const tags = card.tags.split(',').map(x => x.toLowerCase().trim())
             
-            if (card.tags == '') return false
-            return tags.some( tag => searchTags.includes(tag) )
-        })
-    }
+    //         if (card.tags == '') return false
+    //         return tags.some( tag => searchTags.includes(tag) )
+    //     })
+    // }
     
     // Return cards
     return { cards: cards }

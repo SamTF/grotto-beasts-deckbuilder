@@ -5,9 +5,10 @@
     import BtnToggle from '$components/BtnToggle.svelte';
     import TagFilters from '$components/TagFilters.svelte';
     import { createSearchStore, searchHandlerAdvance } from '$lib/stores/search'
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
     import { goto } from "$app/navigation";
     import { page } from "$app/stores"; 
+	import DeckHeader from '../../components/DeckBuilder/DeckHeader.svelte';
 
     // API data
     export let data
@@ -102,6 +103,15 @@
 
     // getAllTags()
 
+    // Get tags from query (if any)
+    onMount(() => {
+        const tagParams = $page.url.searchParams.get('tags')
+
+        if (tagParams) {
+            const tags = tagParams.split(',')
+            tagFilters = [...tags]
+        }
+    })
 
 </script>
 
