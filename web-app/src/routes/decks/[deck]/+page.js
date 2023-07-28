@@ -19,27 +19,24 @@ export async function load({ url, params}) {
     }
 
     // Expand card info
-    let fullCards = []
+    // get all cards
+    const allCardsRes = await fetch(`${url.origin}/api/cards`)
+    const allCards = await allCardsRes.json()
 
-    try {
-        for (let i = 0; i < deck.cards_json.deck.length; i++) {
-            const element = deck.cards_json.deck[i];
-            const id = element.id;
-            const res = await fetch(`${url.origin}/api/card/${id}`)
-            const item = await res.json()
-            
-            // add card quantity field
-            item.quantity = element.quantity
-            fullCards.push(item)
-        } 
-    } catch (error) {
-        console.error(error)
-        throw error(404, {
-            message: error
-        })
+    // array of all card IDs in deck
+    const deckCardIds = Array.from(deck.cards_json.deck, x => x.id)
+    // console.log("DECK CARD IDS")
+    // console.log(deckCardIds)
+
+    // filter all cards to only cards present in deck, and add their quantity
+    let fullCards = allCards.filter(x => deckCardIds.includes(x.number))
+    for (let i = 0; i < fullCards.length; i++) {
+        const element = fullCards[i];
+        element.quantity = deck.cards_json.deck[i].quantity
+        
     }
-       
-
+    // console.log(fullCards)
+    
     // Return simplified deck and full expanded cards
     return { deck: deck, fullCards: fullCards }
 }
