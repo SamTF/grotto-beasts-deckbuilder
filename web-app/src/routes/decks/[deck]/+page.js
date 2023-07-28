@@ -34,7 +34,9 @@ export async function load({ url, params}) {
         } 
     } catch (error) {
         console.error(error)
-        throw error(error)
+        throw error(404, {
+            message: error
+        })
     }
        
 
