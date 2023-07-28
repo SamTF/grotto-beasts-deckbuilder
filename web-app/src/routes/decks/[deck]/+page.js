@@ -20,17 +20,23 @@ export async function load({ url, params}) {
 
     // Expand card info
     let fullCards = []
-    for (let i = 0; i < deck.cards_json.deck.length; i++) {
-        const element = deck.cards_json.deck[i];
-        const id = element.id;
-        const res = await fetch(`${url.origin}/api/card/${id}`)
-        const item = await res.json()
-        
-        // add card quantity field
-        item.quantity = element.quantity
-        console.log(item)
-        fullCards.push(item)
-    }    
+
+    try {
+        for (let i = 0; i < deck.cards_json.deck.length; i++) {
+            const element = deck.cards_json.deck[i];
+            const id = element.id;
+            const res = await fetch(`${url.origin}/api/card/${id}`)
+            const item = await res.json()
+            
+            // add card quantity field
+            item.quantity = element.quantity
+            fullCards.push(item)
+        } 
+    } catch (error) {
+        console.error(error)
+        throw error(error)
+    }
+       
 
     // Return simplified deck and full expanded cards
     return { deck: deck, fullCards: fullCards }
