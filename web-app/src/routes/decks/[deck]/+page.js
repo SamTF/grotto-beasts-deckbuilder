@@ -20,8 +20,11 @@ export async function load({ url, params}) {
 
     // Expand card info
     // get all cards
-    const allCardsRes = await fetch(`${url.origin}/api/cards`)
-    const allCards = await allCardsRes.json()
+    const allCardsRes = await pb.collection("cards").getList(1, 200, {
+        '$autoCancel' : false
+    })
+    const allCards = await allCardsRes.items
+    console.log(allCards)
 
     // array of all card IDs in deck
     const deckCardIds = Array.from(deck.cards_json.deck, x => x.id)
