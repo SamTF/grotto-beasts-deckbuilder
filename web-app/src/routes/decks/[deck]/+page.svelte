@@ -5,10 +5,7 @@
     import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte";
     import HandPreview from "$components/Deck/HandPreview.svelte";
     import DeckGraphs from "$components/Deck/DeckGraphs.svelte";
-
-    //  Local Data
-    // import { deck } from '$lib/test_deck.js'
-    // console.log(deck)
+    import Meta from '$components/Meta/Meta.svelte'
 
     // Receive props from API
     export let data
@@ -18,6 +15,9 @@
     const deck = cards.deck
     const fullCards = data.fullCards
 </script>
+
+<!-- METADATA -->
+<Meta title={data.deck.name} />
 
 <!-- HTML -->
 <DeckHeader name={data.deck.name} author={data.deck.expand.author.name} tags={data.deck.tags} />

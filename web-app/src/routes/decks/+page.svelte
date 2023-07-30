@@ -2,12 +2,16 @@
 <script>
     // Imports
     import DeckGridItem from '$components/DeckExplorer/DeckGridItem.svelte';
+    import Meta from '$components/Meta/Meta.svelte';
 
     export let data
 
     console.log(data)
     // console.log(data.url.searchParams)
 </script>
+
+<!-- METADATA -->
+<Meta title='Deck Explorer' />
 
 <!-- HTML -->
 <div class="header-divider" style="height: 6rem; margin-bottom: 0;"></div>

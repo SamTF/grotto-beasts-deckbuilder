@@ -2,6 +2,7 @@
 <script>
     // Imports
     import { CardTypes } from "$lib/cardUtils"
+    import Meta from "$components/Meta/Meta.svelte";
 
     // Receive data from API
     export let data
@@ -20,6 +21,9 @@
     }
     
 </script>
+
+<!-- META -->
+<Meta title={data.card.name} />
 
 <!-- HTML -->
 <div class="header-divider" style="height: 6rem;"></div>

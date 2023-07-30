@@ -6,9 +6,8 @@
     import TagFilters from '$components/TagFilters.svelte';
     import { createSearchStore, searchHandlerAdvance } from '$lib/stores/search'
 	import { onDestroy, onMount } from 'svelte';
-    import { goto } from "$app/navigation";
     import { page } from "$app/stores"; 
-	import DeckHeader from '../../components/DeckBuilder/DeckHeader.svelte';
+	import Meta from '$components/Meta/Meta.svelte';
 
     // API data
     export let data
@@ -114,6 +113,9 @@
     })
 
 </script>
+
+<!-- META -->
+<Meta title='Card Explorer' />
 
 <!-- HTML -->
 <div class="header-divider"></div>
