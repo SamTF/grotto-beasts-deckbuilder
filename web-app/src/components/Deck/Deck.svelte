@@ -7,7 +7,7 @@
     // Props
     export let deck = []
 
-    let previewImg = "back.webp"
+    let previewImg = `${deck[0].id}. ${deck[0].name}.webp`
 
     const onCardHover = event => {
         console.log(event.detail)
@@ -22,8 +22,6 @@
     <!-- PREVIEW -->
     <div class="card-preview card-image">
         <img src={`/images/cards/${previewImg}`} alt="Card Preview" on:error={() => previewImg = "back.webp"}>
-
-        <!-- <img src={`/images/cards/${previewImg}`} alt="Card Preview"> -->
     </div>
 
     <!-- Card List -->
