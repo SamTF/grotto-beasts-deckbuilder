@@ -18,27 +18,22 @@ export async function load({ url, params}) {
         throw redirect(303, '/decks')        
     }
 
-    // Expand card info
+    // --- EXPAND CARD INFO --------
     // get all cards
-    const allCardsRes = await pb.collection("cards").getList(1, 200, {
-        '$autoCancel' : false
-    })
-    const allCards = await allCardsRes.items
-    console.log(allCards)
+    const allCards = await pb.collection('cards').getFullList({
+        sort: 'number',
+    });
 
     // array of all card IDs in deck
     const deckCardIds = Array.from(deck.cards_json.deck, x => x.id)
-    // console.log("DECK CARD IDS")
-    // console.log(deckCardIds)
 
     // filter all cards to only cards present in deck, and add their quantity
-    let fullCards = allCards.filter(x => deckCardIds.includes(x.number))
+    let fullCards = await allCards.filter(x => deckCardIds.includes(x.number))
     for (let i = 0; i < fullCards.length; i++) {
         const element = fullCards[i];
         element.quantity = deck.cards_json.deck[i].quantity
         
     }
-    // console.log(fullCards)
     
     // Return simplified deck and full expanded cards
     return { deck: deck, fullCards: fullCards }
