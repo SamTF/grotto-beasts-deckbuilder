@@ -5,7 +5,6 @@
 
     // User Authentication
     const login = async () => {
-        console.log("AAAAA")
         const authData = await pb.collection('users').authWithOAuth2({ provider: 'discord' });
         console.log(authData)
     }
@@ -14,7 +13,7 @@
 <header>
     <div class="center">
         <a href="/">
-            <img src="/images/Logo.webp" alt="Grotto Beasts Logo">
+            <img src="/images/logo.svg" alt="Grotto Beasts Logo" class="logo">
         </a>
     </div>
 
@@ -53,5 +52,10 @@
     }
     .login-container img {
         height: 1rem;
+    }
+    
+    .logo {
+        height: 5%;
+        height: 2rem;
     }
 </style>
