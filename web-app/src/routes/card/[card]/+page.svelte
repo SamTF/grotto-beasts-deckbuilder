@@ -83,8 +83,10 @@
 
                 <!-- Flavour Text -->
                 <div class="flavour-text debug-outline">
-                    <hr>
-                    <p>The long paw of the law!</p>
+                    {#if data.card.flavour}
+                        <hr>
+                        <p>{data.card.flavour}</p>
+                    {/if}
                 </div>
             </div>
         </div>
