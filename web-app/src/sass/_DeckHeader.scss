@@ -29,9 +29,20 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
     border-top: 2px solid $colour-accent;
     border-bottom: 2px solid $colour-accent;
 
+    // Container for the deck info and buttons
+    & > div {
+        // display
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+
+        // size
+        width: 80%;
+    }
+
     // Div container for the deck info
     .info-container {
-        width: 80vw;
+        width: 100%;
 
         // Deck name
         h1 {
@@ -72,104 +83,95 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
             }
         }
     }
-}
 
-// Divider between the header and the deck
-.header-divider {
-    // size & margins
-    height: 4rem;
-    margin-bottom: 2rem;
-
-    // design
-    background-color: darken($color: $colour-light, $amount: 15%);
-    border-bottom: 2px solid $colour-accent;
-}
-
-// Same header but with extra options and buttons
-.deck-builder-header {
-    // @extend .deck-header;
-
-    // display
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-
-    // size
-    width: 80%;
-
-    // width fixed to grid cell size
-    .info-container {
-        width: 100%;
-    }
-
-    // buttons
+    // Div container for Buttons
     .header-btns {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-evenly;
+        flex-direction: row-reverse;
+        gap: 1rem;
 
-        // General button style
+        // General header button style
         .btn {
+            // display
+            display: grid;
+            place-items: center;
+            gap: 0;
+         
             // size
             height: 8rem;
             width: 12rem;
 
             // design
-            background-color: $colour-blue-dark;
+            // background-color: $colour-blue-dark;
             background-color: fade-out($color: $colour-blue-dark, $amount: 0.75);
             border-width: 0;
             // padding: 1rem 0;
 
             // font
-            font-size: 1.25rem;
+            font-size: 0.8rem;
             font-weight: 900;
             text-align: center;
             vertical-align: middle;
+            text-transform: uppercase;
 
             &:hover {
                 background-color: $colour-accent;
             }
-        }
 
-        // PLUS Icon to add more cards
-        .btn-add-cards {
-            // display
-            display: grid;
-            place-items: center;
-            gap: 0;
-
-            // font
-            text-transform: uppercase;
-
-            span:first-child {
-                margin-top: -2rem;
-                font-size: 6rem;
-            }
-            span:last-child {
-                margin-top: -2rem;
-                font-size: 0.8rem;
-                font-weight: 900;
+            // Icons
+            .header-btn-icon {
+                height: 4rem;
+                align-self: end;
+                color: white;
             }
         }
+    }
+}
 
-        // SAVE icon to publish deck
-        .btn-save-deck {
-            // display
-            display: grid;
-            place-items: center;
-            gap: 0;
+// Same header but with extra options and buttons
+.deck-builder-header {
+    @extend .deck-header;
 
-            // font
-            text-transform: uppercase;
+    // grid-template-columns: 2rem 1fr;
 
-            span:first-child {
-                font-size: 3.5rem;
+    // Alt design
+    background: $green-orange-gradient !important;
+    border-top: 2px solid $colour-blue-light;
+    border-bottom: 2px solid $colour-beast;
+
+    // Deck Building icon
+    & > div::before {
+        position: absolute;
+        left: -8rem;
+        top: -1rem;
+        content: "✦";
+        font-size: 6rem;
+        color: white;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    // alternate button colour scheme
+    .header-btns {
+        .btn {
+            // @extend .btn;
+
+            background-color: fade-out($color: $colour-beast, $amount: 0.75);
+
+            &:hover {
+                color: $colour-blue-dark;
+                background-color: $colour-blue-light;
+
+                .icon {
+                    color: $colour-blue-dark;
+                    // stroke: $colour-blue-dark;
+                }
             }
-            span:last-child {
-                margin-top: -1rem;
-                font-size: 0.8rem;
-                font-weight: 900;
-            }
+
+            
         }
     }
 
@@ -212,4 +214,3 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
         color: $colour-blue-dark;
     }
 }
-
