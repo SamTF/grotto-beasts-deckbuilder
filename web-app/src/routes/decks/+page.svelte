@@ -37,12 +37,9 @@
 
     <!-- DECK GRID -->
     <div class="deck-grid">
-        
-            {#each data.decks as deck}
-                <DeckGridItem {deck} />
-            {/each}
-        
-        
+        {#each data.decks as deck}
+            <DeckGridItem {deck} />
+        {/each}
     </div>
 
 </div>
