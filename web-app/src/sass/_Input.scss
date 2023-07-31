@@ -72,10 +72,17 @@ input {
     // animations
     transition: transform 200ms;
 
-    &:hover {
+    // Hover effect (only when enabled)
+    &:hover:enabled {
         background-color: $colour-accent;
         color: $colour-dark;
         transform: scale(1.1);
+    }
+
+    // Disabled effect
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
     }
 }
 
