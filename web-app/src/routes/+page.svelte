@@ -52,15 +52,13 @@
             <p>TheDangerDog</p>
             <p>randomCaribou</p>
         </div>
-        
-
     </div>
 
     <!-- display current user -->
     {#if $currentUser}
-        <b>Signed in as {$currentUser.username}</b>
+        <b>Signed in as [+{$currentUser.username}]</b>
     {:else}
-        <b>not signed in</b>
+        <b>[not signed in]</b>
     {/if}
 </div>
 
@@ -85,10 +83,10 @@
         padding: 1rem 2rem;
         
         /* design */
-        /* background-color: var(--colour-mid-light); */
+        background-color: var(--colour-mid-light);
         border-radius: 1rem;
 
-        margin-bottom: 4rem;
+        margin-bottom: 2rem;
     }
 
     .tagline {
