@@ -1,0 +1,27 @@
+// Elegant section dividers
+
+// Divider between the header and the deck
+.header-divider {
+    // size & margins
+    height: 4rem;
+    margin-bottom: 2rem;
+
+    // design
+    background-color: darken($color: $colour-light, $amount: 15%);
+    border-bottom: 2px solid $colour-accent;
+}
+// Different colour scheme for the deck editor
+.header-divider-alt {
+    @extend .header-divider;
+    border-bottom: 2px solid $colour-beast;
+}
+// General purpose divider
+.divider {
+    @extend .header-divider;
+    border-top: 2px solid $colour-accent;
+}
+// General purpose divider - alternate colour scheme
+.divider-alt {
+    @extend .header-divider;
+    border-top: 2px solid $colour-accent;
+}
