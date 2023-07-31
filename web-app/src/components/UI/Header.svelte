@@ -36,26 +36,3 @@
         </nav>
     </div>
 </header>
-
-<style>
-    .login-container {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    .btn {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    .login-container img {
-        height: 1rem;
-    }
-    
-    .logo {
-        height: 5%;
-        height: 2rem;
-    }
-</style>

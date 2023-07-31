@@ -3,6 +3,7 @@
 @import 'COLOURS';
 @import 'ICONS';
 @import 'MIXINS';
+
 // Elements
 @import 'Deck';
 @import 'DeckHeader';
@@ -13,6 +14,7 @@
 @import 'DeckGraphs';
 @import 'Input';
 @import 'DeckBuilder';
+@import 'Dividers';
 
 * {
     box-sizing: border-box;
@@ -38,19 +40,47 @@ a {
     color: inherit;
 }
 
+// The website header on every page
 header {
-    height: 4rem;
-    background-color: $colour-dark;
-
+    // display
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     align-items: center;
 
-    img {
-        height: 3rem;
+    // size
+    height: 4rem;
+
+    // design
+    background-color: $colour-dark;
+
+    // User login area
+    .login-container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+
+        // Login button
+        .btn {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        // Discord Logo
+        img {
+            height: 1rem;
+        }
+    }
+    
+    // Grotto Builders Logo
+    .logo {
+        height: 2rem;
     }
 }
 
+// The Navigation menu inside the Header
 nav {
     display: flex;
     justify-content: space-around;
