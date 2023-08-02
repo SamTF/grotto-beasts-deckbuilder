@@ -19,6 +19,9 @@
 
     <!-- Card Name -->
     <div class="name">
+        {#if card.epic}
+            <span>✦</span>
+        {/if}
         <span>{card.name}</span>
     </div>
 
