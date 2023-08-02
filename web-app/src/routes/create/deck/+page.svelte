@@ -17,18 +17,11 @@
 
     // Save/Load decklist data to/from Session Storage
     onMount(() => {
-        console.log($decklistAdvance)
-
-        // let store = window.sessionStorage.getItem("decklist")
         let store = localStorage.getItem("decklist")
-        console.log("STORE:")
-        console.log(store)
 
         if (store) {
             $decklistAdvance = JSON.parse(store)
         }
-
-        console.log($decklistAdvance)
 
         // populate the simplified deck thing
         deck = $decklistAdvance.map(x => { 
@@ -37,10 +30,10 @@
 
         // save the full cards
         fullCards = $decklistAdvance
-
-
-        console.log(deck)
     })
+
+    // total number of cards in a deck
+    $: deckSum = decklistAdvance.sum($decklistAdvance)
 
 </script>
 
@@ -57,17 +50,16 @@
 {#key deck}<DeckStatsBar {deck} />{/key}
 
 <!-- Starting Hand Preview -->
-{#if deck.length > 1}
-    {#key deck}<HandPreview cards={deck} />{/key}
-{/if}
-
-<!-- Graphs -->
 {#if deck.length >= 7}
-    <div class="header-divider"></div>
-    {#key deck}<DeckGraphs {fullCards} />{/key}
+    {#key deck}<HandPreview cards={deck} />{/key}
 {:else}
     <div class="center" style="margin-top: 2rem;">
         <h1>Add more cards to see a preview of your starting hand!</h1>
     </div>
-    
+{/if}
+
+<!-- Graphs -->
+{#if deck.length >= 7}
+    <div class="divider"></div>
+    {#key deck}<DeckGraphs {fullCards} />{/key}
 {/if}
