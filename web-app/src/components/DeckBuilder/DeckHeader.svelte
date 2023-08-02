@@ -2,15 +2,21 @@
 <script>
     // Imports
     import { page } from '$app/stores'
-    import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
-    import { pb } from '$lib/pocketbase.js'
+    import { onMount } from 'svelte'
+    import { goto } from '$app/navigation'
+    import { pb, currentUser } from '$lib/pocketbase.js'
     import { decklistAdvance } from '$lib/stores/decklist'
+    import Icon from '../UI/Icon.svelte'
+    import { openModal } from 'svelte-modals'
+    import Popup from '$components/UI/Popups/Popup.svelte';
+    import PopupPublishUser from '$components/UI/Popups/PopupPublishUser.svelte'
+    import { publishUser } from '$lib/stores/publishUser'
     
     // Deck Info
     let deckInfo = {
         name: '',
         author: '',
+        author: $currentUser ? $currentUser.username : 'Guest User',
         tags: ['+ Add tag...']
     }
 
@@ -25,6 +31,8 @@
             .replace(/[^a-z0-9]/gi, '')
     }
 
+    $: if ($currentUser) deckInfo.author = $currentUser.username
+
     // Save/Load deck metadata to local storage
     let saveStore = false
     $: if (deckInfo && saveStore) {
@@ -37,31 +45,62 @@
         // let store = window.sessionStorage.getItem("decklist")
         // https://dev.to/danawoodman/svelte-quick-tip-connect-a-store-to-local-storage-4idi
         let store = localStorage.deckInfo
-        console.log("STORE:")
-        console.log(store)
 
         if (store) {
             deckInfo = JSON.parse(store)
         }
 
         saveStore = true
+
+        // auto-fill username if user is logged in
+        if ($currentUser) deckInfo.author = $currentUser.username
+
+        // guest or login
+        $publishUser = localStorage.deckPublishUser || ''
     })
 
     // Upload Deck
     const uploadDeck = async () => {
         // validate that deck is in correct format
         if (decklistAdvance.sum($decklistAdvance) != 40 || decklistAdvance.challenger($decklistAdvance) != 1) {
-            alert("Your deck must have exactly 40 cards PLUS 1 Challenger!")
+            openModal(Popup, {title: 'Invalid Deck D:', message: 'Your deck must have exactly 40 cards + 1 Challenger'})
             return
+        }
+
+        // check if user is logged in (or publishing as a guest)
+        if (!$currentUser && $publishUser != 'guest') {
+            // openModal(Popup, {title: 'Not Logged In :P', message: 'You must be logged in before you can publish a deck'})
+            openModal(PopupPublishUser)
+
+            console.log('deck header user: ', $publishUser)
+
+            if($publishUser != 'guest') {
+                return
+            }
+            // const publishUser = localStorage.getItem('deckPublishUser')
+            // console.log(publishUser)
+            // if(localStorage.getItem('deckPublishUser') != 'guest') {
+            //     return
+            // }
         }
 
         // remove extra spaces from deck name
         deckInfo.name.replace(/\s+/g,' ').trim()
 
+        // validate deck and user name
+        if (deckInfo.name == '' || deckInfo.author == '') {
+            // alert("Don't forget to give the deck a name :)")
+            openModal(Popup, {title: 'Invalid Name :s', message: "Don't forget to give the deck a name :)"})
+            return
+        }
+
         // format the simplified deck
-        const deck = $decklistAdvance.map(x => { 
+        let deck = $decklistAdvance.map(x => { 
             return {id: x.number, name: x.name, type: x.type, quantity: x.quantity}
         })
+
+        // sort the simplified deck by card number
+        deck = deck.sort((a, b) => a.id > b.id)
 
         // get ID of challenger
         const challengerID = $decklistAdvance.find(x => x.type === 'Challenger').id
@@ -70,10 +109,11 @@
         try {
             const data = {
                 name: deckInfo.name,
-                author: '000000000000000',
+                author: $currentUser ? $currentUser.id : '000000000000000', // use logged in user id if available, otherwise use guest user id
                 challenger: challengerID,
                 cards_json: JSON.stringify({deck: deck}),
-                tags: ['Grotto Tribal', 'Coin Flipping'],
+                tags: [],
+                author_name: deckInfo.author
             }
 
             const newRecord = await pb.collection('decks').create(data);
@@ -87,28 +127,35 @@
 
             decklistAdvance.reset()
             localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
+            localStorage.setItem('deckPublishUser', '')
 
-            goto('/decks')
+            // show upload confirmaton via popup
+            openModal(Popup, { title: 'Deck uploaded successfully!', icon: 'sparkles' })
+
+            // redirect after 2 seconds
+            setTimeout(() => goto('/decks'), '2000')
         } catch (error) {
             console.error(error)
+            openModal(Popup, { title: 'An error occured :(', message: 'Try again I guess ^^"' })
         }
-        
     }
 </script>
 
 <!-- HTML -->
-<div class="deck-header">
-    <div class="deck-builder-header">
+<div class="deck-builder-header">
+    <div class="deck-data-container">
         <div class="info-container">
             <div class="deck-author">
-                <input
+                <!-- <input
                     type="text" 
                     class="input-deck-author"
                     placeholder="Enter your username..."
                     bind:value={deckInfo.author}
                     pattern="[a-zA-Z0-9]*"
-                    title="Only letters and numbers allowed (for now)"
-                >
+                    title="Only letters and numbers allowed (for now)&#013;Automatically set to your Discord username if logged in!"
+                    readonly={$currentUser}
+                > -->
+                <p class="deck-author">{$currentUser ? $currentUser.username : 'Guest User'}</p>
             </div>
 
             <div class="deck-name">
@@ -122,27 +169,32 @@
             </div>
             
             <ul class="deck-tags">
-                {#each deckInfo.tags as tag}
+                <!-- {#each deckInfo.tags as tag}
                     <li><a href={$page.url.pathname}>{tag}</a></li>
-                {/each}
+                {/each} -->
+                <li><a href={$page.url.pathname}>＋ Add tag</a></li>
             </ul>
         </div>
 
         <div class="header-btns">
-            <a href="/create/decklist" class="btn btn-add-cards">
-                <span>＋</span>
-                <span>add cards</span>
+            <!-- Edit Deck -->
+            <a href="/create/decklist" class="btn">
+                {#if decklistAdvance.sum($decklistAdvance) < 30}
+                    <Icon name='plus' class='header-btn-icon' strokeWidth='2' />                 
+                    <span>Add Cards</span>
+                {:else}
+                    <Icon name='edit' class='header-btn-icon' strokeWidth='0' solid={true} />                 
+                    <span>Edit Deck</span>
+                {/if}
             </a>
-            <button class="btn btn-save-deck" on:click={uploadDeck}>
-                <span>💾</span>
+
+            <!-- Upload Deck -->
+            <button class="btn" on:click={uploadDeck}>
+                <Icon name='upload' strokeWidth=2/>
                 <span>Publish Deck</span>
             </button>
-            <!-- <button class="btn">🌐 Publish Deck</button> -->
         </div>
     </div>
 </div>
 
-<div class="header-divider">
-
-</div>
-
+<div class="header-divider-alt"></div>
