@@ -1,0 +1,167 @@
+// Background of the modal
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0,0,0,0.50);
+    background: transparentize($color: $colour-dark, $amount: 0.5);
+    background: $blue-blue-green-gradient;
+    opacity: 0.5;
+}
+
+// The container for the popup window
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // size
+    height: 100vh;
+    width: 100vw;
+
+    /* allow click-through to backdrop */
+    pointer-events: none;
+
+    // the actual modal window
+    .modal-contents {
+        // display
+        position: relative;
+        display: grid;
+        place-items: center;
+
+        // size
+        min-width: 20vw;
+        min-height: 10vw;
+        max-width: 50vw;
+        max-height: 66vh;
+
+        // design
+        background-color: $colour-mid-light;
+        background-color: white;
+        border-radius: 1rem;
+        border: 4px solid $colour-accent;
+        padding: 1rem 4rem;
+
+        pointer-events: auto;
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        p {
+            max-width: 60ch;
+            text-align: justify;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    // Icon to close button
+    .modal-close {
+        position: absolute;
+        top: -1rem;
+        right: -1rem;
+
+        height: 3rem;
+        width: 3rem;
+    
+        color: white;
+        color: var(--colour-dark);
+        border-radius: 100%;
+        background-color: white;
+
+        cursor: pointer;
+
+        // Hover effect
+        &:hover {
+            color: $colour-accent;
+        }
+
+        // SVG Icon
+        // .modal-close-icon {
+        //     height: 100%;
+        //     width: 100%;
+        // }
+    }
+
+    // The main popup Icon
+    .icon-container {
+        // display
+        display: grid;
+        place-items: center;
+
+        // size
+        height: 4rem;
+        width: 4rem;
+        margin-bottom: 1rem;
+
+        // design
+        background-color: white;
+        border-radius: 100%;
+
+        .popup-icon {
+            height: 110%;
+            width: 110%;
+            color: $colour-red;
+        }
+    }
+
+    .modal-btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+
+        margin-top: 2rem;
+
+        button {
+            padding: 0.5rem 2rem;
+            background-color: $colour-challenger;
+        }
+    }
+
+    .tag {
+        // font
+        font-family: $font-family;
+        font-size: 1rem;
+        color: #fff;
+        
+        // design
+        // background-color: rgba(154, 84, 37, 0.5) !important;
+        background-color: rgba(37,96,154,.5);
+        padding: 2px 8px;
+        border-radius: 8px;
+        opacity: 0.75;
+
+        // cursor
+        cursor: pointer;
+
+        // Hover
+        &:hover {
+            background-color: $colour-blue-dark !important;
+            transform: scale(1.1);
+        }
+
+        // when the button is active
+        &.active {
+            opacity: 1.0;
+            background-color: $colour-blue-dark;
+            font-weight: 700;
+        }
+
+        // disabled
+        &.disabled:not(.active) {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+}
+

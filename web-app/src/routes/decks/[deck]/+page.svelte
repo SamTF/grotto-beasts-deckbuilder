@@ -20,7 +20,7 @@
 <Meta title={data.deck.name} />
 
 <!-- HTML -->
-<DeckHeader name={data.deck.name} author={data.deck.expand.author.name} tags={data.deck.tags} />
+<DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} deck={fullCards} deckID={data.deck.id} />
 
 <!-- DECK -->
 <div class="center">
@@ -34,5 +34,5 @@
 <HandPreview cards={deck} />
 
 <!-- Graphs -->
-<div class="header-divider"></div>
+<div class="divider"></div>
 <DeckGraphs {fullCards} />

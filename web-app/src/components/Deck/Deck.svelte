@@ -7,7 +7,9 @@
     // Props
     export let deck = []
 
-    let previewImg = `${deck[0].id}. ${deck[0].name}.webp`
+    let previewImg = deck.length > 0 ?
+         `${deck[0].id}. ${deck[0].name}.webp`
+         : 'back.webp'
 
     const onCardHover = event => {
         console.log(event.detail)

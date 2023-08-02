@@ -5,11 +5,14 @@
     export let onClick = () => {}
     export let toggle = false
     export let cardType
+
+    let className = 'btn-toggle'
+    export { className as class };
 </script>
 
 <!-- HTML -->
 <button
-    class="btn-toggle"
+    class={className}
     class:active="{toggle}"
     data-card-type={cardType}
     on:click={() => {toggle = !toggle; onClick()}}

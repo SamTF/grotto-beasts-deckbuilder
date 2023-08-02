@@ -1,13 +1,41 @@
 <!-- JS -->
 <script>
     // Imports
-    import DeckGridItem from '$components/DeckExplorer/DeckGridItem.svelte';
-    import Meta from '$components/Meta/Meta.svelte';
+    import DeckGridItem from '$components/DeckExplorer/DeckGridItem.svelte'
+    import Meta from '$components/Meta/Meta.svelte'
+    import BtnToggle from '$components/BtnToggle.svelte'
+    import TagFilters from '$components/TagFilters.svelte'
+    import { createSearchStore, searchHandler, searchHandlerAdvance } from '$lib/stores/deckSearch'
+    import { onDestroy, onMount } from 'svelte'
 
     export let data
 
     console.log(data)
     // console.log(data.url.searchParams)
+
+    // Searchable data
+    const searchableDecks = data.decks.map((deck) => ({
+        ...deck,
+        searchTerms: `${deck.name} ${deck.expand.author.name} ${deck.expand.challenger.name}`
+    }))
+
+    // Svelte store stuff
+    const searchStore = createSearchStore(searchableDecks)
+
+    // watch for changes in the data
+    const unsub = searchStore.subscribe(model => searchHandler(model))
+    // const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+
+    // unsub to avoid memory leaks
+    onDestroy(() => {
+        unsub()
+    })
+
+    // Filtering by Tags
+    let tagFilters = []
+
+    // Searching by input
+    const clearSearch = () => {}
 </script>
 
 <!-- METADATA -->
@@ -19,6 +47,16 @@
 <div class="deck-explorer-container">
     <div class="explorer-filters">
         <h1>Grotto Explorer!</h1>
+
+        <div class="deck-search-bar">
+            <input
+                type="text"
+                class="input-search"
+                placeholder="Enter deck name, challenger, or author"
+                bind:value={$searchStore.search}
+            >
+            <button on:click={clearSearch}>✖</button>
+        </div>
 
         <div class="deck-types">
             <ul class="btn-tags">
@@ -33,16 +71,15 @@
             <button>Filters</button>
             <input type="text" name="deck-search" id="deck-search" placeholder="Search decks...">
         </div>
+
+        <!-- <TagFilters bind:tagFilters={tagFilters} /> -->
     </div>
 
     <!-- DECK GRID -->
     <div class="deck-grid">
-        
-            {#each data.decks as deck}
-                <DeckGridItem {deck} />
-            {/each}
-        
-        
+        {#each $searchStore.filtered as deck}
+            <DeckGridItem {deck} />
+        {/each}
     </div>
 
 </div>

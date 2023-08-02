@@ -6,7 +6,6 @@ export const cardTags = [
     "Any Tribal",
     "Aquatic Beast Tribal",
     "Aquatic Tribal Counter",
-    "Attachment",
     "Beast Removal",
     "Beast Tutor",
     "Best Character",
