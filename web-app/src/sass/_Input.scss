@@ -12,9 +12,10 @@ input {
     background: transparentize($color: $colour-dark, $amount: 0.5);
 
     border-radius: 50px;
-    background: #e2bd9d;
-    box-shadow: inset 20px 20px 50px #c0a185,
-                inset -20px -20px 50px #ffd9b5;
+    // background: #e2bd9d;
+    // box-shadow: inset 20px 20px 50px #c0a185,
+    //             inset -20px -20px 50px #ffd9b5;
+    background-color: $colour-mid-light;
 
     &[type="text"] {
         // width: 50%;
@@ -42,8 +43,18 @@ input {
             cursor: pointer;
             color: $colour-accent;
             transform: scale(1.1);
-            text-shadow: 1px 1px 10px black;
+            // text-shadow: 1px 1px 10px black;
         }
+    }
+}
+
+.deck-search-bar {
+    @extend .search-bar;
+
+    .input-search {
+        color: $colour-challenger;
+        background: white;
+        box-shadow: none;
     }
 }
 
