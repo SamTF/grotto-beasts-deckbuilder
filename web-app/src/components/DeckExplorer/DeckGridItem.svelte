@@ -4,7 +4,7 @@
 <script>
     export let deck
 
-    let challengerImg = `${deck.expand.challenger.number}. ${deck.expand.challenger.name}.webp`
+    $: challengerImg = `${deck.expand.challenger.number}. ${deck.expand.challenger.name}.webp`
     console.log(challengerImg)
 </script>
 
