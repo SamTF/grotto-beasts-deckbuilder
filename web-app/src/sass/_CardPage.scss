@@ -7,22 +7,45 @@
     grid-template-columns: 1fr 2fr;
     justify-content: center;
 
-    // Image scan of the card
-    .card-image {
-        max-height: 480px;
-        height: 50vh;
+    // margins
+    margin-bottom: 6rem;
 
-        img {
-            height: 100%;
+    // Mobile layout
+    @include mobile() {
+        // vertical grid layout
+        grid-template-columns: none;
+        grid-template-rows: 1fr auto;
+
+        // background-color: green;
+
+        .card-image-large {
+            max-height: 400px;
+            height: 400px;
+
+            margin-bottom: 4rem;
+
+            img {
+                height: 100%;
+            }
         }
-        
     }
+
+    // Image scan of the card
+    // .card-image {
+    //     max-height: 480px;
+    //     height: 50vh;
+
+    //     img {
+    //         height: 100%;
+    //     }
+        
+    // }
 
     // All the text and iconography info related to the card
     .card-info {
         // display
         display: grid;
-        grid-template-rows: 6rem auto 1fr auto;
+        grid-template-rows: auto auto 1fr auto;
         // header | tags | card effect | flavour text
         
         // size
@@ -36,6 +59,9 @@
             grid-template-columns: 7rem 1fr 7rem;
             justify-content: center;
             align-items: center;
+
+            // size
+            min-height: var(--space-xl);
 
             // design
             background-color: $colour-orange;
@@ -126,6 +152,12 @@
                 h1 {
                     font-size: 3rem;
                     font-weight: bold;
+                    line-height: 1;
+
+                    // mobile layout
+                    @include mobile {
+                        font-size: 2.5rem;
+                    }
                 }
     
                 h2 {
@@ -151,6 +183,15 @@
 
             // \n = new line
             white-space: pre-line;
+
+            // Mobile layout
+            @include mobile() {
+                align-items: start;
+                margin: 0 2rem;
+                margin-bottom: 2rem;
+                // font-size: 1.25rem;
+                // text-align: justify;
+            }
         }
 
         .flavour-text {
@@ -186,6 +227,12 @@
 
             // text
             text-transform: capitalize;
+
+            // mobile layout
+            @include mobile() {
+                font-size: 1.25rem;
+                margin: 0.5rem 2rem 2rem;
+            }
         }
     }
 }
