@@ -89,6 +89,24 @@
         margin-top: 2rem;
         margin-bottom: 6rem;
 
+        // Mobile layout
+        @include mobile {
+            // single-file row with more compact gird items
+            grid-template-columns: none;
+            grid-auto-rows: 100px;
+            gap: 1rem;
+
+            // make deck info bold
+            .deck-item-info {
+                font-weight: 700;
+            }
+
+            // center challenger image
+            .deck-grid-item {
+                background-position-y: center !important;
+            }
+        }
+
         .deck-grid-item {
             // display
             display: grid;
@@ -124,6 +142,7 @@
             .deck-item-author {
                 font-size: 1.25rem;
                 color: rgba(255, 255, 255, 0.75);
+                font-weight: 700;
             }
 
             // info like tags or views (bottom right aligned)

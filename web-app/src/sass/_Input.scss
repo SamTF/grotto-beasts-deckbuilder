@@ -28,7 +28,7 @@ input {
 .search-bar {
     width: 50%;
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-md);
 
     button {
         // position
@@ -45,6 +45,12 @@ input {
             transform: scale(1.1);
             // text-shadow: 1px 1px 10px black;
         }
+    }
+
+    // Mobile layout
+    @include mobile {
+        // much wider
+        width: 90%
     }
 }
 
