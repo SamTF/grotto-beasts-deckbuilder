@@ -1,0 +1,23 @@
+$space-xl: 4rem;
+$space-lg: 4rem;
+$space-md: 2rem;
+$space-sm: 1rem;
+
+:root {
+    --space-xl: 6rem;
+    --space-lg: 4rem;
+    --space-md: 2rem;
+    --space-sm: 1rem;
+
+    @include screen-laptop() {
+        --space-lg: 3rem;
+        --space-md: 2rem;
+        --space-sm: 1rem;
+    }
+
+    @include mobile() {
+        --space-lg: 3rem;
+        --space-md: 1rem;
+        --space-sm: 0.5rem;
+    }
+}

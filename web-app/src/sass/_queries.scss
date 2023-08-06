@@ -1,0 +1,26 @@
+// Media queries to display styling ONLY if viewport conditions are met
+// From: https://www.vincentntang.com/sass-media-queries/
+
+@mixin screen-min($min) {
+    @media (min-width: $min) {
+        @content
+    }
+};
+
+@mixin screen-max($max) {
+    @media (max-width: $max) {
+        @content
+    }    
+};
+
+@mixin mobile {
+    @media (max-width: 940px) {
+        @content
+    }
+};
+
+@mixin screen-laptop {
+    @media (max-width: 1600px) {
+        @content
+    }
+};
