@@ -17,6 +17,12 @@
 
     // margins
     margin-bottom: 2rem;
+
+    // Mobile layout
+    @include mobile {
+        grid-template-columns: none;
+        grid-template-rows: auto auto;
+    }
 }
 
 // The Container for the list of cards
@@ -53,6 +59,13 @@
     height: 400px;
     height: fit-content;
     
+    // Mobile layout
+    @include mobile {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+    }
 }
 
 // The Card Preview
@@ -70,6 +83,11 @@
         max-height: 350px;
         object-fit: scale-down;
         object-position: top;
+    }
+
+    // Mobile layout: hide this div
+    @include mobile {
+        display: none;
     }
 }
 
@@ -89,6 +107,20 @@
 
     // margins
     // margin-bottom: 2rem;
+
+    // Mobile layout
+    @include mobile {
+        // size
+        position: static;
+        width: 80vw;
+
+        // font
+        font-size: 1.25rem;
+
+        .header {
+            font-size: 1.5rem;
+        }
+    }
 
     .header {
         // size

@@ -33,14 +33,14 @@
     .left {
         display: flex;
         flex-direction: row;
-        gap: 1rem;
+        gap: var(--space-sm);
     }
 
     // right panel containing card count by type
     .right {
         display: flex;
         flex-direction: row;
-        gap: 2rem;
+        gap: var(--space-md);
 
         font-weight: bold;
 
