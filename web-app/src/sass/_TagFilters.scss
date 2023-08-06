@@ -1,0 +1,43 @@
+// Menu displaying toggleable button tags to filter cards or decks by
+
+// container for the filters and show/hide button
+.card-tag-filters-container {
+    display: grid;
+    place-items: center;
+    margin-bottom: 4rem;
+
+    // show/hide button and clear all button
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    // the actual filters
+    .card-tag-filters {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+
+        max-width: 70%;
+        margin-top: 1rem;
+
+        @include mobile {
+            // display
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+
+            // wider
+            width: 90vw;
+        }
+    }
+}
+
+
+
+
+
+.red-btn {
+    background-color: var(--colour-red);
+}
