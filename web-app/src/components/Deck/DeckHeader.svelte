@@ -23,9 +23,11 @@
         decklistAdvance.set(fullCards)
         localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
         localStorage.setItem("deckInfo", JSON.stringify({ 
-            name: `${name} 2`,
+            name: `${name} Remix`,
             author,
-            tags
+            tags,
+            remix: true,
+            remix_of: deck.id
         }))
 
         goto(`/create/deck?remix=${deck.id}`)
@@ -103,7 +105,7 @@
 
             {#if deck.remix}
                 <div class="remix">
-                    <p>Remix of <a href={`${deck.remix_of}`}>{deck.remix_of}</a></p>
+                    <p>Remix of <a href={`${deck.remix_of}`} data-sveltekit-reload>{deck.remix_of}</a></p>
                 </div>
             {/if}
         </div>

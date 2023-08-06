@@ -114,7 +114,9 @@
                 challenger: challengerID,
                 cards_json: JSON.stringify({deck: deck}),
                 tags: [],
-                author_name: deckInfo.author
+                author_name: deckInfo.author,
+                remix: deckInfo.remix || false,
+                remix_of: deckInfo.remix_of || ''
             }
 
             // edit deck instead of posting new one if in edit mode
