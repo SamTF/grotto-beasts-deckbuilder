@@ -20,7 +20,7 @@
 <Meta title={data.deck.name} />
 
 <!-- HTML -->
-<DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} deck={fullCards} deckID={data.deck.id} />
+<DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={fullCards} deck={data.deck}/>
 
 <!-- DECK -->
 <div class="center">
