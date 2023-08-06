@@ -150,39 +150,3 @@
         {/each}
     </div>
 </div>
-
-
-<!-- CSS -->
-<style>
-    .card-grid-container {
-        display: grid;
-        place-items: center;
-        width: 100%;
-    }
-
-    .card-grid {
-        /* display: flex; */
-        /* flex-direction: row; */
-        /* flex-wrap: wrap; */
-        /* gap: 4rem; */
-
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-auto-rows: auto;
-        grid-row-gap: 2rem;
-        place-items: center;
-
-        width: 80vw;
-    }
-
-    h1 {
-        margin-bottom: 2rem;
-    }
-
-    .type-filters {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-</style>
