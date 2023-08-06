@@ -1,0 +1,122 @@
+// The website Header and Navbar
+
+// The website header on every page
+header {
+    // display
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+
+    // size
+    height: 4rem;
+
+    // design
+    background-color: $colour-dark;
+
+    // User login area
+    .login-container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+
+        // Login button
+        .btn {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        // Discord Logo
+        img {
+            height: 1rem;
+        }
+    }
+    
+    // Grotto Builders Logo
+    .logo {
+        height: 2rem;
+    }
+
+    // Mobile layout
+    @include mobile() {
+        // display: none;
+
+        // position
+        position: fixed;
+        bottom: 3rem;
+
+        // display
+        grid-template-columns: auto 1fr auto;
+        // grid-auto-flow: row;
+        justify-content: center;
+        align-items: center;
+
+        // size
+        width: 100vw;
+        height: 8vh;
+
+        // design
+        background-color: transparent;
+
+        // Logo
+        .logo {
+            display: none;
+        }
+
+        // Discord login
+        .login-container {
+            display: none;
+        }
+    }
+}
+
+// The Navigation menu inside the Header
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    // background-color: green;
+
+    height: 100%;
+    width: 100%;
+    // width: 66%;
+
+    a {
+        text-decoration: none;
+        color: $colour-accent;
+        font-weight: bold;
+    }
+
+    // icon
+    .icon {
+        height: 3rem;
+    }
+}
+
+.mobile-nav-container {
+    // display
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+
+    // size
+    width: 75%;
+    height: 100%;
+    padding: 0 2rem;
+
+    // design
+    background-color: $colour-dark;
+    border-radius: 2rem;
+    border: 2px solid $colour-accent;
+    filter: drop-shadow(6px 6px 10px rgba(0, 0, 0, 0.75));
+
+    @include screen-min(960px) {
+        display: none !important;
+    }
+}
