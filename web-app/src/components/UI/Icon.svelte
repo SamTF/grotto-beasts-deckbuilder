@@ -25,7 +25,7 @@
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 {displayIcon.box} {displayIcon.box}"
     fill={solid ? colour ? colour : 'currentColor' : 'none'}
-    stroke={'currentColor'}
+    stroke={colour ? colour : 'currentColor'}
     stroke-width={strokeWidth}
     class={`icon ${className}`}
     stroke-linecap="round"
