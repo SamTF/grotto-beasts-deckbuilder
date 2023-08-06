@@ -1,3 +1,183 @@
+## v0.17.2
+
+- Soft-deprecated `$http.send({ data: object, ... })` in favour of `$http.send({ body: rawString, ... })`
+  to allow sending non-JSON body with the request ([#3058](https://github.com/pocketbase/pocketbase/discussions/3058)).
+  The existing `data` prop will still work, but it will be recommended to use `body` instead (_to send JSON you can use `JSON.stringify(...)` as body value_).
+
+- Added `core.RealtimeConnectEvent.IdleTimeout` field to allow specifying a different realtime idle timeout duration per client basis ([#3054](https://github.com/pocketbase/pocketbase/discussions/3054)).
+
+- Fixed `apis.RequestData` deprecation log note ([#3068](https://github.com/pocketbase/pocketbase/pull/3068); thanks @gungjodi).
+
+
+## v0.17.1
+
+- Use relative path when redirecting to the OAuth2 providers page in the Admin UI to support subpath deployments ([#3026](https://github.com/pocketbase/pocketbase/pull/3026); thanks @sonyarianto).
+
+- Manually trigger the `OnBeforeServe` hook for `tests.ApiScenario` ([#3025](https://github.com/pocketbase/pocketbase/discussions/3025)).
+
+- Trigger the JSVM `cronAdd()` handler only on app `serve` to prevent unexpected (and eventually duplicated) cron handler calls when custom console commands are used ([#3024](https://github.com/pocketbase/pocketbase/discussions/3024#discussioncomment-6592703)).
+
+- The `console.log()` messages are now written to the `stdout` instead of `stderr`.
+
+
+## v0.17.0
+
+- New more detailed guides for using PocketBase as framework (both Go and JS).
+  _If you find any typos or issues with the docs please report them in https://github.com/pocketbase/site._
+
+- Added new experimental JavaScript app hooks binding via [goja](https://github.com/dop251/goja).
+  They are available by default with the prebuilt executable if you create `*.pb.js` file(s) in the `pb_hooks` directory.
+  Lower your expectations because the integration comes with some limitations. For more details please check the [Extend with JavaScript](https://pocketbase.io/docs/js-overview/) guide.
+  Optionally, you can also enable the JS app hooks as part of a custom Go build for dynamic scripting but you need to register the `jsvm` plugin manually:
+  ```go
+  jsvm.MustRegister(app core.App, config jsvm.Config{})
+  ```
+
+- Added Instagram OAuth2 provider ([#2534](https://github.com/pocketbase/pocketbase/pull/2534); thanks @pnmcosta).
+
+- Added VK OAuth2 provider ([#2533](https://github.com/pocketbase/pocketbase/pull/2533); thanks @imperatrona).
+
+- Added Yandex OAuth2 provider ([#2762](https://github.com/pocketbase/pocketbase/pull/2762); thanks @imperatrona).
+
+- Added new fields to `core.ServeEvent`:
+  ```go
+  type ServeEvent struct {
+    App    App
+    Router *echo.Echo
+    // new fields
+    Server      *http.Server      // allows adjusting the HTTP server config (global timeouts, TLS options, etc.)
+    CertManager *autocert.Manager // allows adjusting the autocert options (cache dir, host policy, etc.)
+  }
+  ```
+
+- Added `record.ExpandedOne(rel)` and `record.ExpandedAll(rel)` helpers to retrieve casted single or multiple expand relations from the already loaded "expand" Record data.
+
+- Added rule and filter record `Dao` helpers:
+  ```go
+  app.Dao().FindRecordsByFilter("posts", "title ~ 'lorem ipsum' && visible = true", "-created", 10)
+  app.Dao().FindFirstRecordByFilter("posts", "slug='test' && active=true")
+  app.Dao().CanAccessRecord(record, requestInfo, rule)
+  ```
+
+- Added `Dao.WithoutHooks()` helper to create a new `Dao` from the current one but without the create/update/delete hooks.
+
+- Use a default fetch function that will return all relations in case the `fetchFunc` argument of `Dao.ExpandRecord(record, expands, fetchFunc)` and `Dao.ExpandRecords(records, expands, fetchFunc)` is `nil`.
+
+- For convenience it is now possible to call `Dao.RecordQuery(collectionModelOrIdentifier)` with just the collection id or name.
+  In case an invalid collection id/name string is passed the query will be resolved with cancelled context error.
+
+- Refactored `apis.ApiError` validation errors serialization to allow `map[string]error` and `map[string]any` when generating the public safe formatted `ApiError.Data`.
+
+- Added support for wrapped API errors (_in case Go 1.20+ is used with multiple wrapped errors, the first `apis.ApiError` takes precedence_).
+
+- Added `?download=1` file query parameter to the file serving endpoint to force the browser to always download the file and not show its preview.
+
+- Added new utility `github.com/pocketbase/pocketbase/tools/template` subpackage to assist with rendering HTML templates using the standard Go `html/template` and `text/template` syntax.
+
+- Added `types.JsonMap.Get(k)` and `types.JsonMap.Set(k, v)` helpers for the cases where the type aliased direct map access is not allowed (eg. in [goja](https://pkg.go.dev/github.com/dop251/goja#hdr-Maps_with_methods)).
+
+- Soft-deprecated `security.NewToken()` in favor of `security.NewJWT()`.
+
+- `Hook.Add()` and `Hook.PreAdd` now returns a unique string identifier that could be used to remove the registered hook handler via `Hook.Remove(handlerId)`.
+
+- Changed the after* hooks to be called right before writing the user response, allowing users to return response errors from the after hooks.
+  There is also no longer need for returning explicitly `hook.StopPropagtion` when writing custom response body in a hook because we will skip the finalizer response body write if a response was already "committed".
+
+- ⚠️ Renamed `*Options{}` to `Config{}` for consistency and replaced the unnecessary pointers with their value equivalent to keep the applied configuration defaults isolated within their function calls:
+  ```go
+  old: pocketbase.NewWithConfig(config *pocketbase.Config) *pocketbase.PocketBase
+  new: pocketbase.NewWithConfig(config pocketbase.Config) *pocketbase.PocketBase
+
+  old: core.NewBaseApp(config *core.BaseAppConfig) *core.BaseApp
+  new: core.NewBaseApp(config core.BaseAppConfig) *core.BaseApp
+
+  old: apis.Serve(app core.App, options *apis.ServeOptions) error
+  new: apis.Serve(app core.App, config apis.ServeConfig) (*http.Server, error)
+
+  old: jsvm.MustRegisterMigrations(app core.App, options *jsvm.MigrationsOptions)
+  new: jsvm.MustRegister(app core.App, config jsvm.Config)
+
+  old: ghupdate.MustRegister(app core.App, rootCmd *cobra.Command, options *ghupdate.Options)
+  new: ghupdate.MustRegister(app core.App, rootCmd *cobra.Command, config ghupdate.Config)
+
+  old: migratecmd.MustRegister(app core.App, rootCmd *cobra.Command, options *migratecmd.Options)
+  new: migratecmd.MustRegister(app core.App, rootCmd *cobra.Command, config migratecmd.Config)
+  ```
+
+- ⚠️ Changed the type of `subscriptions.Message.Data` from `string` to `[]byte` because `Data` usually is a json bytes slice anyway.
+
+- ⚠️ Renamed `models.RequestData` to `models.RequestInfo` and soft-deprecated `apis.RequestData(c)` in favor of `apis.RequestInfo(c)` to avoid the stuttering with the `Data` field.
+  _The old `apis.RequestData()` method still works to minimize the breaking changes but it is recommended to replace it with `apis.RequestInfo(c)`._
+
+- ⚠️ Changes to the List/Search APIs
+    - Added new query parameter `?skipTotal=1` to skip the `COUNT` query performed with the list/search actions ([#2965](https://github.com/pocketbase/pocketbase/discussions/2965)).
+      If `?skipTotal=1` is set, the response fields `totalItems` and `totalPages` will have `-1` value (this is to avoid having different JSON responses and to differentiate from the zero default).
+      With the latest JS SDK 0.16+ and Dart SDK v0.11+ versions `skipTotal=1` is set by default for the `getFirstListItem()` and `getFullList()` requests.
+
+    - The count and regular select statements also now executes concurrently, meaning that we no longer perform normalization over the `page` parameter and in case the user
+      request a page that doesn't exist (eg. `?page=99999999`) we'll return empty `items` array.
+
+    - Reverted the default `COUNT` column to `id` as there are some common situations where it can negatively impact the query performance.
+      Additionally, from this version we also set `PRAGMA temp_store = MEMORY` so that also helps with the temp B-TREE creation when `id` is used.
+      _There are still scenarios where `COUNT` queries with `rowid` executes faster, but the majority of the time when nested relations lookups are used it seems to have the opposite effect (at least based on the benchmarks dataset)._
+
+- ⚠️ Disallowed relations to views **from non-view** collections ([#3000](https://github.com/pocketbase/pocketbase/issues/3000)).
+  The change was necessary because I wasn't able to find an efficient way to track view changes and the previous behavior could have too many unexpected side-effects (eg. view with computed ids).
+  There is a system migration that will convert the existing view `relation` fields to `json` (multiple) and `text` (single) fields.
+  This could be a breaking change if you have `relation` to view and use `expand` or some of the `relation` view fields as part of a collection rule.
+
+- ⚠️ Added an extra `action` argument to the `Dao` hooks to allow skipping the default persist behavior.
+  In preparation for the logs generalization, the `Dao.After*Func` methods now also allow returning an error.
+
+- Allowed `0` as `RelationOptions.MinSelect` value to avoid the ambiguity between 0 and non-filled input value ([#2817](https://github.com/pocketbase/pocketbase/discussions/2817)).
+
+- Fixed zero-default value not being used if the field is not explicitly set when manually creating records ([#2992](https://github.com/pocketbase/pocketbase/issues/2992)).
+  Additionally, `record.Get(field)` will now always return normalized value (the same as in the json serialization) for consistency and to avoid ambiguities with what is stored in the related DB table.
+  The schema fields columns `DEFAULT` definition was also updated for new collections to ensure that `NULL` values can't be accidentally inserted.
+
+- Fixed `migrate down` not returning the correct `lastAppliedMigrations()` when the stored migration applied time is in seconds.
+
+- Fixed realtime delete event to be called after the record was deleted from the DB (_including transactions and cascade delete operations_).
+
+- Other minor fixes and improvements (typos and grammar fixes, updated dependencies, removed unnecessary 404 error check in the Admin UI, etc.).
+
+
+## v0.16.10
+
+- Added multiple valued fields (`relation`, `select`, `file`) normalizations to ensure that the zero-default value of a newly created multiple field is applied for already existing data ([#2930](https://github.com/pocketbase/pocketbase/issues/2930)).
+
+
+## v0.16.9
+
+- Register the `eagerRequestInfoCache` middleware only for the internal `api` group routes to avoid conflicts with custom route handlers ([#2914](https://github.com/pocketbase/pocketbase/issues/2914)).
+
+
+## v0.16.8
+
+- Fixed unique validator detailed error message not being returned when camelCase field name is used ([#2868](https://github.com/pocketbase/pocketbase/issues/2868)).
+
+- Updated the index parser to allow no space between the table name and the columns list ([#2864](https://github.com/pocketbase/pocketbase/discussions/2864#discussioncomment-6373736)).
+
+- Updated go deps.
+
+
+## v0.16.7
+
+- Minor optimization for the list/search queries to use `rowid` with the `COUNT` statement when available.
+  _This eliminates the temp B-TREE step when executing the query and for large datasets (eg. 150k) it could have 10x improvement (from ~580ms to ~60ms)._
+
+
+## v0.16.6
+
+- Fixed collection index column sort normalization in the Admin UI ([#2681](https://github.com/pocketbase/pocketbase/pull/2681); thanks @SimonLoir).
+
+- Removed unnecessary admins count in `apis.RequireAdminAuthOnlyIfAny()` middleware ([#2726](https://github.com/pocketbase/pocketbase/pull/2726); thanks @svekko).
+
+- Fixed `multipart/form-data` request bind not populating map array values ([#2763](https://github.com/pocketbase/pocketbase/discussions/2763#discussioncomment-6278902)).
+
+- Upgraded npm and Go dependencies.
+
+
 ## v0.16.5
 
 - Fixed the Admin UI serialization of implicit relation display fields ([#2675](https://github.com/pocketbase/pocketbase/issues/2675)).
@@ -8,7 +188,7 @@
 ## v0.16.4
 
 - Fixed the selfupdate command not working on Windows due to missing `.exe` in the extracted binary path ([#2589](https://github.com/pocketbase/pocketbase/discussions/2589)).
-  _Note that the command on Windows will work on v0.16.4+ onwards, meaning that you still will have to update manually one more time to v0.16.4._
+  _Note that the command on Windows will work from v0.16.4+ onwards, meaning that you still will have to update manually one more time to v0.16.4._
 
 - Added `int64`, `int32`, `uint`, `uint64` and `uint32` support when scanning `types.DateTime` ([#2602](https://github.com/pocketbase/pocketbase/discussions/2602))
 
@@ -152,7 +332,7 @@
   It works with a short lived (~5min) file token passed as query param with the file url.
   For more details and example, you could check https://pocketbase.io/docs/files-handling/#protected-files.
 
-- **!** Fixed typo in `Record.WithUnkownData()` -> `Record.WithUnknownData()`.
+- ⚠️ Fixed typo in `Record.WithUnkownData()` -> `Record.WithUnknownData()`.
 
 - Added simple loose wildcard search term support in the Admin UI.
 
@@ -243,16 +423,16 @@
 
 - Added CGO linux target for the prebuilt executable.
 
-- **!** Renamed `daos.GetTableColumns()` to `daos.TableColumns()` for consistency with the other Dao table related helpers.
+- ⚠️ Renamed `daos.GetTableColumns()` to `daos.TableColumns()` for consistency with the other Dao table related helpers.
 
-- **!** Renamed `daos.GetTableInfo()` to `daos.TableInfo()` for consistency with the other Dao table related helpers.
+- ⚠️ Renamed `daos.GetTableInfo()` to `daos.TableInfo()` for consistency with the other Dao table related helpers.
 
-- **!** Changed `types.JsonArray` to support specifying a generic type, aka. `types.JsonArray[T]`.
+- ⚠️ Changed `types.JsonArray` to support specifying a generic type, aka. `types.JsonArray[T]`.
   If you have previously used `types.JsonArray`, you'll have to update it to `types.JsonArray[any]`.
 
-- **!** Registered the `RemoveTrailingSlash` middleware only for the `/api/*` routes since it is causing issues with subpath file serving endpoints ([#2072](https://github.com/pocketbase/pocketbase/issues/2072)).
+- ⚠️ Registered the `RemoveTrailingSlash` middleware only for the `/api/*` routes since it is causing issues with subpath file serving endpoints ([#2072](https://github.com/pocketbase/pocketbase/issues/2072)).
 
-- **!** Changed the request logs `method` value to UPPERCASE, eg. "get" => "GET" ([#1956](https://github.com/pocketbase/pocketbase/discussions/1956)).
+- ⚠️ Changed the request logs `method` value to UPPERCASE, eg. "get" => "GET" ([#1956](https://github.com/pocketbase/pocketbase/discussions/1956)).
 
 - Other minor UI improvements.
 
@@ -309,11 +489,11 @@
 
 - Added `UploadedFiles` field to the `RecordCreateEvent` and `RecordUpdateEvent` event structs.
 
-- **!** Moved file upload after the record persistent to allow setting custom record id safely from the `OnModelBeforeCreate` hook.
+- ⚠️ Moved file upload after the record persistent to allow setting custom record id safely from the `OnModelBeforeCreate` hook.
 
-- **!** Changed `System.GetFile()` to return directly `*blob.Reader` instead of the `io.ReadCloser` interface.
+- ⚠️ Changed `System.GetFile()` to return directly `*blob.Reader` instead of the `io.ReadCloser` interface.
 
-- **!** Changed `To`, `Cc` and `Bcc` of `mailer.Message` to `[]mail.Address` for consistency and to allow multiple recipients and optional name.
+- ⚠️ Changed `To`, `Cc` and `Bcc` of `mailer.Message` to `[]mail.Address` for consistency and to allow multiple recipients and optional name.
 
     If you are sending custom emails, you'll have to replace:
     ```go
@@ -333,11 +513,11 @@
     }
     ```
 
-- **!** Refactored the Authentik integration as a more generic "OpenID Connect" provider (`oidc`) to support any OIDC provider (Okta, Keycloak, etc.).
+- ⚠️ Refactored the Authentik integration as a more generic "OpenID Connect" provider (`oidc`) to support any OIDC provider (Okta, Keycloak, etc.).
   _If you've previously used Authentik, make sure to rename the provider key in your code to `oidc`._
   _To enable more than one OIDC provider you can use the additional `oidc2` and `oidc3` provider keys._
 
-- **!** Removed the previously deprecated `Dao.Block()` and `Dao.Continue()` helpers in favor of `Dao.NonconcurrentDB()`.
+- ⚠️ Removed the previously deprecated `Dao.Block()` and `Dao.Continue()` helpers in favor of `Dao.NonconcurrentDB()`.
 
 - Updated the internal redirects to allow easier subpath deployment when behind a reverse proxy.
 
@@ -442,7 +622,7 @@
     ```
     For all those event hooks `*hook.Hook` was replaced with `*hooks.TaggedHook`, but the hook methods signatures are the same so it should behave as it was previously if no tags were specified.
 
-- **!** Fixed the `json` field **string** value normalization ([#1703](https://github.com/pocketbase/pocketbase/issues/1703)).
+- ⚠️ Fixed the `json` field **string** value normalization ([#1703](https://github.com/pocketbase/pocketbase/issues/1703)).
 
     In order to support seamlessly both `application/json` and `multipart/form-data`
     requests, the following normalization rules are applied if the `json` field is a
