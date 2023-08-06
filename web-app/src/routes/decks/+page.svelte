@@ -42,7 +42,7 @@
 <Meta title='Deck Explorer' />
 
 <!-- HTML -->
-<div class="header-divider" style="height: 6rem; margin-bottom: 0;"></div>
+<div class="header-divider" style="margin-bottom: 0;"></div>
 
 <div class="deck-explorer-container">
     <div class="explorer-filters">
