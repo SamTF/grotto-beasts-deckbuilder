@@ -31,31 +31,31 @@
 <div class="page-container center">
     <div class="page-body">
         <div class="card-page-container">
-            <div class="card-image debug-outline">
+            <div class="card-image-large">
                 <img src={`/images/cards/${cardImg}`} alt={cardImg}>
             </div>
 
             <!-- All Card related info -->
-            <div class="card-info debug-outline">
+            <div class="card-info">
                 <!-- Top Line -->
-                <div class="header debug-outline">
+                <div class="header">
 
                     {#if data.card.type == "Challenger"}
                         <!-- Challenger Goal -->
-                        <div class="card-goal debug-outline">
+                        <div class="card-goal">
                             <span>{data.card.goal}</span>
                         </div>
 
                     {:else}
                         <!-- Summoning Cost -->
-                        <div class="card-cost debug-outline">
+                        <div class="card-cost">
                             <span>{data.card.cost}</span>
                             <div class="icon">🌟</div>
                         </div>
                     {/if}
                     
                     <!-- Name and Type -->
-                    <div class="text debug-outline" style={headerStyle}>
+                    <div class="text" style={headerStyle}>
                         <div class="card-name">
                             <h1>{data.card.name}</h1>
                             <span class="card-number">#{data.card.number}</span>
@@ -70,7 +70,7 @@
 
                     <!-- Power -->
                     {#if data.card.type == "Challenger" || data.card.type == "Beast"}
-                        <div class="card-power debug-outline">
+                        <div class="card-power">
                             <span>{data.card.power}</span>
                         </div>
                     {/if}
@@ -85,12 +85,12 @@
                 </ul>
 
                 <!-- Card Effect -->
-                <div class="card-effect debug-outline">
+                <div class="card-effect">
                     <p>{data.card.effect}</p>
                 </div>
 
                 <!-- Flavour Text -->
-                <div class="flavour-text debug-outline">
+                <div class="flavour-text">
                     {#if data.card.flavour}
                         <hr>
                         <p>{data.card.flavour}</p>
@@ -100,3 +100,5 @@
         </div>
     </div>
 </div>
+
+<div class="header-divider" style="margin-bottom: 0;"></div>
