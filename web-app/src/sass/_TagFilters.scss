@@ -20,7 +20,7 @@
         flex-wrap: wrap;
         gap: 1rem;
 
-        max-width: 70%;
+        width: 70%;
         margin-top: 1rem;
 
         @include mobile {
@@ -29,7 +29,7 @@
             grid-template-columns: 1fr 1fr 1fr;
 
             // wider
-            width: 90vw;
+            width: 100%;
         }
     }
 }
