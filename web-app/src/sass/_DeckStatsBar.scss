@@ -34,6 +34,11 @@
         display: flex;
         flex-direction: row;
         gap: var(--space-sm);
+
+        // Mobile layout
+        @include mobile {
+            font-weight: 700;
+        }
     }
 
     // right panel containing card count by type

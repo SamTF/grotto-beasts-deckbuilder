@@ -102,6 +102,17 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
                 padding: 2px 8px;
                 border-radius: 8px;
             }
+
+            // Mobile layout
+            @include mobile {
+                font-size: 1rem;
+                font-weight: 400;
+
+                li {
+                    display: grid;
+                    place-items: center;
+                }
+            }
         }
     }
 
@@ -122,7 +133,7 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
             // gap: 2rem;
 
             // margins
-            margin-top: 1rem;
+            margin-top: 2rem;
         }
 
         // General header button style
