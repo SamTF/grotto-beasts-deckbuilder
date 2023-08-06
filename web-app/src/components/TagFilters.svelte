@@ -57,33 +57,3 @@
         </div>
     {/if}
 </div>
-
-<!-- CSS -->
-<style>
-    .card-tag-filters-container {
-        display: grid;
-        place-items: center;
-        margin-bottom: 4rem;
-    }
-
-    .card-tag-filters {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-
-        max-width: 70%;
-        margin-top: 1rem;
-    }
-
-    .buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .red-btn {
-        background-color: var(--colour-red);
-    }
-</style>
-
