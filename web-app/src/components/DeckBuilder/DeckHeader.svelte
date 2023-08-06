@@ -6,18 +6,18 @@
     import { goto } from '$app/navigation'
     import { pb, currentUser } from '$lib/pocketbase.js'
     import { decklistAdvance } from '$lib/stores/decklist'
-    import Icon from '../UI/Icon.svelte'
-    import { openModal } from 'svelte-modals'
-    import Popup from '$components/UI/Popups/Popup.svelte';
-    import PopupPublishUser from '$components/UI/Popups/PopupPublishUser.svelte'
     import { publishUser } from '$lib/stores/publishUser'
+    import Icon from '../UI/Icon.svelte'
+    import Popup from '$components/UI/Popups/Popup.svelte'
+    import PopupPublishUser from '$components/UI/Popups/PopupPublishUser.svelte'
+    import { openModal } from 'svelte-modals'
     
     // Deck Info
     let deckInfo = {
         name: '',
-        author: '',
+        // author: '',
         author: $currentUser ? $currentUser.username : 'Guest User',
-        tags: ['+ Add tag...']
+        tags: []
     }
 
     // DECK NAME: Allow only alphanumeric character and spaces, but remove extra spaces later
@@ -31,6 +31,7 @@
             .replace(/[^a-z0-9]/gi, '')
     }
 
+    // automatically set username to logged in user
     $: if ($currentUser) deckInfo.author = $currentUser.username
 
     // Save/Load deck metadata to local storage
@@ -116,13 +117,28 @@
                 author_name: deckInfo.author
             }
 
-            const newRecord = await pb.collection('decks').create(data);
+            // edit deck instead of posting new one if in edit mode
+            if (deckInfo.edit == true) {
+                console.log("EDIT MODE!! \nEDIT MODE EDMOEMOEMOE!!!")
+                const updatedRecord = await pb.collection('decks').update(deckInfo.deckID, {
+                    name: deckInfo.name,
+                    challenger: challengerID,
+                    cards_json: JSON.stringify({deck: deck}), 
+                })
+            }
+            // otherwise create a new deck
+            else {
+                const newRecord = await pb.collection('decks').create(data);
+            }
+            
 
             // Reset local storage
             deckInfo = {
                 name: '',
                 author: '',
-                tags: ['+ Add tag...']
+                tags: [],
+                edit: false,
+                deckID: ''
             }
 
             decklistAdvance.reset()
@@ -133,7 +149,10 @@
             openModal(Popup, { title: 'Deck uploaded successfully!', icon: 'sparkles' })
 
             // redirect after 2 seconds
-            setTimeout(() => goto('/decks'), '2000')
+            // setTimeout(() => goto('/decks'), '2000')
+
+            // redirect instantly
+            goto('/decks')
         } catch (error) {
             console.error(error)
             openModal(Popup, { title: 'An error occured :(', message: 'Try again I guess ^^"' })
