@@ -12,6 +12,7 @@ header {
 
     // design
     background-color: $colour-dark;
+    z-index: 10;
 
     // User login area
     .login-container {
@@ -103,7 +104,6 @@ nav {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    z-index: 10;
 
     // size
     width: 75%;
