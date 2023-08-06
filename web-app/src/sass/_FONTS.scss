@@ -6,3 +6,18 @@
 $font-family: 'Alegreya Sans', 'Roboto', sans-serif;
 // $text-colour: #1a1a1a;
 $font-size: 16px;
+$font-size-md: 14px;
+$font-size-sm: 12px;
+
+// setting reactive font sizes
+:root {
+    font-size: $font-size;
+    
+    // decrease default font size on smaller screens
+    @include screen-laptop() {
+        font-size: $font-size-md;
+    };
+    @include mobile() {
+        font-size: $font-size-sm;
+    };
+}
