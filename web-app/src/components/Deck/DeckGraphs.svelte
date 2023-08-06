@@ -70,7 +70,13 @@
     const manaTooltip = (tooltipItems) => {
         const label = tooltipItems.label
         const value = tooltipItems.raw
-        return `${value} cards can be summoned for ${label} mana`
+        return `   ${value} cards can be summoned for ${label} mana`
+    }
+
+    const beastTypeTooltip = (tooltipItems) => {
+        const label = tooltipItems.label
+        const value = tooltipItems.raw
+        return `   ${value} ${label} Beasts`
     }
 
     // Chart styling options
@@ -88,7 +94,7 @@
                     display: true,
                     text: 'Summoning Cost',
                     // color: 'hsla(0, 0%, 0%, 0.75)',
-                    // color: '#370101',
+                    color: '#370101',
                     font: { size: 16, family: '"Alegreya Sans","Roboto",sans-serif' },
                 },
             },
@@ -99,7 +105,7 @@
                     display: true,
                     text: 'Number of Cards',
                     // color: 'hsla(0, 0%, 0%, 0.75)',
-                    // color: '#370101',
+                    color: '#370101',
                     font: { size: 16, family: '"Alegreya Sans","Roboto",sans-serif' },
                 },
             },
@@ -148,7 +154,11 @@
             }},
         },
         plugins: {
-            title: {text: 'Beast Types', display: true}
+            title: {text: 'Beast Types', display: true},
+            tooltip: { callbacks: {
+                label: beastTypeTooltip,
+                title: function() {return null},
+            }}
         }
     }
 </script>
@@ -159,12 +169,12 @@
 
     <div class="graphs-container">
         <!-- Mana Curve -->
-        <div class="mana-curve">
+        <div class="graph-item mana-curve">
             <Bar data={manaData} options={manaOptions} />
         </div>
 
         <!-- Beast Types -->
-        <div class="beast-types">
+        <div class="graph-item beast-types">
             <Bar data={beastData} options={beastOptions} />
         </div>
     </div>
