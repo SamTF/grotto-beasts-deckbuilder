@@ -4,7 +4,8 @@
 .header-divider {
     // size & margins
     height: 4rem;
-    margin-bottom: 2rem;
+    // margin-bottom: 2rem;
+    margin-bottom: var(--space-md);
 
     // design
     background-color: darken($color: $colour-light, $amount: 15%);
