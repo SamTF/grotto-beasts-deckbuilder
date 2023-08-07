@@ -10,7 +10,7 @@ footer {
     // size
     width: 100%;
     height: 4rem;
-    // margin-top: 4rem;
+    margin-top: 4rem;
 
     // display
     display: grid;
@@ -27,7 +27,7 @@ footer {
     @include mobile() {
         // size
         height: 6rem;
-        // margin: 0;
+        margin: 0;
 
         // font
         font-weight: 700;
