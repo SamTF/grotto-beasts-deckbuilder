@@ -92,8 +92,6 @@
     {:else}
         <b>[not signed in]</b>
     {/if}
-
-    <button on:click={showPopup}>Show Popup</button>
 </div>
 
 <!-- CSS -->
