@@ -1,0 +1,159 @@
+// About page
+
+// The page container
+.welcome-page {
+    display: grid;
+    place-items: center;
+
+    a {
+        text-decoration: underline;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    // Panel for each topic section
+    .panel {
+        /* display */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    
+        /* size */
+        width: 36rem;
+        margin-bottom: 2rem;
+        padding: 1rem 2rem;
+        
+        /* design */
+        background-color: var(--colour-mid-light);
+        border-radius: 1rem;
+
+        // Mobile layout
+        @include mobile {
+            width: 90vw;
+        }
+    }
+
+    // The Grotto Builders logo
+    .site-logo {
+        width: 100%;
+    }
+
+    // Create ✦ Share ✦ Explore
+    .tagline {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    
+        width: 100%;
+    
+        color: white;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    // the panel header
+    .made-by {
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: var(--colour-red);
+        letter-spacing: 2px;
+        /* -webkit-text-stroke: 1px;
+        -webkit-text-stroke-color: var(--colour-accent); */
+    }
+
+    // panel main text
+    .body-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    // line seperating topic in panel
+    hr {
+        width: 66%;
+        border-top: 1px solid rgba(0, 0, 0, 0.425);
+        border-bottom: 0px;
+        align-self: center;
+        margin: 0.5rem 0rem;
+    }
+
+    // Special thanks section
+    .special-thanks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    
+        width: 100%;
+
+        p::before {
+            content: "✦ ";
+        }
+    }
+
+    // Route page buttons
+    .buttons-panel {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: var(--space-md);
+        margin-bottom: var(--space-lg);
+    
+        width: 50vw;
+
+        // Route button
+        .route-icon-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-sm);
+        
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+        
+            background-color: var(--colour-dark);
+            color: var(--colour-accent);
+            outline: 4px solid $colour-accent;
+
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+
+            transition: all 200ms ease;
+
+            // Image icon
+            img {
+                max-height: 100%;
+        
+            }
+
+            // Hover effect
+            &:hover {
+                background-color: $colour-challenger;
+                outline-offset: 1rem;
+                outline-style: dashed;
+            }
+        }
+
+        // Mobile layout
+        @include mobile {
+            width: 90vw;
+
+            .route-icon-btn {
+                height: 8rem;
+                width: 8rem;
+                font-size: 0.8rem;
+                text-align: center;
+                text-transform: uppercase;
+
+                span {
+                    // display: none;
+                }
+
+                img {
+                    max-height: 80%;
+                }
+            }
+        }
+    }
+}
