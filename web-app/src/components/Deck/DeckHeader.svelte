@@ -5,9 +5,10 @@
     import { currentUser, pb } from '$lib/pocketbase.js'
     import { decklistAdvance } from '$lib/stores/decklist'
     import { goto } from '$app/navigation'
-    import Icon from '../UI/Icon.svelte'
+    import Icon from '$components/UI/Icon.svelte'
     import { openModal } from 'svelte-modals'
     import Popup from '$components/UI/Popups/Popup.svelte'
+    import PopupDeleteDeck from '$components/UI/Popups/PopupDeleteDeck.svelte'
     
     // Props
     export let author, name, tags, authorID, fullCards
@@ -48,14 +49,7 @@
     }
 
     const deleteDeck = async () => {
-        try {
-            const data = await pb.collection('decks').delete(deck.id)
-            console.log(data)
-            openModal(Popup, { title: 'Deck successfully deleted', icon: 'sparkles' })
-            goto('/decks')
-        } catch (error) {
-            openModal(Popup, { title: 'Error x(', message: error })
-        }
+        openModal(PopupDeleteDeck, { deckID: deck.id })
     }
 
     const bookmarkDeck = async () => {
