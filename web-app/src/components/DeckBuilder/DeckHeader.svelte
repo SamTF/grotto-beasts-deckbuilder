@@ -5,11 +5,12 @@
     import { onMount } from 'svelte'
     import { goto } from '$app/navigation'
     import { pb, currentUser } from '$lib/pocketbase.js'
-    import { decklistAdvance } from '$lib/stores/decklist'
+    import { decklistAdvance, deckTags } from '$lib/stores/decklist'
     import { publishUser } from '$lib/stores/publishUser'
-    import Icon from '../UI/Icon.svelte'
+    import Icon from '$components/UI/Icon.svelte'
     import Popup from '$components/UI/Popups/Popup.svelte'
     import PopupPublishUser from '$components/UI/Popups/PopupPublishUser.svelte'
+    import PopupTags from '$components/UI/Popups/PopupTags.svelte'
     import { openModal } from 'svelte-modals'
     
     // Deck Info
@@ -40,6 +41,7 @@
         sessionStorage.setItem("deckInfo", JSON.stringify(deckInfo))
         localStorage.setItem("deckInfo", JSON.stringify(deckInfo))
     }
+    $: deckInfo.tags = $deckTags
 
     // Save/Load decklist data to/from Session Storage
     onMount(() => {
@@ -49,6 +51,7 @@
 
         if (store) {
             deckInfo = JSON.parse(store)
+            $deckTags = deckInfo.tags
         }
 
         saveStore = true
@@ -113,7 +116,7 @@
                 author: $currentUser ? $currentUser.id : '000000000000000', // use logged in user id if available, otherwise use guest user id
                 challenger: challengerID,
                 cards_json: JSON.stringify({deck: deck}),
-                tags: [],
+                tags: deckInfo.tags,
                 author_name: deckInfo.author,
                 remix: deckInfo.remix || false,
                 remix_of: deckInfo.remix_of || ''
@@ -125,7 +128,8 @@
                 const updatedRecord = await pb.collection('decks').update(deckInfo.deckID, {
                     name: deckInfo.name,
                     challenger: challengerID,
-                    cards_json: JSON.stringify({deck: deck}), 
+                    cards_json: JSON.stringify({deck: deck}),
+                    tags: deckInfo.tags,
                 })
             }
             // otherwise create a new deck
@@ -186,14 +190,15 @@
                     placeholder="Enter deck name..." 
                     bind:value={deckInfo.name}
                     title="Only letters, numbers, and spaces allowed (for now)"
+                    maxlength="20"
                 >
             </div>
             
             <ul class="deck-tags">
-                <!-- {#each deckInfo.tags as tag}
+                {#each $deckTags as tag}
                     <li><a href={$page.url.pathname}>{tag}</a></li>
-                {/each} -->
-                <li><a href={$page.url.pathname}>＋ Add tag</a></li>
+                {/each}
+                <button on:click={() => openModal(PopupTags)}>Edit Tags</button>
             </ul>
         </div>
 

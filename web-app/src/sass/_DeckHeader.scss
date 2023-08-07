@@ -97,10 +97,29 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
 
             // each tag item
             li {
+                // display
+                display: grid;
+                place-items: center;
+                
+                // design
+                text-align: center;
                 color: white;
-                background-color: fade-out($color: $colour-blue-dark, $amount: 0.75);
                 padding: 2px 8px;
+                background-color: fade-out($color: $colour-blue-dark, $amount: 0.75);
                 border-radius: 8px;
+            }
+
+            // Edit tags button
+            button {
+                // font
+                font-weight: 700;
+                color: white;
+
+                // design
+                background-color: $colour-blue-dark;
+                padding: 2px 12px;
+                border-radius: 8px;
+                cursor: pointer;
             }
 
             // Mobile layout
@@ -198,16 +217,16 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
     border-bottom: 2px solid $colour-beast;
 
     // Deck Building icon
-    & > div::before {
-        position: absolute;
-        left: -8rem;
-        top: -1rem;
-        content: "✦";
-        font-size: 6rem;
-        color: white;
-        vertical-align: middle;
-        text-align: center;
-    }
+    // & > div::before {
+    //     position: absolute;
+    //     left: -8rem;
+    //     top: -1rem;
+    //     content: "✦";
+    //     font-size: 6rem;
+    //     color: white;
+    //     vertical-align: middle;
+    //     text-align: center;
+    // }
 
     // alternate button colour scheme
     .header-btns {
@@ -233,7 +252,7 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
     // INPUT FIELDS
     input[type="text"] {
         // reset everything
-        width: fit-content !important;
+        width: fit-content;
         background: none;
         background-color: none;
         border: none;
@@ -251,6 +270,11 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
             border: 4px solid $colour-accent;
             padding: 0.5rem 1rem !important;
             border-radius: 2rem;
+        }
+
+        // Mobile layout
+        @include mobile {
+            width: 90%;
         }
     }
 

@@ -96,3 +96,5 @@ export const createDecklist = () => {
 }
 
 export const decklistAdvance = createDecklist()
+
+export const deckTags = writable([]);
