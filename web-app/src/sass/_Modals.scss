@@ -60,6 +60,13 @@
             text-align: justify;
             margin-bottom: 0.5rem;
         }
+
+        // Mobile layout
+        @include mobile {
+            max-width: 90vw;
+            width: 90vw;
+            max-height: 66vh;
+        }
     }
 
     // Icon to close button
