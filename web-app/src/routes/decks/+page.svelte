@@ -7,6 +7,7 @@
     import TagFilters from '$components/TagFilters.svelte'
     import { createSearchStore, searchHandler, searchHandlerAdvance } from '$lib/stores/deckSearch'
     import { onDestroy, onMount } from 'svelte'
+    import CreateDeckItem from '$components/DeckExplorer/CreateDeckItem.svelte'
 
     export let data
 
@@ -77,6 +78,10 @@
 
     <!-- DECK GRID -->
     <div class="deck-grid">
+        <!-- button to create new deck -->
+        <CreateDeckItem />
+
+        <!-- display all decks according to the user's search terms -->
         {#each $searchStore.filtered as deck}
             <DeckGridItem {deck} />
         {/each}

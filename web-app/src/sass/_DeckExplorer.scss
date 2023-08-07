@@ -107,6 +107,7 @@
             }
         }
 
+        // Each Deck item card in the grid
         .deck-grid-item {
             // display
             display: grid;
@@ -149,6 +150,47 @@
             .deck-item-info {
                 justify-self: end;
                 align-self: end;
+            }
+        }
+
+        // Button to create new deck
+        .deck-grid-create {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            // design
+            color: white;
+            outline: 4px dashed $colour-accent;
+            background: transparentize($color: $colour-accent, $amount: 0.75);
+
+            // animations
+            transition: all 200ms ease;
+
+            // Icon
+            .icon {
+                height: 80%;
+            }
+
+            // Text
+            h2 {
+                font-size: 1.25rem;
+                font-weight: 900;
+                text-transform: uppercase;
+            }
+
+            // Hover effect
+            &:hover {
+                outline-offset: 8px;
+                background: $colour-accent;
+
+                // make Glueman fly in :D
+                background-repeat: no-repeat;
+                background-position: 100%;
+                background-position-y: top;
+                background-image: linear-gradient(to bottom, $colour-accent 0%, transparentize($color: $colour-accent, $amount: 0.25) 100%),
+                                var(--bg-image, url("images/cards/360/1. Glueman.webp"));
             }
         }
     }
