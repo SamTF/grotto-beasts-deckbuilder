@@ -25,9 +25,9 @@
             <img src="/images/icons/decks.svg" alt="Decks" class="icon">
         </a>
 
-        <a href="/create/deck">
+        <!-- <a href="/create/deck">
             <Icon name='plus-circle' solid={true} strokeWidth='0' />
-        </a>
+        </a> -->
 
         <a href="/account">
             <Icon name='user' solid={true} strokeWidth='0' />
