@@ -111,7 +111,7 @@
 
 <!-- HTML -->
 <div class="header-divider"></div>
-<div class="page-container">
+<div class="page-container desktop-only">
     <div class="card-grid-container">
         <div class="top">
             <h1>Add Cards To Your Deck List!</h1>
@@ -175,6 +175,19 @@
     <DecklistSidebar />
 </div>
 
+<div class="mobile-only mobile-under-construction">
+    <h1>Building a deck is currently not supported on mobile</h1>
+    <br>
+    <p>Because making the UI scale for mobile is currently giving me a headache and taking too much of my time.</p>
+    <p>Check back soon!</p>
+    <p>Sorry for the inconvenience :)</p>
+    <center>
+        <img src="https://web.archive.org/web/20090807084125if_/http://www.geocities.com/commonreligion/under_constructionA.gif" alt="Under construction">
+        <img src="https://web.archive.org/web/20091024114538im_/http://www.geocities.com/paradisesurfing/head_construction.gif" alt="Under construction">
+        <img src="https://media.tenor.com/iItTmBivcRMAAAAj/hypnospace-outlaw-hypnospace.gif" alt="Gumshoe Gooper">
+    </center>
+</div>
+
 
 <!-- CSS -->
 <style>
@@ -236,5 +249,17 @@
     .page-container {
         display: grid;
         grid-template-columns: 1fr 20%;
+    }
+
+    .mobile-under-construction {
+        margin: 2rem 4rem;
+        margin-bottom: 16rem;
+    }
+    .mobile-under-construction p {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .mobile-under-construction img {
+        max-width: 100%;
     }
 </style>
