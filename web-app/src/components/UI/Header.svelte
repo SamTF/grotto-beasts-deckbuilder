@@ -25,7 +25,7 @@
         <nav>
             <!-- <a href="/account">Account</a> -->
             {#if $currentUser}
-                <a href="/account" class="btn-active">{$currentUser.username}</a>
+                <a href="/account" class="btn-active desktop-only">{$currentUser.username}</a>
             {:else}
                 <div class="login-container desktop-only">
                     <button class="btn" on:click={login}>
