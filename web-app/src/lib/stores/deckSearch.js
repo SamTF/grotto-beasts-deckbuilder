@@ -39,20 +39,19 @@ export const searchHandlerAdvance = (store) => {
 
     console.log(searchTerm)
 
-    // search by #author
-    if (searchTerm.includes('#')) {
-        const searchAuthor = searchTerm.replace('#', '')
-        console.log(searchAuthor)
+    // search by @author
+    if (searchTerm.includes('@')) {
+        const searchAuthor = searchTerm.replace('@', '')
 
         store.filtered = store.data
             .filter(item => {
-                console.log(item.expand.author.username)
-                return item.expand.author.username.toLowerCase().includes(searchAuthor)
+                const deckAuthor = item.expand.author.username.toLowerCase()
+                return deckAuthor.includes(searchAuthor)
             })
     }
 
     // search name and type
-    if (searchTerm != '') {
+    else if (searchTerm != '') {
         store.filtered = store.filtered
             // filter by search term
             .filter(item => {
@@ -60,6 +59,11 @@ export const searchHandlerAdvance = (store) => {
             })
             // sort by name (only when shoing filtered results)
             .sort((a, b) => searchTerm == '' ? a === b : a.name > b.name)
+    }
+    
+    // reset results
+    else {
+        store.filtered = store.data
     }
     
 }
