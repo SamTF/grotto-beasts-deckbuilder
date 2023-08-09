@@ -92,7 +92,7 @@
         deckInfo.name.replace(/\s+/g,' ').trim()
 
         // validate deck and user name
-        if (deckInfo.name == '' || deckInfo.author == '') {
+        if (deckInfo.name == '') {
             // alert("Don't forget to give the deck a name :)")
             openModal(Popup, {title: 'Invalid Name :s', message: "Don't forget to give the deck a name :)"})
             return
