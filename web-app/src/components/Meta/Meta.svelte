@@ -4,7 +4,7 @@
 <script>
     export let title = ''
     export let description = 'Create, share, and explore decks for Grotto Beasts!'
-    export let thumbnail = 'Grotto Builder!'
+    export let thumbnail = '/images/logo.webp'
     export let url = 'https:/grotto.builders'
     export let colour = '#F6C955'
 </script>
