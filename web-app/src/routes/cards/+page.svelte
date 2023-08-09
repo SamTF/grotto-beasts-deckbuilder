@@ -127,7 +127,7 @@
         <input
             type="text"
             class="input-search"
-            placeholder="Enter card name, #type, and/or #tag"
+            placeholder="Enter card name or type"
             bind:value={$searchStore.search}
         >
         <!-- <button>➜</button> -->
