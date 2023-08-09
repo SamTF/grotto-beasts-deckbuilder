@@ -21,5 +21,5 @@
     <meta property="og:image"       content={thumbnail}>            <!-- Cool lil thumbnail to the side! :) -->
     <meta property="og:url"         content={url}>                  <!-- Link when you click on the title -->
     <meta name="theme-color"        content={colour}>               <!-- Embed sidebar colour! -->
-    <meta name="twitter:card"       content="summary_large_image">  <!-- BIG image -->
+    <!-- <meta name="twitter:card"       content="summary_large_image"> -->
 </svelte:head>
