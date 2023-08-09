@@ -7,8 +7,8 @@
 <nav class="desktop-only">
     <a href="/">Home</a>
     <a href="/cards">Cards</a>
-    <a href="/decks">Decks</a>
-    <a href="/decks">Your Decks</a>
+    <a href="/decks" data-sveltekit-reload>Decks</a>
+    <a href="/decks/me" data-sveltekit-reload>Your Decks</a>
     <a href="/create/deck">＋ Create Deck!</a>
 </nav>
 
