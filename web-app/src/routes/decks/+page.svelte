@@ -11,7 +11,7 @@
 
     export let data
 
-    console.log(data)
+    // console.log(data)
     // console.log(data.url.searchParams)
 
     // Searchable data
@@ -24,19 +24,18 @@
     const searchStore = createSearchStore(searchableDecks)
 
     // watch for changes in the data
-    const unsub = searchStore.subscribe(model => searchHandler(model))
-    // const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+    // const unsub = searchStore.subscribe(model => searchHandler(model))
+    const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
 
     // unsub to avoid memory leaks
     onDestroy(() => {
         unsub()
     })
 
-    // Filtering by Tags
-    let tagFilters = []
-
     // Searching by input
-    const clearSearch = () => {}
+    const clearSearch = () => {
+        $searchStore.search = ''
+    }
 </script>
 
 <!-- METADATA -->
@@ -53,7 +52,7 @@
             <input
                 type="text"
                 class="input-search"
-                placeholder="Enter deck name, challenger, or author"
+                placeholder="Enter deck name, challenger, or @author"
                 bind:value={$searchStore.search}
             >
             <button on:click={clearSearch}>✖</button>
@@ -61,10 +60,10 @@
 
         <div class="deck-types">
             <ul class="btn-tags">
-                <li class="btn-tag">All Decks</li>
-                <li class="btn-tag">Official Decks</li>
-                <li class="btn-tag">Your Decks</li>
-                <li class="btn-tag">Bookmarked Decks</li>
+                <li class="btn-tag"><a data-sveltekit-reload href="/decks">All Decks</a></li>
+                <li class="btn-tag"><a data-sveltekit-reload href="/decks/official">Official Decks</a></li>
+                <li class="btn-tag"><a data-sveltekit-reload href="/decks/me">Your Decks</a></li>
+                <li class="btn-tag"><a data-sveltekit-reload href="/decks/boomarked">Bookmarked Decks</a></li>
             </ul>
         </div>
 
