@@ -53,7 +53,7 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
         @include mobile {
             // vertical grid layout
             grid-template-columns: none;
-            grid-template-rows: 1fr 1fr;
+            grid-template-rows: 1fr auto;
 
             // size
             width: 90%;
@@ -84,10 +84,12 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
             // display
             display: flex;
             flex-direction: row;
+            flex-wrap: wrap;
             gap: 1rem;
 
             // size & margins
             margin-top: 0.5rem;
+            max-width: 90vw;
 
             // design
             list-style: none;
@@ -153,6 +155,9 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
 
             // margins
             margin-top: 2rem;
+
+            // size
+            max-height: 8rem;
         }
 
         // General header button style
