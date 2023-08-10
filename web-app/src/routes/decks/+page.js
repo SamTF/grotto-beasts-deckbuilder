@@ -20,6 +20,15 @@ export async function load({ url, params, route, fetch }) {
         filter = `author = "${user.id}"`
     } else if (deckType == 'official') {
         filter = `author = "srygbxh3t3jneel"`
+    } else if (deckType == 'bookmarked') {
+        // const bookmarks = user.bookmarks
+        console.log("BOOKMARKS: ", user?.bookmarks)
+        filter = ``
+        user?.bookmarks.forEach(b => {
+            filter += `id = "${b}" ||`
+        });
+        filter = filter.slice(0, -2)
+        console.log("FILTER: ", filter)
     }
 
     console.log(filter)

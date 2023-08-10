@@ -63,7 +63,7 @@
                 <li class="btn-tag"><a data-sveltekit-reload href="/decks">All Decks</a></li>
                 <li class="btn-tag"><a data-sveltekit-reload href="/decks/official">Official Decks</a></li>
                 <li class="btn-tag"><a data-sveltekit-reload href="/decks/me">Your Decks</a></li>
-                <li class="btn-tag"><a data-sveltekit-reload href="/decks/boomarked">Bookmarked Decks</a></li>
+                <li class="btn-tag"><a data-sveltekit-reload href="/decks/bookmarked">Bookmarked Decks</a></li>
             </ul>
         </div>
 
