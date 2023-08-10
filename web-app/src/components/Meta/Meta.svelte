@@ -12,7 +12,7 @@
 <!-- META -->
 <svelte:head>
     <!-- Page Title -->
-    <title>{title == '' ? 'Grotto Builder!' : `${title} // Grotto Builder!`}</title>
+    <title>{title == '' ? 'Grotto Builders!' : `${title} // Grotto Builders!`}</title>
 
     <!-- Link Embed Stuff -->
     <meta property="og:site_name"   content="grotto.builders">      <!-- Top of the embed -->
