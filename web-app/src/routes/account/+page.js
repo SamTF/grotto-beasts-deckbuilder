@@ -5,9 +5,9 @@ import { get } from "svelte/store";
 export async function load({ params}) {
     const user = get(currentUser)
 
-    if (!user) {
-        throw redirect(303, '/decks')
-    }
+    // if (!user) {
+    //     throw redirect(303, '/decks')
+    // }
 
     return {data: 'yes'}
     

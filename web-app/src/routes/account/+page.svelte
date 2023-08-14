@@ -3,7 +3,13 @@
     // imports
     import { pb, currentUser } from '$lib/pocketbase.js'
 
-    // user auth functions
+    // log in user via Discord
+    const login = async () => {
+        const authData = await pb.collection('users').authWithOAuth2({ provider: 'discord' });
+        document.cookie = `authData=${JSON.stringify(authData)}`;
+    }
+
+    // log out current user
     const logout = () => {
         pb.authStore.clear()
         location.reload()
@@ -18,22 +24,41 @@
         <div class="account-panel-header">
             <h1>Account Settings</h1>
         </div>
+  
+        <!-- Loggged in Account Panel -->
+        {#if $currentUser}
+            <div class="account-panel-body">
+                <h2>Hi there, {$currentUser.username}! <img src="/images/emotes/meowdy.png" alt="meowdy" height="32"> </h2>
+                    <br>
+                    <p>This is your simple account page</p>
+                    <p>It is a work in progress</p>
+                    <p>Right only logging in and out works</p>
+                    <p>there will be more options here later :)</p>
+            </div>
+            <div class="account-panel-btns">
+                <button class="btn" on:click={logout}>Log out</button>
+                <button class="btn" disabled={true}>Edit display name</button>
+                <button class="btn" disabled={true}>Edit avatar</button>
+                <button class="btn" disabled={true}>Make profile private</button>
+            </div>
 
-        <div class="account-panel-body">
-            <h2>Hi there, {$currentUser.username}! <img src="/images/emotes/meowdy.png" alt="meowdy" height="32"> </h2>
-            <br>
-            <p>This is your simple account page</p>
-            <p>It is a work in progress</p>
-            <p>Right only logging in and out works</p>
-            <p>there will be more options here later :)</p>
-        </div>
-
-        <div class="account-panel-btns">
-            <button class="btn" on:click={logout}>Log out</button>
-            <button class="btn" disabled={true}>Edit display name</button>
-            <button class="btn" disabled={true}>Edit avatar</button>
-            <button class="btn" disabled={true}>Make profile private</button>
-        </div>
+        <!-- Not Signed in Panel -->
+        {:else}
+            <div class="account-panel-body">
+                <h2>Hi there partner, looks like you are not signed in! <img src="/images/emotes/meowdy.png" alt="meowdy" height="32"> </h2>
+                <br>
+                <p>Conveniently sign in using Discord to take full advantage of <b>Grotto Builders!</b></p>
+                <p>This allows you to: </p>
+                <ul>
+                    <li>take credit for decks you create</li>
+                    <li>edit your published decks</li>
+                    <li>bookmark other people's decks</li>
+                </ul>
+            </div>
+            <div class="account-panel-btns">
+                <button class="btn" on:click={login}>Log In</button>
+            </div>
+        {/if}
         
     </div>
     
@@ -43,37 +68,5 @@
     .page-container {
         display: grid;
         place-items: center;
-    }
-
-    .account-panel {
-        /* size */
-        height: 32rem;
-        width: 28rem;
-
-        padding: 1rem 2rem;
-        
-        /* design */
-        background-color: var(--colour-mid-light);
-        border-radius: 1rem;
-    }
-
-    .account-panel-header {
-        margin-bottom: 2rem;
-    }
-    .account-panel-body {
-        color: white;
-        margin-bottom: 2rem;
-    }
-    .account-panel-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .account-panel-btns button {
-        width: 100%;
-    }
-    .account-panel-btns button:disabled {
-        opacity: 0.5;
-        cursor: no-drop;
     }
 </style>

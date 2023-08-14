@@ -1,0 +1,67 @@
+// The Account Panel where users and log in and out, and edit their account details
+
+.account-panel {
+    /* size */
+    height: 32rem;
+    width: 28rem;
+
+    margin-top: var(--space-md);
+    padding: 1rem 2rem;
+    
+    /* design */
+    background-color: var(--colour-mid-light);
+    border-radius: 1rem;
+
+    // Mobile layout
+    @include mobile {
+        width: 90vw;
+        height: fit-content;
+        margin-bottom: var(--space-xl);
+    }
+
+    // title of the page
+    .account-panel-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    // main contents
+    .account-panel-body {
+        color: white;
+        margin-bottom: 2rem;
+
+        p {
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            margin-left: 2rem;
+            list-style-type: none;
+
+            li {
+                text-indent: -1ch;
+
+                &::before {
+                    content: "✦";
+                    padding-right: 1ch;
+                }
+            }
+        }
+    }
+
+    // action buttons
+    .account-panel-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        button {
+            width: 100%;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: no-drop;
+            }
+        }
+    }
+}
