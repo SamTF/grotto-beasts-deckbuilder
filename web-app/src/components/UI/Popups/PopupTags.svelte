@@ -105,6 +105,9 @@
 
         /* max-width: 70%; */
         margin-top: 1rem;
+
+        overflow-y: auto;
+        max-height: 40vh;
     }
 
     .modal-btns {
