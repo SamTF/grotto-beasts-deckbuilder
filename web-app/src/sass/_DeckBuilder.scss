@@ -1,5 +1,19 @@
 // Deckbuilder stuff
 
+// The main container for the page
+.page-container-decklist {
+    display: grid;
+    grid-template-columns: 1fr 25%;
+
+    // Mobile layout
+    @include mobile {
+        display: flex;
+        width: 100%;
+    }
+
+    // Button to toggle Decklist Sidebar on mobile
+}
+
 // Sidebar displaying all cards currently added to the deck
 .deck-list-sidebar {
     position: sticky;
@@ -28,10 +42,32 @@
     height: 82.5vh;
     width: 20vw;
 
-
     // design
     background-color: $colour-mid-light;
     border-radius: 16px;
+
+    // Mobile layout
+    @include mobile {
+        // position
+        position: fixed;
+        top: 2rem;
+        right: 0;
+        left: 0;
+        margin: auto;
+
+        // size
+        height: 95vh;
+        width: 90vw;
+
+        z-index: 10;
+        transition: all 200ms ease;
+
+        &.hidden {
+            background-color: green;
+            top: 56rem;
+            transition: all 200ms ease;
+        }
+    }
 
     .decklist-wrapper {
         width: 100%;
@@ -39,6 +75,12 @@
 
         display: grid;
         grid-template-rows: 6rem 1fr 4rem;
+
+        // Mobile layout
+        @include mobile {
+            // bigger header and footer
+            grid-template-rows: 8rem 1fr 5rem;
+        }
     }
 
 
@@ -74,10 +116,31 @@
         }
 
         // number of cards in deck
-        p.card-count {
+        .card-count {
             color: $colour-green-dark;
             font-weight: bold;
             font-size: 1.25rem;
+        }
+        .card-count-challenger {
+            color: $colour-green-dark;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        // Mobile layout
+        @include mobile {
+            height: 8rem;
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .card-count {
+                font-size: 1.5rem;
+            }
+            .card-count-challenger {
+                font-size: 1.25rem;
+            }
         }
     }
 
@@ -114,6 +177,12 @@
             &:last-child {
                 margin-bottom: 1rem;
             }
+
+            // Mobile layout
+            @include mobile {
+                width: 90%;
+                gap: 0.75rem;
+            }
         }
 
         // Sorting Buttons
@@ -125,6 +194,16 @@
 
             // always display them before the cards
             order: -2;
+
+            // Mobile layout
+            @include mobile {
+                height: 4rem;
+
+                .btn-toggle {
+                    font-size: 1.25rem !important;
+                    font-weight: 700 !important;
+                }
+            }
         }
     }
 
@@ -146,6 +225,20 @@
 
         button, a, .btn {
             height: fit-content;
+        }
+
+        // Mobile layout
+        @include mobile {
+            // bigger buttons
+            .btn {
+                display: grid;
+                place-items: center;
+
+                height: 80%;
+                width: 33%;
+
+                font-size: 1.25rem;
+            }
         }
     }
 }
@@ -205,4 +298,79 @@
     &[data-card-type="beast" i] { background-color: $colour-beast; }
     &[data-card-type="grotto" i] { background-color: $colour-grotto; }
     &[data-card-type="wish" i] { background-color: $colour-wish; }
+
+    // Mobile layout
+    @include mobile {
+        // Larger font
+        height: 3rem;
+        font-size: 1.25rem;
+
+        // Larger number icons
+        grid-template-columns: 3.5rem 1fr 3rem;
+
+        .quantity, .cost, .goal {
+            height: 2.5rem;
+            width: 2.5rem;
+            font-size: 2rem;
+        }
+    }
+}
+
+// Top div with help info
+.card-grid-container .top {
+    display: grid;
+    place-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        margin-bottom: 1rem;
+    }
+
+    // container for the help text
+    .help {
+        margin-top: 1rem;
+        max-width: 70ch;
+
+        // Mobile layout: narrower width
+        @include mobile {
+            max-width: 40ch;
+        }
+
+        // bullet list of instructions
+        .help-list {
+            margin-bottom: 1rem;
+
+            li {
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        // developer notes
+        code {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+    }
+}
+
+// Side button to toggle Decklist Sidebar on mobile
+.decklist-sidebar-toggle {
+    // position
+    position: fixed;
+    right: 0;
+    top: 45%;
+
+    // vertical text
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+
+    // design
+    padding: 2rem 1rem;
+    color: white;
+    background-color: var(--colour-blue-dark);
+    border-radius: 0 1rem 1rem 0;
+    outline: 2px solid white;
+
+    z-index: 20;
+    cursor: pointer;
 }

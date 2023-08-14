@@ -106,12 +106,13 @@
     // User feedback
     let showHelp = false
 
-
+    // Mobile toggles
+    let showDecklist = false
 </script>
 
 <!-- HTML -->
 <div class="header-divider"></div>
-<div class="page-container desktop-only">
+<div class="page-container-decklist">
     <div class="card-grid-container">
         <div class="top">
             <h1>Add Cards To Your Deck List!</h1>
@@ -144,7 +145,7 @@
             <input
                 type="text"
                 class="input-search"
-                placeholder="Enter card name, #type, and/or #tag"
+                placeholder="Enter card name or type"
                 bind:value={$searchStore.search}
             >
             <!-- <button>➜</button> -->
@@ -161,7 +162,7 @@
 
         <TagFilters bind:tagFilters={tagFilters} />
 
-        <div class="card-grid">
+        <div class="card-grid-deckbuilder">
             <!-- {#each data.cards as card} -->
             {#key $searchStore.filtered}
             {#each $searchStore.filtered as card}
@@ -172,10 +173,22 @@
     </div>
 
     <!-- Decklist Sidebar -->
-    <DecklistSidebar />
-</div>
+    <div class="desktop-only">
+        <DecklistSidebar />
+    </div>
 
-<div class="mobile-only mobile-under-construction">
+    <!-- Mobile UI -->
+    <div class="mobile-only">
+        <!-- Sidebar toggle for mobile -->
+        <div class="decklist-sidebar-toggle mobile-only" on:click={() => showDecklist = !showDecklist}>
+            <h2>{ showDecklist ? "Hide Decklist ◀" : "Show Decklist ▶" }</h2>
+        </div>
+
+        <!-- Decklist Sidebar -->
+        <DecklistSidebar bind:visible={showDecklist} />
+    </div>
+</div>
+<!-- <div class="mobile-only mobile-under-construction">
     <h1>Building a deck is currently not supported on mobile</h1>
     <br>
     <p>Because making the UI scale for mobile is currently giving me a headache and taking too much of my time.</p>
@@ -186,71 +199,11 @@
         <img src="https://web.archive.org/web/20091024114538im_/http://www.geocities.com/paradisesurfing/head_construction.gif" alt="Under construction">
         <img src="https://media.tenor.com/iItTmBivcRMAAAAj/hypnospace-outlaw-hypnospace.gif" alt="Gumshoe Gooper">
     </center>
-</div>
+</div> -->
 
 
 <!-- CSS -->
 <style>
-    
-    .card-grid-container {
-        display: grid;
-        place-items: center;
-        width: 100%;
-    }
-
-    .card-grid {
-        /* display: flex; */
-        /* flex-direction: row; */
-        /* flex-wrap: wrap; */
-        /* gap: 4rem; */
-
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-auto-rows: auto;
-        grid-row-gap: 2rem;
-        place-items: center;
-
-        /* width: 80vw; */
-        width: 90%;
-    }
-
-    .top {
-        display: grid;
-        place-items: center;
-        margin-bottom: 2rem;
-    }
-    .top h1 {
-        margin-bottom: 1rem;
-    }
-
-    .help {
-        margin-top: 1rem;
-        max-width: 70ch;
-    }
-    .help .help-list {
-        margin-bottom: 1rem;
-    }
-    .help .help-list li {
-        margin-bottom: 0.25rem;
-    }
-
-    code {
-        display: block;
-        margin-bottom: 0.5rem;
-    }
-
-    .type-filters {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .page-container {
-        display: grid;
-        grid-template-columns: 1fr 20%;
-    }
-
     .mobile-under-construction {
         margin: 2rem 4rem;
         margin-bottom: 16rem;

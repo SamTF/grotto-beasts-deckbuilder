@@ -14,6 +14,11 @@
         flex-direction: row;
         gap: 1rem;
         margin-bottom: 2rem;
+
+        // Mobile layout
+        @include mobile {
+            width: 90%;
+        }
     }
 
     // The actual card grid
@@ -49,6 +54,13 @@
                 max-height: 200px !important;
             }
         }
+    }
+
+    // Card Explorer in Deckbuilder Mode
+    .card-grid-deckbuilder {
+        @extend .card-grid;
+
+        width: 90%;
     }
 }
 

@@ -8,6 +8,9 @@
     import { decklistAdvance } from '$lib/stores/decklist'
 	import { onDestroy, onMount } from 'svelte';
 
+    // Props
+    export let visible = true
+
     // Save Decklist to session cookies
     let saveStore = false
     $: if ($decklistAdvance && saveStore) {
@@ -23,11 +26,16 @@
         console.log("STORE:")
         console.log(store)
 
-        if (store) {
+        if ($decklistAdvance.length > 0) {
+            localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
+        }
+        else if (store) {
             $decklistAdvance = JSON.parse(store)
         }
 
         saveStore = true
+
+        console.log($decklistAdvance)
     })
     
     // Count cards in decklist
@@ -63,7 +71,7 @@
 </script>
 
 <!-- HTML -->
-<div class="deck-list-sidebar" oncontextmenu="return false">
+<div class="deck-list-sidebar" oncontextmenu="return false" class:hidden={!visible}>
 
     <div class="decklist-wrapper">
     <!-- Header / Deck Title -->
@@ -72,7 +80,7 @@
 
         {#key $decklistAdvance}
             <p class="card-count">{CardsInDecklist()}/40 Cards</p>
-            <p class="card-count" style="font-size: 0.9rem;">{ChallengersInDecklist()}/1 Challenger</p>
+            <p class="card-count-challenger">{ChallengersInDecklist()}/1 Challenger</p>
         {/key}
     </div>
     
@@ -92,10 +100,12 @@
         </div>
 
         <!-- List of card items -->
+        {#key $decklistAdvance}
         {#each $decklistAdvance as card}
             <!-- <div>{quantity}x {name}(#{number})</div> -->
             <DecklistItem {card} />
         {/each}
+        {/key}
     </div>
     </div>
 
