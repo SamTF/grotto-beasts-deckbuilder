@@ -82,6 +82,25 @@
             openModal(Popup, { title: 'Error x(', message: error })
         }
     }
+
+    const exportDeck = async () => {
+        // fetching the decklist in correct format as plain text
+        const res = await fetch(`/api/export/${deck.id}`)
+        let cards = await res.text()
+
+        // saving the decklist as a TXT
+        const f = new File([cards], 'deck.txt', {
+            type: 'text/plain',
+        })
+
+        // downloading the file
+        var a = document.createElement('a');
+        document.body.append(a);
+        a.download = `${deck.name}.txt`;
+        a.href = URL.createObjectURL(f);
+        a.click();
+        a.remove();
+    }
 </script>
 
 <!-- HTML -->
@@ -108,7 +127,7 @@
         <div class="header-btns">
             {#if userCreatedThisDeck}
                 <!-- Export as TXT -->
-                <button class="btn" title="Save decklist as Text file to import it somewhere else &#013;>>> Currently does nothing :)" disabled={true}>
+                <button class="btn" title="Save decklist as Text file to import it somewhere else" on:click={exportDeck}>
                     <Icon name='export-file' class='header-btn-icon' strokeWidth='0' solid={true}/>
                     <span>Export</span>
                 </button>
@@ -130,7 +149,7 @@
             <!-- Normal deck buttons -->
             {:else}
                 <!-- Export as TXT -->
-                <button class="btn" title="Save decklist as Text file to import it somewhere else &#013;>>> Currently does nothing :)" disabled={true}>
+                <button class="btn" title="Save decklist as Text file to import it somewhere else" on:click={exportDeck}>
                     <Icon name='export-file' class='header-btn-icon' strokeWidth='0' solid={true}/>
                     <span>Export</span>
                 </button>
