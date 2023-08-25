@@ -12,6 +12,7 @@
     // log out current user
     const logout = () => {
         pb.authStore.clear()
+        document.cookie = "authData= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
         location.reload()
     }
 </script>
