@@ -66,8 +66,9 @@
     // Upload Deck
     const uploadDeck = async () => {
         // validate that deck is in correct format
-        if (decklistAdvance.sum($decklistAdvance) != 40 || decklistAdvance.challenger($decklistAdvance) != 1) {
-            openModal(Popup, {title: 'Invalid Deck D:', message: 'Your deck must have exactly 40 cards + 1 Challenger'})
+        const deckSize = decklistAdvance.deckSize($decklistAdvance)
+        if (decklistAdvance.sum($decklistAdvance) != deckSize || decklistAdvance.challenger($decklistAdvance) != 1) {
+            openModal(Popup, {title: 'Invalid Deck D:', message: `Your deck must have exactly ${deckSize} cards + 1 Challenger`})
             return
         }
 

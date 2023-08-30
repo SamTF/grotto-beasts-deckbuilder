@@ -23,8 +23,6 @@
         // let store = window.sessionStorage.getItem("decklist")
         // https://dev.to/danawoodman/svelte-quick-tip-connect-a-store-to-local-storage-4idi
         let store = localStorage.decklist
-        console.log("STORE:")
-        console.log(store)
 
         if ($decklistAdvance.length > 0) {
             localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
@@ -79,7 +77,7 @@
         <h1>DECK LIST</h1>
 
         {#key $decklistAdvance}
-            <p class="card-count">{CardsInDecklist()}/40 Cards</p>
+            <p class="card-count">{CardsInDecklist()}/{decklistAdvance.deckSize($decklistAdvance)} Cards</p>
             <p class="card-count-challenger">{ChallengersInDecklist()}/1 Challenger</p>
         {/key}
     </div>

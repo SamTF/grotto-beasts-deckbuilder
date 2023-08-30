@@ -11,7 +11,15 @@
 
     // vars
     let quantity = 0
-    let maxQuantity = card.type != 'Challenger' ? 3 : 1
+    let maxQuantity = card.type == 'Challenger' ? 1 : 3
+    // let maxQuantity = card.type == 'Challenger' ? 1 : card.name == 'Byeah Beast' ? 60 : 3
+    $: deckSize = decklistAdvance.deckSize($decklistAdvance)
+    $: if (card.name == 'Byeah Beast') maxQuantity = deckSize
+
+    $: byeahPrime = $decklistAdvance.some(({ name }) => name === 'Byeah Prime')
+    $: console.log('BYEAH PRIME? >>> ', byeahPrime)
+    
+    $: if (quantity > maxQuantity) quantity = maxQuantity
 
     // Update quantity when removing cards via clicking in the Decklisr Sidebar
     $: if ($decklistAdvance.length > 1) {
@@ -68,9 +76,8 @@
         if (card.type == CardTypes.CHALLENGER) {
             return (decklistAdvance.challenger($decklistAdvance) >= 1)
         } else {
-            return (decklistAdvance.sum($decklistAdvance) >= 40)
+            return (decklistAdvance.sum($decklistAdvance) >= deckSize)
         }
-        
     }
 
     // Check if the deck already has a Challenger
