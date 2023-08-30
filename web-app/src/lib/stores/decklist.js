@@ -91,6 +91,12 @@ export const createDecklist = () => {
         // Get the ID of the Challenger
         challengerID: (cards) => {
             cards.find(x => x.type === 'Challenger').id
+        },
+        // Get the required size for this Deck
+        deckSize: (cards) => {
+            // basically checks if the deck has Byeah Prime, otherwise it's the default size of 40 cards
+            const byeahPrime = cards.some(({ name }) => name === 'Byeah Prime')
+            return byeahPrime ? 60 : 40;
         }
     }
 }
