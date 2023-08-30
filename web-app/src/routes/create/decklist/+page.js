@@ -4,9 +4,6 @@ import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit";
 
 export async function load({ url, params}) {
-    // look for search params
-    console.log(url.searchParams)
-
     let searchTags = url.searchParams.get('tags')
 
     // Format search tags appropriately, if any were given
