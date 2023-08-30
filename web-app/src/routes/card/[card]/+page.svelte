@@ -6,7 +6,6 @@
 
     // Receive data from API
     export let data
-    console.log(data)
 
     // image file name
     const cardImg = `${data.card.number}. ${data.card.name}.webp`
@@ -23,7 +22,7 @@
 </script>
 
 <!-- META -->
-<Meta title={data.card.name} />
+<Meta title={data.card.name} description={data.card.effect} thumbnail={`/images/cards/${cardImg}`} bigMode={true}/>
 
 <!-- HTML -->
 <div class="header-divider" style="height: 6rem;"></div>

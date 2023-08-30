@@ -14,10 +14,11 @@
     const cards = data.deck.cards_json
     const deck = cards.deck
     const fullCards = data.fullCards
+    const challengerImg = `${data.deck.expand.challenger.number}. ${data.deck.expand.challenger.name}.webp`
 </script>
 
 <!-- METADATA -->
-<Meta title={data.deck.name} />
+<Meta title={data.deck.name} description={`A deck built by ${data.deck.expand.author.username}`} thumbnail={`/images/cards/360/${challengerImg}`} />
 
 <!-- HTML -->
 <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={fullCards} deck={data.deck}/>

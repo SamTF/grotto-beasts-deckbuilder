@@ -7,6 +7,7 @@
     export let thumbnail = '/images/logo.webp'
     export let url = 'https:/grotto.builders'
     export let colour = '#F6C955'
+    export let bigMode = false
 </script>
 
 <!-- META -->
@@ -21,5 +22,9 @@
     <meta property="og:image"       content={thumbnail}>            <!-- Cool lil thumbnail to the side! :) -->
     <meta property="og:url"         content={url}>                  <!-- Link when you click on the title -->
     <meta name="theme-color"        content={colour}>               <!-- Embed sidebar colour! -->
-    <!-- <meta name="twitter:card"       content="summary_large_image"> -->
+
+    {#if bigMode}
+        <meta name="twitter:card"   content="summary_large_image">
+    {/if}
+    
 </svelte:head>
