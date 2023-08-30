@@ -2,8 +2,6 @@ import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit";
 
 export async function load({ url, params}) {
-    console.log(`URL SLUG : ${params.deck}`)
-
     // Load Deck data if a deck exists with the given ID
     let deck = null
     try {

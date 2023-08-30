@@ -5,7 +5,6 @@
     export let deck
 
     $: challengerImg = `${deck.expand.challenger.number}. ${deck.expand.challenger.name}.webp`
-    console.log(challengerImg)
 </script>
 
 <!-- HTML -->

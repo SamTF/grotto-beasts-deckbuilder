@@ -10,7 +10,6 @@
 
     // Hover effect
     const onHover = () => {
-        console.log(`hovering over ${name}`)
         dispatch('cardHover', { id, name })
     }
 </script>

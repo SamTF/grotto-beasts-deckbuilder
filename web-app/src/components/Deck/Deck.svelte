@@ -12,7 +12,6 @@
          : 'back.webp'
 
     const onCardHover = event => {
-        console.log(event.detail)
         const { id, name } = event.detail
         previewImg = `${id}. ${name}.webp`
     }

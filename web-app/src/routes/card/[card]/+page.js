@@ -2,8 +2,6 @@ import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit";
 
 export async function load({ url, params}) {
-    console.log(params.card)
-
     // the filter by which to find the desired card
     let filter = `name ~ "${params.card}"`
     

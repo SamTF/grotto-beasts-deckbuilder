@@ -37,8 +37,6 @@ export const searchHandlerAdvance = (store) => {
     const typesFilter = store.types
     const tagFilters = store.tags
 
-    console.log(searchTerm)
-
     // search by @author
     if (searchTerm.includes('@')) {
         const searchAuthor = searchTerm.replace('@', '')
