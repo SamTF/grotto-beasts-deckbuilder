@@ -28,9 +28,9 @@
         <div class="body-text">
             <p><b>Grotto Builders</b> is a Deck Building tool for the hit trading card game <a href="https://grottobeasts.net/" target="_blank"><i><b>Grotto Beasts!</b></i></a></p>
             <p>Create decks, share them, and explore the decks the community has made.</p>
-            <p>Grotto Builders also features a card browser that allows  filtering by tags.</p>
+            <p>Grotto Builders is an <b>unofficial</b> fan-made resource and not affiliated with Elberston and Sons.</p>
             <hr>
-            <p>It is very much work in progress and being worked on in my spare time. Expect very slow but steady progress :)</p>
+            <p>While mostly complete, Grotto Builders is a work in progress and being worked on and maintained in my spare time.</p>
             <p>Feedback, suggestions, and contributions are always welcome!</p>
             <p>You can find and message me on <a href="https://discord.com/users/216972321099874305/" target="_blank">Discord</a> or <a href="https://steamcommunity.com/id/customurlalreadyused/" target="_blank">Steam</a>.</p>
         </div>
@@ -60,7 +60,7 @@
         <div class="body-text">
             <p>Hi there, my name is Sam! Some of you may know me from Jerma chat as SamFreelancePolice.</p>
             <p>I've been watching Jerma since I was 12 and this summer I spent all my spare money on Grotto Beasts, and I enjoy them so much that I decided to create this online deck builder and give something to the Jerma community!</p>
-            <p>I graduated a Game Design course from university this summer <a href="https://chroma-mancer.com/" target="_blank">(where I made a game called Chroma Mancer)</a>. I'm currently unemployed and looking for a job, so if any of you millionaire Andys own a game studio or need a website made, hit me up :)</p>            
+            <p>I graduated a Game Design course from university this summer <a href="https://chroma-mancer.com/" target="_blank">(where I made a game called Chroma Mancer)</a>. I'm currently unemployed and looking for a job, so if any of you millionaire Andys own a game studio or need a website made, <a href="https://sam.freelancepolice.org/" target="_blank"> hit me up</a> :)</p>            
         </div>
     </div>
 
