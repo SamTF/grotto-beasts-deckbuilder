@@ -36,6 +36,28 @@
     const clearSearch = () => {
         $searchStore.search = ''
     }
+
+    // Sorting decks
+    let sortingVisible = false
+    const sortingMethods = ['name', 'author', 'creation', 'challenger']
+    let deckSort = { creation: true }
+
+    const sortDecks = (method) => {
+        method = method.toLowerCase()
+
+        // invert order if method is already selected
+        if (method in deckSort) {
+            deckSort[method] = !deckSort[method]
+        }
+        // otherwise, set the new method as current sorting method
+        else {
+            deckSort = {}
+            deckSort[method] = true
+        }
+
+        const ascending = deckSort[method]
+        searchStore.sort(method, ascending)
+    }
 </script>
 
 <!-- METADATA -->
@@ -73,6 +95,29 @@
         </div>
 
         <!-- <TagFilters bind:tagFilters={tagFilters} /> -->
+    </div>
+
+    <div class="sorting-options-container">
+        {#if !sortingVisible}
+            <div class="buttons">
+                <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
+            </div>
+        {:else}
+            <div class="buttons">
+                <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
+            </div>
+            
+            <!-- Sorting buttons -->
+            <div class="sorting-options">
+                {#each sortingMethods as method}
+                    <BtnToggle
+                        text={!(method in deckSort) ? method : deckSort[method] ? `${method}▲` : `${method}▼`}
+                        toggle={method in deckSort}
+                        onClick={() => sortDecks(method)}
+                    />
+                {/each}
+            </div>
+        {/if}
     </div>
 
     <!-- DECK GRID -->

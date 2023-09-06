@@ -16,7 +16,33 @@ export const createSearchStore = (data) => {
     return {
         subscribe,
         set,
-        update
+        update,
+        // Sort order for the elements in the list of decks
+        sort: (method = 'name', ascending = true) => update(data => {
+            switch (method.toLowerCase()) {
+                case 'name':
+                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    return data
+                
+                case 'creation':
+                    data.data.sort((a, b) => (ascending? a.created > b.created : a.created < b.created))
+                    return data
+                
+                case 'author':
+                    data.data.sort((a, b) => (ascending? a.author_name.toLowerCase() > b.author_name.toLowerCase() : a.author_name.toLowerCase() < b.author_name.toLowerCase()))
+                    return data
+
+                case 'challenger':
+                    data.data.sort((a, b) => (ascending ? a.challenger > b.challenger : a.challenger < b.challenger))
+                    return data
+            
+                default:
+                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    return data
+            }
+
+            // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+        })
     }
 }
 
