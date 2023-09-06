@@ -18,6 +18,8 @@
         searchTerms: `${card.name} ${card.type} ${card.subtype}`
     }))
 
+
+    console.log(searchableCards)
     // Svelte store stuff
     const searchStore = createSearchStore(searchableCards)
 
@@ -112,6 +114,28 @@
         }
     })
 
+    // Sorting cards
+    let sortingVisible = false
+    const sortingMethods = ['number', 'name', 'cost', 'power']
+    let cardSort = { number: true }
+
+    const sortDecks = (method) => {
+        method = method.toLowerCase()
+
+        // invert order if method is already selected
+        if (method in cardSort) {
+            cardSort[method] = !cardSort[method]
+        }
+        // otherwise, set the new method as current sorting method
+        else {
+            cardSort = {}
+            cardSort[method] = true
+        }
+
+        const ascending = cardSort[method]
+        searchStore.sort(method, ascending)
+    }
+
 </script>
 
 <!-- META -->
@@ -143,6 +167,29 @@
     </div>
 
     <TagFilters bind:tagFilters={tagFilters} />
+
+    <div class="sorting-options-container">
+        {#if !sortingVisible}
+            <div class="buttons">
+                <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
+            </div>
+        {:else}
+            <div class="buttons">
+                <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
+            </div>
+            
+            <!-- Sorting buttons -->
+            <div class="sorting-options">
+                {#each sortingMethods as method}
+                    <BtnToggle
+                        text={!(method in cardSort) ? method : cardSort[method] ? `${method}▲` : `${method}▼`}
+                        toggle={method in cardSort}
+                        onClick={() => sortDecks(method)}
+                    />
+                {/each}
+            </div>
+        {/if}
+    </div>
 
     <div class="card-grid">
         {#each $searchStore.filtered as card}

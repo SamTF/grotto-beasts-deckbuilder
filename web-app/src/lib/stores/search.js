@@ -16,7 +16,33 @@ export const createSearchStore = (data) => {
     return {
         subscribe,
         set,
-        update
+        update,
+        // Sort order for the elements in the list of data.data
+        sort: (method = 'number', ascending = true) => update(data => {
+            switch (method.toLowerCase()) {
+                case 'number':
+                    data.data.sort((a, b) => (ascending ? a.number > b.number : a.number < b.number))
+                    return data
+                
+                case 'name':
+                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    return data
+                
+                case 'cost':
+                    data.data.sort((a, b) => (ascending? a.cost > b.cost : a.cost < b.cost))
+                    return data
+
+                case 'power':
+                    data.data.sort((a, b) => (ascending ? a.power > b.power : a.power < b.power))
+                    return data
+            
+                default:
+                    data.data.sort((a, b) => (ascending ? a.number > b.number : a.number < b.number))
+                    return data
+            }
+
+            // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+        })
     }
 }
 
