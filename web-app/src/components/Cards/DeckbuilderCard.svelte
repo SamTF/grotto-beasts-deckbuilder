@@ -17,7 +17,6 @@
     $: if (card.name == 'Byeah Beast') maxQuantity = deckSize
 
     $: byeahPrime = $decklistAdvance.some(({ name }) => name === 'Byeah Prime')
-    $: console.log('BYEAH PRIME? >>> ', byeahPrime)
     
     $: if (quantity > maxQuantity) quantity = maxQuantity
 
