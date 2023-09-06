@@ -1,0 +1,24 @@
+// The sorting buttons
+
+// Container for sorting buttons and visibility button
+.sorting-options-container {
+    // display
+    display: grid;
+    place-items: center;
+
+    // margins
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-sm);
+
+    // The actual sorting options
+    .sorting-options {
+        // display
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+    
+        // margin
+        margin-top: 1rem;
+    }
+}
