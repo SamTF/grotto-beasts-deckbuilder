@@ -65,6 +65,14 @@
     </div>
 
     <div class="panel">
+        <p class="made-by">Donations & Support</p>
+            <div class="body-text">
+                <p>I've finally set up a <a href="/donate">donations page!</a></p>
+                <p>If you've found <b><i>Grotto Builders!</i></b> useful, and want to contribute to its continued existence or support the creator, <a href="/donate">I would very gratefully accept a small donation :)</a></p>
+            </div>
+        </div>
+
+    <div class="panel">
         <p class="made-by">Special Thanks</p>
         <b>For help, feedback, and inspiration:</b>
         <div class="special-thanks">
@@ -93,8 +101,3 @@
         <b>[not signed in]</b>
     {/if}
 </div>
-
-<!-- CSS -->
-<style>
-    
-</style>
