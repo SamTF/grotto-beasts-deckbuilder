@@ -204,6 +204,12 @@
         </div>
 
         <div class="header-btns">
+            <!-- Upload Deck -->
+            <a href="/create/import" class="btn">
+                <Icon name='import' strokeWidth=0 solid={true}/>
+                <span>Import Decklist</span>
+            </a>
+
             <!-- Edit Deck -->
             <a href="/create/decklist" class="btn">
                 {#if decklistAdvance.sum($decklistAdvance) < 30}
