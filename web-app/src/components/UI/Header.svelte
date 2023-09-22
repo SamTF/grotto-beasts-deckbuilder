@@ -7,8 +7,17 @@
     const login = async () => {
         const authData = await pb.collection('users').authWithOAuth2({ provider: 'discord' });
         document.cookie = `authData=${JSON.stringify(authData)}`;
-        //console.log(authData)
-        //console.log(document.cookie)
+
+        // Update avatar
+        const avatarURL = authData.meta.avatarUrl
+
+        try {
+            const update = await pb.collection('users').update($currentUser.id, {
+                avatarURL: avatarURL
+            })
+        } catch (error) {
+            console.error(error)
+        }
     }
 </script>
 
