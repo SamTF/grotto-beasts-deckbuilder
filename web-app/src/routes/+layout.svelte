@@ -6,6 +6,7 @@
     import { pb, currentUser } from '$lib/pocketbase.js'
     import { Modals, closeModal } from 'svelte-modals'
     import { onMount } from 'svelte'
+    import {Toaster} from 'svelte-french-toast'
 
     const x = $decklistAdvance
     const y = $currentUser
@@ -47,3 +48,4 @@
       on:keydown={closeModal}
     />
 </Modals>
+<Toaster />
