@@ -135,3 +135,34 @@ button {
         display: none !important;
     }
 }
+
+// Container for the deck code
+.deck-code {
+    margin-top: 1rem;
+    color: var(--colour-blue-dark);
+    font-weight: 700;
+    opacity: 0.75;
+
+    // The actual deck code text
+    span {
+        margin-left: 0.25rem;
+        padding: 0.25rem 0.5rem;
+
+        border-radius: 1rem;
+        background-color: rgba(255, 255, 255, 0.5);
+
+        cursor: pointer;
+
+        // hover effect
+        &:hover {
+            background-color: var(--colour-blue-dark);
+            color: white;
+            opacity: 1;
+        }
+    }
+
+    // The icon
+    .deck-code-icon {
+        height: 1rem;
+    }
+}
