@@ -67,10 +67,40 @@
         goto('/create/deck/')
     }
 
-    onMount(() => {
-        console.log(cardList)
-        console.log(data)
-    })
+    // IMPORT DECK CODE
+    const importDeckcode = async (deckcode) => {
+        // decode into json decklist
+        const res = await fetch(`/api/import/tts/${deckcode}`)
+        let cards = await res.json()
+
+        console.log(cards)
+
+        // format the correct array of cards as an array of objects
+        let final = cards.map((card) => {
+            // Full version in PB format
+            let fullCard = data.cards.find(x => x.number == card.id)
+            fullCard.quantity = card.quantity
+            return fullCard
+        })
+
+        $decklistAdvance = final
+        localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
+        goto('/create/deck/')
+    }
+
+    // Parse Import Input to check whether it's a decklist or deck code
+    const parseInput = () => {
+        const result = decklist.split(/\r?\n/);
+
+        // TTS Deck Code
+        if (result.length == 1 && decklist.startsWith('GB')) {
+            importDeckcode(decklist)
+        }
+        // Text Decklist
+        else {
+            importDecklist()
+        }
+    }
 </script>
 
 <!-- HTML -->
@@ -80,34 +110,26 @@
     <div class="panel">
         <h1>Import Decklist</h1>
 
-        <p>Paste a decklist in the format shown.</p>
+        <p>Paste a <b>text decklist</b> or a <b>TTS deck code</b> in the format shown.</p>
 
-        <textarea name="decklist-import" id="decklist-import" placeholder="Example decklist...
+        <textarea name="decklist-import" id="decklist-import" placeholder="Example decklist:
         1 Jerma
-        1 The Big Baker
         2 Brightlight Casino
         1 Fossil Ridge
-        2 Sportball Stadium
-        1 Sunspring Field
         2 Batter Up!
         3 Bonus Luck
-        3 Dunk Tank
-        2 Reckless Offroading
         2 Surprise Snack
-        2 Try Another!
-        2 Birthday Basher
         3 Crabcha
         2 Festive Mimic
-        1 Hydraxolotl
-        2 Jukeboxer
-        3 Mr. Anycard
-        2 Poñata
-        3 Sweet Tooth
-        2 Weeniemutt &#13;"
+        1 Hydraxolotl&#13;
+        
+        Example TTS deck code:
+        GBv7i22i5j6i11j1i4j1l11l15j8j4j12j9l10j14i4j15l8j24l8j
+        "
         spellcheck="false"
         bind:value={decklist}></textarea>
 
-        <button class="btn" on:click={importDecklist}>
+        <button class="btn" on:click={parseInput}>
             <span>Import</span>
         </button>
     </div>

@@ -9,6 +9,8 @@
     import { openModal } from 'svelte-modals'
     import Popup from '$components/UI/Popups/Popup.svelte'
     import PopupDeleteDeck from '$components/UI/Popups/PopupDeleteDeck.svelte'
+    import PopupExport from '$components/UI/Popups/PopupExport.svelte'
+    import toast from 'svelte-french-toast'
     
     // Props
     export let author, name, tags, authorID, fullCards
@@ -84,22 +86,25 @@
     }
 
     const exportDeck = async () => {
-        // fetching the decklist in correct format as plain text
-        const res = await fetch(`/api/export/${deck.id}`)
-        let cards = await res.text()
+        // Open the export options modal
+        openModal(PopupExport, { deckID: deck.id })
 
-        // saving the decklist as a TXT
-        const f = new File([cards], 'deck.txt', {
-            type: 'text/plain',
-        })
+        // // fetching the decklist in correct format as plain text
+        // const res = await fetch(`/api/export/${deck.id}`)
+        // let cards = await res.text()
 
-        // downloading the file
-        var a = document.createElement('a');
-        document.body.append(a);
-        a.download = `${deck.name}.txt`;
-        a.href = URL.createObjectURL(f);
-        a.click();
-        a.remove();
+        // // saving the decklist as a TXT
+        // const f = new File([cards], 'deck.txt', {
+        //     type: 'text/plain',
+        // })
+
+        // // downloading the file
+        // var a = document.createElement('a');
+        // document.body.append(a);
+        // a.download = `${deck.name}.txt`;
+        // a.href = URL.createObjectURL(f);
+        // a.click();
+        // a.remove();
     }
 </script>
 
@@ -107,7 +112,7 @@
 <div class="deck-header">
     <div class="deck-data-container">
         <div class="info-container">
-            <a href={`/users/${author}`} class="deck-author">{author}</a>
+            <a href={`/user/${author}`} class="deck-author">{author}</a>
             <h1 class="deck-name">{name}</h1>
             
             <ul class="deck-tags">
@@ -121,6 +126,15 @@
                     <p>Remix of <a href={`${deck.remix_of}`} data-sveltekit-reload>{deck.remix_of}</a></p>
                 </div>
             {/if}
+
+            <!-- TTS Deck Code -->
+            <!-- Waiting for the TTS Grotto Beasts mod to release before this becomes official -->
+            <!-- <div class="deck-code">
+                <span on:click={() => toast.success("Deck code copied!")}>
+                    <Icon name='copy' class='deck-code-icon' strokeWidth='2' solid={false}/>
+                    GBv31i10j1j1j1j3j6j5i13j4l6j27l9j1j4l3j23i3j5j34i8j
+                </span>
+            </div> -->
         </div>
 
         <!-- Special Controls for the deck author -->
