@@ -4,8 +4,10 @@
     import DeckGridItem from '$components/DeckExplorer/DeckGridItem.svelte'
     import Meta from '$components/Meta/Meta.svelte'
     import Icon from '$components/UI/Icon.svelte';
+    import IntegrationLink from '$components/UI/IntegrationLink.svelte';
     import { onMount } from 'svelte'
     import { pb, currentUser } from '$lib/pocketbase.js'
+    import { CardTypes, cardsByType, countCardType } from "$lib/cardUtils"
 
     // Props
     export let data
@@ -13,15 +15,34 @@
     // Vars
     let editingPage = false
     let bio = ""
+    let decksInfo = { challengerNum: 0, beastNum: 0, grottoNum: 0, wishNum: 0 }
+    let totalUniqueCards = 0
 
     // Date when the user's account was created
     let joinDate = new Date(data.user.created).toLocaleDateString()
 
     onMount(() => {
-        // ...
-        console.log($currentUser)
-        console.log(data.user)
+        // set the user's bio description
         bio = data.user.bio
+
+        // Combine all decks into one array
+        let combinedCards = []
+        data.decks.forEach(element => {
+            combinedCards = combinedCards.concat(element.cards_json.deck)
+        });
+        console.log(combinedCards)
+        
+        // Calculate unique cards
+        let combinedCardIds = combinedCards.map(x => x.id)
+        let uniqueCards = [...new Set(combinedCardIds)]
+        totalUniqueCards = uniqueCards.length
+        console.log(uniqueCards)
+
+        // Calculate the total number of cards used by type across all of the user's decks
+        decksInfo.challengerNum = countCardType(combinedCards, CardTypes.CHALLENGER)
+        decksInfo.beastNum = countCardType(combinedCards, CardTypes.BEAST)
+        decksInfo.grottoNum = countCardType(combinedCards, CardTypes.GROTTO)
+        decksInfo.wishNum = countCardType(combinedCards, CardTypes.WISH)
     })
 
     // Three random adjectives, why not?
@@ -36,8 +57,7 @@
     // whether this deck was created by the current authenticated user
     const isUsersPage = $currentUser ? data.user.id == $currentUser.id : false
 
-    
-
+    // Toggle editing mode
     const toggleEditProfile = () => editingPage = !editingPage
 
     // Update the profile changes
@@ -53,6 +73,12 @@
         }
 
         editingPage = false
+    }
+
+    // Reset bio changes
+    const cancelChanges = () => {
+        editingPage = false // disable page editing
+        bio = data.user.bio // reset the bio to its original value
     }
 </script>
 
@@ -73,17 +99,6 @@
         <div class="info-container">
             <h1>{data.user.username}</h1>
             <p class="deck-author">Grotto Builder since {joinDate}</p>
-            <!-- <p class="deck-author">Sub text</p> -->
-            <!-- <div class="deck-author">
-                <input
-                    type="text" 
-                    class="input-deck-author"
-                    placeholder="Enter your profile description..."
-                    bind:value={test}
-                    pattern="[a-zA-Z0-9]*"
-                    title="Only letters and numbers allowed (for now)&#013;Automatically set to your Discord username if logged in!"
-                >
-            </div> -->
             <ul class="deck-tags">
                 {#await getAdjectives() then tags}
                     {#each tags as tag}
@@ -91,6 +106,32 @@
                     {/each}
                 {/await}
             </ul>
+
+            <!-- Profile Links -->
+            <div class="profile-links">
+                <!-- Bestiary Link -->
+                {#if data.user.integrations?.bestiary}
+                    <IntegrationLink
+                        text='View Grotto Bestiary Inventory'
+                        textMobile='Grotto Bestiary'
+                        link={`https://www.grotto-bestiary.com/inventory?username=${data.username}`}
+                        icon='/images/icons/sludge.svg'
+                        iconAlt='sludge'
+                    />
+                {/if}
+
+                <!-- Discord link -->
+                {#if data.user.integrations?.discord}
+                    <IntegrationLink
+                        text='Message on Discord'
+                        textMobile='Discord'
+                        link={`https://discord.com/users/${data.user.discordID}/`}
+                        icon='/images/icons/discord-white.svg'
+                        iconAlt='discord icon'
+                        iconHeight='15px'
+                    />
+                {/if}
+            </div>
         </div>
 
         <div class="header-btns">
@@ -102,54 +143,73 @@
 
             {#if isUsersPage}
                 {#if editingPage}
-                    <textarea name="user-bio" id="user-bio" maxlength="150" placeholder={bio} bind:value={bio}></textarea>
-                    <button class="btn profile-btn" on:click={saveProfileChanges}>
+                    <!-- Text input area -->
+                    <textarea
+                        name="user-bio" id="user-bio"
+                        class="user-bio-input"
+                        maxlength="150"
+                        placeholder={bio}
+                        bind:value={bio}
+                    ></textarea>
+
+                    <!-- Butotn to save changes -->
+                    <button class="btn profile-btn profile-btn-positive" on:click={saveProfileChanges}>
                         <Icon name='check-circle' class='header-btn-icon' strokeWidth='0' solid={true} />
                         <span>Save</span>
                     </button>
+
+                    <!-- Butotn to cancel changes -->
+                    <button class="btn profile-btn profile-btn-negative" on:click={cancelChanges}>
+                        <Icon name='trash' class='header-btn-icon' strokeWidth='0' solid={true} />
+                        <span>Cancel</span>
+                    </button>
                 {:else}
-                    <div class="user-bio">
-                        <p class="user-bio-text">{bio}</p>
+                    <div
+                        class="user-bio user-bio-btn"
+                        on:click={toggleEditProfile}
+                        on:keypress={() => {}}
+                    >
+                        <p class="user-bio-text" class:empty={bio == ""}>
+                            { bio ? bio : 'Click to add a profile bio!' }
+                        </p>
+
+                        <div class="user-bio-edit-btn">
+                            <span>Click to edit ✏️</span>
+                        </div>
                     </div>
-                    
-                    <button class="btn profile-btn" on:click={toggleEditProfile}>
+
+                    <button class="btn profile-btn profile-btn-positive mobile-only" on:click={toggleEditProfile}>
                         <Icon name='edit' class='header-btn-icon' strokeWidth='0' solid={true} />
                         <span>Edit</span>
                     </button>
                 {/if}
-                
-                <!-- <div class="deck-author">
-                    <input
-                        type="text" 
-                        class="input-deck-author"
-                        placeholder="Enter your profile description..."
-                        bind:value={test}
-                        pattern="[a-zA-Z0-9]*"
-                        title="Only letters and numbers allowed (for now)&#013;Automatically set to your Discord username if logged in!"
-                    >
-                </div> -->
-                
             {:else}
                 <div class="user-bio">
                     <p class="user-bio-text">{bio}</p>
                 </div>
             {/if}
-            <!-- <div class="profile-links">
-                <div>
-                    <a href={`https://www.grotto-bestiary.com/inventory?username=${data.username}`}>View Grotto Bestiary Inventory</a>
-                    <img src="https://www.grotto-bestiary.com/images/emotes/sludge_gay.png" alt="sludge" height="20px">
-                </div>
-
-                <div>
-                    <a href="/">Message on discord</a>
-                    <img src="/images/icons/discord-white.svg" alt="discord logo" height="16px">
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
 
-<div class="header-divider-alt"></div>
+<!-- <div class="header-divider-alt"></div> -->
+<div class="deck-stats-bar">
+    <div class="left">
+        <img src="/images/icons/decks.svg" alt="Decks" class="icon">
+        <span>{data.decks.length} decks built</span>
+        <!-- <span>/</span> -->
+        <img src="/images/icons/cards.svg" alt="Decks" class="icon">
+        <span class="desktop-only">{totalUniqueCards}/200 unique cards used</span>
+        <span class="mobile-only">{totalUniqueCards} unique cards</span>
+    </div>
+
+    <div class="right">
+        <span data-card-type="challenger">{decksInfo.challengerNum}</span>
+        <span data-card-type="beast">{decksInfo.beastNum}</span>
+        <span data-card-type="grotto">{decksInfo.grottoNum}</span>
+        <span data-card-type="wish">{decksInfo.wishNum}</span>
+    </div>
+</div>
 
 <!-- USER'S DECKS -->
 <div class="deck-explorer-container">
@@ -163,92 +223,23 @@
 
 <div class="divider-alt"></div>
 
+<!-- CSS -->
 <style>
-    .discord-avatar {
-        height: 128px;
-        width: 128px;
-
-        border-radius: 100%;
-        border: 2px solid white;
-
-        filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.5));
+    .deck-builder-header {
+        border-bottom: none;
     }
 
-    .mobile-avatar-container {
-        display: grid;
-        place-items: center;
-    }
-
-    .profile-links {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    .profile-links div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        /* gap: 0.5rem; */
-        justify-content: space-between;
-
+    .icon {
         color: white;
-
-        background-color: var(--colour-blue-dark);
-        padding: 4px 8px;
-        border-radius: 8px;
-    }
-
-    textarea {
-        /* Size */
-        height: 100%;
-        max-height: 100%;
-        width: 50%;
-        min-width: 30ch;
-        max-width: 40vw;
-        text-align: start;
-
-        /* Margins & Paddings */
-        padding: 1rem;
-
-        /* Font */
-        font-weight: 700;
-        font-size: 1rem;
-
-        /* Design */
-        border-radius: 8px;
-        background-color: var(--colour-light);
-        border: none;
-    }
-
-    .user-bio {
-        display: flex;
-        align-items: center;
-
-        max-width: 50%;
-        height: 100%;
-    }
-
-    .user-bio p {
-        font-size: 1.25rem;
-
-        text-align: justify;
-        text-justify: auto;
-        word-wrap: break-word;
+        height: 2.5rem;
     }
 
     /* MOBILE LAYOUT */
     @media (max-width: 940px) {
-        /* Center info text */
-        .info-container {
-            display: grid;
-            place-items: center;
-        }
 
-        /* Edit buttons in the corner */
+        /* Mobile edit buttons */
         .profile-btn {
             position: absolute;
-            top: 4px;
-            right: 4px;
 
             height: fit-content;
             width: fit-content;
@@ -258,10 +249,23 @@
         .profile-btn span {
             display: none;
         }
+        .profile-btn-positive {
+            top: 4px;
+            right: 4px;
+        }
+        .profile-btn-negative {
+            top: 4px;
+            left: 4px;
+        }
 
-        /* Bolder text */
-        .user-bio p {
-            font-weight: 600;
+        /* Deck stats bar */
+        .deck-stats-bar {
+            height: 6rem;
+            flex-direction: column;
+        }
+        .deck-stats-bar div {
+            width: 100%;
+            justify-content: center;
         }
     }
 </style>
