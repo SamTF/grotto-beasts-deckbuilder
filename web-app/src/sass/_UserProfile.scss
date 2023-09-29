@@ -1,0 +1,177 @@
+// A user's profile page
+
+// Mobile layout
+// @include mobile() {
+//     width: 90vw;
+// }
+
+// The main container
+.info-container {
+    // center info text on mobile
+    @include mobile() {
+        display: grid;
+        place-items: center;
+    }
+}
+
+// User Bio Input
+textarea.user-bio-input {
+    // Size
+    height: 100%;
+    max-height: 100%;
+    width: 50%;
+    min-width: 30ch;
+    max-width: 40vw;
+    text-align: start;
+
+    // Margins & Paddings
+    padding: 1rem;
+
+    // Font
+    font-family: inherit;
+    font-size: 1.25rem;
+    // font-weight: 700;
+
+    // Design
+    border-radius: 8px;
+    background-color: var(--colour-light);
+    border: none;
+
+    // Mobile layout
+    @include mobile() {
+        // Bigger textarea and font size
+        max-width: 90vw;
+        min-width: 75vw;
+        max-height: 100%;
+        height: 8rem;
+
+        font-size: 1.5rem;
+    }
+}
+
+// User Avatar
+.discord-avatar {
+    height: 128px;
+    width: 128px;
+
+    border-radius: 100%;
+    border: 2px solid white;
+
+    filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.5));
+}
+.mobile-avatar-container {
+    display: grid;
+    place-items: center;
+}
+
+// The User profile description
+// The container
+.user-bio {
+    display: flex;
+    align-items: center;
+
+    max-width: 50%;
+    height: 100%;
+
+    padding: 0 2rem;
+
+    // Mobile layout
+    @include mobile() {
+        // wider bio
+        max-width: 90%;
+
+        // bolder text
+        p {
+            font-weight: 600;
+        }
+    }
+
+    // the description text
+    p {
+        font-size: 1.25rem;
+
+        text-align: justify;
+        text-justify: auto;
+        word-wrap: break-word;
+    }
+
+    // sample text when there is no description
+    .empty {
+        font-style: italic;
+        font-weight: 700;
+        opacity: 0.5;
+    }
+}
+
+// Clickable div to edit description text
+.user-bio-btn {
+    position: relative;
+
+    &:hover {
+        cursor: pointer;
+        border-radius: 20px;
+        background-color: rgba(80,35,29,.25);
+    }
+
+    // display the text on hover
+    &:hover .user-bio-edit-btn {
+        display: block;
+    }
+
+    // Span in the top right corner that says "click to edit"
+    .user-bio-edit-btn {
+        display: none;
+
+        position: absolute;
+        top: 4px;
+        right: 1rem;
+
+        font-weight: bold;
+    }
+}
+
+// Profile Links
+// The container
+.profile-links {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-top: var(--space-sm);
+
+    // Mobile layout
+    @include mobile() {
+        // vertical centered layout
+        flex-direction: column;
+        align-items: center;
+        margin-top: var(--space-md);
+    }
+
+    // Each link element
+    div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: space-between;
+    
+        width: fit-content;
+    
+        color: white;
+    
+        background-color: var(--colour-blue-dark);
+        background-color: $colour-beast;
+        padding: 4px 8px;
+        border-radius: 8px;
+
+        // Uniform height and width on mobile
+        @include mobile() {
+            height: 28px;
+            width: 100%;
+        }
+    }
+
+    // The integration link icon
+    .integration-icon {
+        height: 1rem;
+    }
+}
