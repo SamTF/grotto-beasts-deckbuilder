@@ -13,7 +13,8 @@
 
         try {
             const update = await pb.collection('users').update($currentUser.id, {
-                avatarURL: avatarURL
+                avatarURL: avatarURL,
+                discordID: authData.meta.rawUser.id
             })
         } catch (error) {
             console.error(error)
