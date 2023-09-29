@@ -2,7 +2,7 @@
 
 .account-panel {
     /* size */
-    height: 32rem;
+    height: fit-content;
     width: 28rem;
 
     margin-top: var(--space-md);
@@ -16,7 +16,7 @@
     @include mobile {
         width: 90vw;
         height: fit-content;
-        margin-bottom: var(--space-xl);
+        margin-bottom: var(--space-md);
     }
 
     // title of the page
