@@ -6,7 +6,8 @@
     // User Authentication
     const login = async () => {
         const authData = await pb.collection('users').authWithOAuth2({ provider: 'discord' });
-        document.cookie = `authData=${JSON.stringify(authData)}`;
+        delete authData.record // !!this prevents the cookie from going over the 4K size limit!!
+        document.cookie = `authData=${JSON.stringify(authData)}; expires = Thu, 01 Jan 2030 00:00:00 GMT; path=/`;
 
         // Update avatar
         const avatarURL = authData.meta.avatarUrl
