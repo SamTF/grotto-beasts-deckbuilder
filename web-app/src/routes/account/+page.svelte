@@ -5,6 +5,7 @@
     import { pb, currentUser } from '$lib/pocketbase.js'
     import Checkbox from '$components/UI/Checkbox.svelte';
     import toast from 'svelte-french-toast'
+    import { goto } from '$app/navigation'
 
     // vars
     let showBestiary = false
@@ -95,7 +96,7 @@
             </div>
             <div class="account-panel-btns">
                 <!-- <h3>General Settings</h3> -->
-                <a href="/user/me" class="btn" style="text-align: center;">View My Profile</a>
+                <button class="btn" on:click={() => goto('/user/me')}>View My Profile</button>
                 <button class="btn" on:click={logout}>Log out</button>
                 <button class="btn" disabled={true}>Change avatar</button>
                 <!-- <button class="btn" disabled={true}>Edit display name</button> -->
