@@ -74,6 +74,11 @@
 
     <div class="panel">
         <p class="made-by">Special Thanks</p>
+        <b>Supported by:</b>
+        <div class="special-thanks">
+            <p><a href="/user/netdotnet">Net</a></p>
+        </div>
+
         <b>For help, feedback, and inspiration:</b>
         <div class="special-thanks">
             <p><a href="https://www.grotto-bestiary.com/" target="_blank">Violet</a></p>
