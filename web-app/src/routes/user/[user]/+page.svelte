@@ -83,7 +83,7 @@
 </script>
 
 <!-- META -->
-<Meta title={data.username} description={`${data.username}'s profile page'`} />
+<Meta title={data.username} description={bio ? bio : `${data.user.username}'s profile!'`} thumbnail={data.user.avatarURL ? data.user.avatarURL : `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${data.username}&backgroundColor=25609a,2bddf8,ade985,2a481e,fac648,de3852`} />
 
 <!-- HTML -->
 <div class="deck-builder-header">
