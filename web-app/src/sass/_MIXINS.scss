@@ -4,10 +4,8 @@
 @mixin icon-number($colour, $size: 5rem) {
     // display
     display: grid;
-    place-items: center;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    text-align: center;
 
     // font
     font-size: $size * 0.75;
