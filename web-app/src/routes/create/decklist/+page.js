@@ -26,5 +26,5 @@ export async function load({ url, params}) {
     }
     
     // Return cards
-    return { cards: cards }
+    return { cards: cards.original, patched: cards.patched }
 }
