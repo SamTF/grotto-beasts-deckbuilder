@@ -3,10 +3,10 @@
 <!-- JS -->
 <script>
     // Imports
-    import DecklistItem from './DecklistItem.svelte';
-    import BtnToggle from '$components/BtnToggle.svelte';
+    import DecklistItem from './DecklistItem.svelte'
+    import BtnToggle from '$components/BtnToggle.svelte'
     import { decklistAdvance } from '$lib/stores/decklist'
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte'
 
     // Props
     export let visible = true
@@ -98,12 +98,12 @@
         </div>
 
         <!-- List of card items -->
-        {#key $decklistAdvance}
+        <!-- {#key $decklistAdvance} -->
         {#each $decklistAdvance as card}
             <!-- <div>{quantity}x {name}(#{number})</div> -->
             <DecklistItem {card} />
         {/each}
-        {/key}
+        <!-- {/key} -->
     </div>
     </div>
 

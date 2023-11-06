@@ -3,8 +3,9 @@
 <!-- JS -->
 <script>
     // Imports
-    import BtnToggle from "./BtnToggle.svelte";
+    import BtnToggle from "./BtnToggle.svelte"
     import { cardTags } from "$lib/cardTags"
+    import { slide } from "svelte/transition"
 
     // Props
     export let visible = false
@@ -49,11 +50,13 @@
             <button class="btn" on:click={() => toggleFilters(false)}>Hide Tags ▲</button>
             <button class="btn red-btn" on:click={clearTags}>Clear All ✖</button>
         </div>
-
-        <div class="card-tag-filters">
-            {#each cardTags as tag}
-                <BtnToggle text={tag} cardType={tag} toggle={tagFilters.includes(tag)} onClick={() => toggleTag(tag)} />
-            {/each}
-        </div>
     {/if}
 </div>
+
+{#if visible}
+    <div class="card-tag-filters" transition:slide>
+        {#each cardTags as tag}
+            <BtnToggle text={tag} cardType={tag} toggle={tagFilters.includes(tag)} onClick={() => toggleTag(tag)} />
+        {/each}
+    </div>
+{/if}
