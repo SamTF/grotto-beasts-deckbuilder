@@ -63,11 +63,23 @@ export const searchHandlerAdvance = (store) => {
     const typesFilter = store.types
     const tagFilters = store.tags
 
+    // filter by tags
+    if (tagFilters.length >= 1) {
+        store.filtered = store.data.filter(item => {
+            const deckTags = item.tags
+            console.log(deckTags)
+            console.log(deckTags.some(tag => tagFilters.includes(tag)))
+            return deckTags.some(tag => tagFilters.includes(tag))
+        })
+    } else {
+        store.filtered = store.data
+    }
+
     // search by @author
     if (searchTerm.includes('@')) {
         const searchAuthor = searchTerm.replace('@', '')
 
-        store.filtered = store.data
+        store.filtered = store.filtered
             .filter(item => {
                 const deckAuthor = item.expand.author.username.toLowerCase()
                 return deckAuthor.includes(searchAuthor)
@@ -85,10 +97,10 @@ export const searchHandlerAdvance = (store) => {
             .sort((a, b) => searchTerm == '' ? a === b : a.name > b.name)
     }
     
-    // reset results
-    else {
-        store.filtered = store.data
-    }
+    // // reset results
+    // else {
+    //     store.filtered = store.data
+    // }
     
 }
 
