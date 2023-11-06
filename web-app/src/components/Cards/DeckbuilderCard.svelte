@@ -5,6 +5,9 @@
     // Imports
     import { CardTypes } from "$lib/cardUtils"
     import { createDecklistStore, decklist, decklistAdvance } from '$lib/stores/decklist'
+    import toast from 'svelte-french-toast'
+    import { onMount } from "svelte"
+    import Icon from "../UI/Icon.svelte";
 
     // Props
     export let card
@@ -12,7 +15,6 @@
     // vars
     let quantity = 0
     let maxQuantity = card.type == 'Challenger' ? 1 : 3
-    // let maxQuantity = card.type == 'Challenger' ? 1 : card.name == 'Byeah Beast' ? 60 : 3
     $: deckSize = decklistAdvance.deckSize($decklistAdvance)
     $: if (card.name == 'Byeah Beast') maxQuantity = deckSize
 
@@ -34,29 +36,31 @@
         }
     }
 
-    if ($decklistAdvance.some(x => x.name == card.name)) {
+    // Reactively update the Quantity counter after any change in the Decklist
+    $: if ($decklistAdvance.some(x => x.name == card.name)) {
         const i = $decklistAdvance.findIndex(x => x.name == card.name)
         quantity = $decklistAdvance[i].quantity
+    } else {
+        quantity = 0
     }
 
     const decreaseQuantity = () => {
         if (quantity > 0) {
             quantity--
             decklistAdvance.remove(card)
-            // decklist.update(data => {console.log(data)})
-            // cartContents.update(contents => [...contents, item]);
+            toast.success(`Removed a ${card.name} from your decklist!`)
         }
     }
     const increaseQuantity = () => {
         // Do not add any more cards if the deck is at it's limit
         if (deckMaxCapacity()) {
-            alert("The deck is already at maximum capacity!\nRemove some cards if you want to add more :P")
+            toast.error("The deck is already at maximum capacity!\nRemove some cards if you want to add more :P")
             return
         }
 
         // Ensure that the deck can only have one challenger
         if (card.type == 'Challenger' && deckHasChallenger()) {
-            alert("Grotto Beasts!™ decks can only have one (1) Challenger!\nIf you want to swap Challengers, remove the one in the deck first :)")
+            toast.error("Grotto Beasts!™ decks can only have one (1) Challenger!\nIf you want to swap Challengers, remove the one in the deck first :)")
             return
         }
 
@@ -66,7 +70,7 @@
 
             decklistAdvance.add(card)
             // decklist.update(contents => [...contents, { id: card.number, quantity: 1 }])
-            console.log($decklistAdvance)
+            toast.success(`Added ${quantity} ${card.name}${quantity > 1 ? 's' : ''} to your decklist!`)
         }
     }
 
@@ -83,69 +87,48 @@
     const deckHasChallenger = () => {
         return ($decklistAdvance.some(x => x.type == 'Challenger'))
     }
+
+    // RENDER UI ONLY AFTER CARD IMAGE LOADS
+    // to prevent the weird loading thing
+    let showUI = false
+
+    onMount(() => {
+        setTimeout(() => showUI = true, '100')
+    })
 </script>
 
 <!-- HTML -->
-<div class="card deckbuilder-card" id={card.number}}>
+<div class="card deckbuilder-card" id={card.number} oncontextmenu="return false">
     <div class="card-image">
-        <a href={`/card/${card.number}`} target="_blank"><img src={`/images/cards/360/${card.number}. ${card.name}.webp`} alt={card.name} loading="lazy"></a>
+        <!-- <a href={`/card/${card.number}`} target="_blank"><img src={`/images/cards/360/${card.number}. ${card.name}.webp`} alt={card.name} loading="lazy"></a> -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <img
+            src={card.imageURL.small}
+            alt={card.name}
+            loading="lazy"
+            on:click={increaseQuantity}
+            on:contextmenu={decreaseQuantity}
+            >
+        
+        <!-- Re-render block when $decklist changes -->
         {#key $decklistAdvance}
-
+        {#if showUI}
         <!-- Buttons to add/remove card copies -->
             <div class="builder-btns">
-                <button class="btn btn-builder btn-positive" on:click={increaseQuantity} disabled={quantity >= maxQuantity || deckMaxCapacity()}>+</button>
-                <button class="btn btn-builder btn-negative" on:click={decreaseQuantity} disabled={quantity <= 0}>-</button>
+                <!-- + -->
+                <button class="btn btn-builder btn-positive" on:click={increaseQuantity} disabled={quantity >= maxQuantity || deckMaxCapacity()}>
+                    <Icon name='plus' class='btn-builder-icon' strokeWidth={4} solid={false} />
+                </button>
+
+                <!-- - -->
+                <button class="btn btn-builder btn-negative" on:click={decreaseQuantity} disabled={quantity <= 0}>
+                    <Icon name='minus' class='btn-builder-icon' strokeWidth={4} solid={false} />
+                </button>
             </div>
 
             <!-- Number of copies of this card in the user's deck list -->
             <span class="deckbuilder-card-quantity">x{quantity}</span>
+        {/if}
         {/key}
     </div> 
 </div>
-
-<style>
-    .deckbuilder-card {
-        position: relative;
-    }
-
-    .builder-btns {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-    }
-
-    .card-image:hover {
-        transform: scale(1);
-    }
-    .card-image img:hover {
-        outline: 0.5rem solid gold;
-    }
-
-    .btn-builder {
-        font-family: 'Alegreya Sans', 'Roboto', sans-serif;
-        font-weight: 900 !important;
-        font-size: 1rem;
-        opacity: 1;
-    }
-
-    .btn-builder:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .deckbuilder-card-quantity {
-        /* position */
-        position: absolute;
-        bottom: 0.5rem;
-        right: 1rem;
-
-        color: white;
-        font-size: 4rem;
-        font-weight: 900;
-        -webkit-text-stroke: 2px brown;
-    }
-
-    .card-image img {
-        max-height: 280px;
-    }
-</style>
