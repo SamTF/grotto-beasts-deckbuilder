@@ -1,15 +1,43 @@
 // Fetches ALL the Grotto Beasts cards
+// Including alternate versions
 
 import { pb } from '$lib/pocketbase.js';
 import { json } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
+import versions from '$lib/versions.js'
 
-const collection = "cards"
+
+const collection = versions[0].collection
+const collection_v2 = versions[1].collection
 
 export async function GET({ url, params }) {
+    // ORIGINAL CARDS
     const result = await pb.collection(collection).getList(1, 200, {
         '$autoCancel' : false
     })
 
-    return json(result.items)
+    // set the original card's image URL directly on the object
+    for (let i = 0; i < result.items.length; i++) {
+        const card = result.items[i];
+        card.imageURL = { 
+            large: `/images/cards/${card.number}. ${card.name}.webp`,
+            small: `/images/cards/360/${card.number}. ${card.name}.webp` 
+        }
+    }
+
+    // PATCHED TTS CARDS
+    const result_v2 = await pb.collection(collection_v2).getList(1, 200, {
+        '$autoCancel' : false
+    })
+
+    // set the patched card image's URL via pocketbase
+    for (let i = 0; i < result_v2.items.length; i++) {
+        const patched = result_v2.items[i];
+        patched.imageURL = {
+            large: `https://pb.grotto.builders/api/files/${patched.collectionId}/${patched.id}/${patched.image}`,
+            small: `https://pb.grotto.builders/api/files/${patched.collectionId}/${patched.id}/${patched.image}`
+        }
+    }
+
+    return json({ original: result.items, patched: result_v2.items })
 }
