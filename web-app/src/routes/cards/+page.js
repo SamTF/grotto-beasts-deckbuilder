@@ -27,7 +27,17 @@ export async function load({ url, params}) {
     //         return tags.some( tag => searchTags.includes(tag) )
     //     })
     // }
+
+    // Copy missing cards from original list (these are cards without an alternate version)
+    for (let i = 0; i < cards.original.length; i++) {
+        const original = cards.original[i]
+        if (!cards.patched.some(x => x.number == original.number)) {
+            cards.patched.push(original)
+        }
+    }
+    // Sort patched cards by ID after adding missing cards
+    cards.patched.sort((a, b) => a.number > b.number)
     
     // Return cards
-    return { cards: cards }
+    return { cards: cards.original, patched: cards.patched }
 }
