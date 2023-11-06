@@ -1,6 +1,6 @@
 {
-	"name": "web-app",
-	"version": "0.0.1",
+	"name": "grotto-builders",
+	"version": "1.4.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
