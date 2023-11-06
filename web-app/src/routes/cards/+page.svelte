@@ -1,13 +1,16 @@
 <!-- JS -->
 <script>
     // Imports
-    import Card from '$components/Cards/Card.svelte';
-    import BtnToggle from '$components/BtnToggle.svelte';
-    import TagFilters from '$components/TagFilters.svelte';
+    import Card from '$components/Cards/Card.svelte'
+    import BtnToggle from '$components/BtnToggle.svelte'
+    import TagFilters from '$components/TagFilters.svelte'
     import { createSearchStore, searchHandlerAdvance } from '$lib/stores/search'
-	import { onDestroy, onMount } from 'svelte';
-    import { page } from "$app/stores"; 
-	import Meta from '$components/Meta/Meta.svelte';
+	import { onDestroy, onMount } from 'svelte'
+    import { page } from "$app/stores"
+    import { get } from 'svelte/store'
+	import Meta from '$components/Meta/Meta.svelte'
+    import { slide } from "svelte/transition"
+    import Icon from '$components/UI/Icon.svelte'
 
     // API data
     export let data
@@ -18,9 +21,8 @@
         searchTerms: `${card.name} ${card.type} ${card.subtype}`
     }))
 
-
-    console.log(searchableCards)
     // Svelte store stuff
+    // let searchStore = createSearchStore(searchableCards)
     const searchStore = createSearchStore(searchableCards)
 
     // watch for changes in the data
@@ -31,6 +33,9 @@
         unsub()
     })
 
+    // SEARCH OPTIONS
+    let showSearchOptions = false
+    const toggleSearchOptions = () => { showSearchOptions = !showSearchOptions }
 
     // FILTERS
     // Filtering by Type
@@ -50,16 +55,11 @@
     $: if ( Object.values(typeFilters).some(element => element == true) ) {
         let types = []
         for (const [key, value] of Object.entries(typeFilters)) {
-            console.log(key, value);
             if (value == true) {
                 types.push(key)
                 $searchStore.types = types
             }
         }
-
-        // let query = new URLSearchParams($page.url.searchParams.toString());
-        // query.set('tags', 'draw');
-        // goto(`?${query.toString()}`);
     } else {
         // console.log("boblin")
         let types = []
@@ -107,7 +107,7 @@
     // Get tags from query (if any)
     onMount(() => {
         const tagParams = $page.url.searchParams.get('tags')
-
+        // const tagParams = get(page.url.searchParams.get('tags'))
         if (tagParams) {
             const tags = tagParams.split(',')
             tagFilters = [...tags]
@@ -135,7 +135,6 @@
         const ascending = cardSort[method]
         searchStore.sort(method, ascending)
     }
-
 </script>
 
 <!-- META -->
@@ -158,39 +157,61 @@
         <button on:click={clearSearch}>✖</button>
     </div>
 
-    <div class="type-filters">
-        <BtnToggle bind:toggle={typeFilters.challenger} text={'Challengers'}    cardType={'challenger'} onClick={() => typeFilters.challenger != typeFilters.challenger} />
-        <BtnToggle bind:toggle={typeFilters.beast}      text={'Beasts'}         cardType={'beast'}/>
-        <BtnToggle bind:toggle={typeFilters.grotto}     text={'Grottos'}        cardType={'grotto'} />
-        <BtnToggle bind:toggle={typeFilters.wish}       text={'Wishes'}         cardType={'wish'} />
+    <!-- Main container for ALL search filter options and toggles -->
+    {#if showSearchOptions}
 
-    </div>
+        <!-- Filtering by type -->
+        <div class="type-filters" transition:slide>
+            <BtnToggle bind:toggle={typeFilters.challenger} text={'Challengers'}    cardType={'challenger'} onClick={() => typeFilters.challenger != typeFilters.challenger} />
+            <BtnToggle bind:toggle={typeFilters.beast}      text={'Beasts'}         cardType={'beast'}/>
+            <BtnToggle bind:toggle={typeFilters.grotto}     text={'Grottos'}        cardType={'grotto'} />
+            <BtnToggle bind:toggle={typeFilters.wish}       text={'Wishes'}         cardType={'wish'} />
 
-    <TagFilters bind:tagFilters={tagFilters} />
+        </div>
 
-    <div class="sorting-options-container">
-        {#if !sortingVisible}
-            <div class="buttons">
-                <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
+        <div class="card-search-options" transition:slide>
+            <!-- Filtering by Tag -->
+            <TagFilters bind:tagFilters={tagFilters} />
+
+            <!-- Sorting cards show/hide -->
+            <div class="sorting-options-container">
+                {#if !sortingVisible}
+                    <div class="buttons">
+                        <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
+                    </div>
+                {:else}
+                    <div class="buttons">
+                        <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
+                    </div>
+                {/if}
             </div>
-        {:else}
-            <div class="buttons">
-                <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
-            </div>
-            
-            <!-- Sorting buttons -->
-            <div class="sorting-options">
-                {#each sortingMethods as method}
-                    <BtnToggle
-                        text={!(method in cardSort) ? method : cardSort[method] ? `${method}▲` : `${method}▼`}
-                        toggle={method in cardSort}
-                        onClick={() => sortDecks(method)}
-                    />
-                {/each}
-            </div>
-        {/if}
-    </div>
 
+            <!-- Sorting cards -->
+            {#if sortingVisible}
+                <!-- Sorting buttons -->
+                <div class="sorting-options" transition:slide>
+                    {#each sortingMethods as method}
+                        <BtnToggle
+                            text={!(method in cardSort) ? method : cardSort[method] ? `${method}▲` : `${method}▼`}
+                            toggle={method in cardSort}
+                            onClick={() => sortDecks(method)}
+                        />
+                    {/each}
+                </div>
+            {/if}
+        </div>
+    {/if}
+
+    <!-- Button to show/hide search options -->
+    <button
+        class="card-search-options-btn"
+        class:active={showSearchOptions}
+        on:click={toggleSearchOptions}
+    >
+        <Icon name='chevron-down' class='card-search-options-icon' strokeWidth='2' solid={false} />
+    </button>
+
+    <!-- CARD GRID -->
     <div class="card-grid">
         {#each $searchStore.filtered as card}
             <Card {card} />

@@ -8,6 +8,8 @@
     import { createSearchStore, searchHandler, searchHandlerAdvance } from '$lib/stores/deckSearch'
     import { onDestroy, onMount } from 'svelte'
     import CreateDeckItem from '$components/DeckExplorer/CreateDeckItem.svelte'
+    import Icon from '$components/UI/Icon.svelte'
+    import { slide } from 'svelte/transition'
 
     export let data
 
@@ -32,9 +34,10 @@
         unsub()
     })
 
-    // Searching by input
+    // Reset all search input and filters
     const clearSearch = () => {
         $searchStore.search = ''
+        tagFilters = []
     }
 
     // Sorting decks
@@ -58,6 +61,15 @@
         const ascending = deckSort[method]
         searchStore.sort(method, ascending)
     }
+
+    // Filtering by Tags
+    let tagFilters = []
+    $: $searchStore.tags = tagFilters
+
+    // Show/Hide advanced search options
+    let showSearchOptions = false
+
+    const toggleSearchOptions = () => { showSearchOptions = !showSearchOptions }
 </script>
 
 <!-- METADATA -->
@@ -93,11 +105,54 @@
             <button>Filters</button>
             <input type="text" name="deck-search" id="deck-search" placeholder="Search decks...">
         </div>
-
-        <!-- <TagFilters bind:tagFilters={tagFilters} /> -->
     </div>
 
-    <div class="sorting-options-container">
+    <!-- Main container for ALL search filter options and toggles -->
+    {#if showSearchOptions}
+        <div class="card-search-options" transition:slide>
+            <TagFilters bind:tagFilters={tagFilters} />
+
+            <!-- Sorting cards show/hide -->
+            <div class="sorting-options-container">
+                {#if !sortingVisible}
+                    <div class="buttons">
+                        <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
+                    </div>
+                {:else}
+                    <div class="buttons">
+                        <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
+                    </div>
+                {/if}
+            </div>
+
+            <!-- Sorting cards -->
+            {#if sortingVisible}
+                <!-- Sorting buttons -->
+                <div class="sorting-options" transition:slide>
+                    {#each sortingMethods as method}
+                        <BtnToggle
+                            text={!(method in deckSort) ? method : deckSort[method] ? `${method}▲` : `${method}▼`}
+                            toggle={method in deckSort}
+                            onClick={() => sortDecks(method)}
+                        />
+                    {/each}
+                </div>
+            {/if}
+        </div>
+    {/if}
+
+    <!-- Button to show/hide search options -->
+    <button
+        class="card-search-options-btn"
+        class:active={showSearchOptions}
+        on:click={toggleSearchOptions}
+    >
+        <Icon name='chevron-down' class='card-search-options-icon' strokeWidth='2' solid={false} />
+    </button>
+
+    
+
+    <!-- <div class="sorting-options-container" style="margin-top: 1rem;">
         {#if !sortingVisible}
             <div class="buttons">
                 <button class="btn" on:click={() => sortingVisible = true}>Sorting Options ▶</button>
@@ -107,8 +162,8 @@
                 <button class="btn" on:click={() => sortingVisible = false}>Sorting Options ▲</button>
             </div>
             
-            <!-- Sorting buttons -->
-            <div class="sorting-options">
+             Sorting buttons
+            <div class="sorting-options" style="margin-top: 1rem;">
                 {#each sortingMethods as method}
                     <BtnToggle
                         text={!(method in deckSort) ? method : deckSort[method] ? `${method}▲` : `${method}▼`}
@@ -118,7 +173,7 @@
                 {/each}
             </div>
         {/if}
-    </div>
+    </div> -->
 
     <!-- DECK GRID -->
     <div class="deck-grid">
