@@ -2,7 +2,7 @@
 <script>
     // Imports
     import DeckSection from "./DeckSection.svelte";
-    import { CardTypes } from "$lib/cardUtils"
+    import { CardTypes, countCardType } from "$lib/cardUtils"
 
     // Props
     export let deck = []
@@ -27,8 +27,12 @@
 
     <!-- Card List -->
     <div class="deck">
+        <!-- Create a section for each card type -->
         {#each Object.values(CardTypes) as type}
-            <DeckSection cardType={type} deck={deck} on:cardHover={onCardHover} />
+            <!-- but only if there exist cards of that type in the deck -->
+            {#if countCardType(deck, type) > 0}
+                <DeckSection cardType={type} deck={deck} on:cardHover={onCardHover} />
+            {/if}
         {/each}
     </div>
 </div>
