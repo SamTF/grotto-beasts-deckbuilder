@@ -87,7 +87,7 @@
 
     const exportDeck = async () => {
         // Open the export options modal
-        openModal(PopupExport, { deckID: deck.id })
+        openModal(PopupExport, { deckID: deck.id, deckName: name })
 
         // // fetching the decklist in correct format as plain text
         // const res = await fetch(`/api/export/${deck.id}`)
@@ -117,7 +117,7 @@
             
             <ul class="deck-tags">
                 {#each tags as tag}
-                    <li><a href={$page.url.pathname}>{tag}</a></li>
+                    <li>{tag}</li>
                 {/each}
             </ul>
 

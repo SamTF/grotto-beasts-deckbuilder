@@ -8,6 +8,7 @@
     // Props
     export let isOpen
     export let deckID
+    export let deckName = 'decklist'
 
     // Waiting for TTS Mod to release
     const hasModReleased = false
@@ -25,7 +26,7 @@
         // downloading the file
         var a = document.createElement('a');
         document.body.append(a);
-        a.download = `${deck.name}.txt`;
+        a.download = `${deckName}.txt`;
         a.href = URL.createObjectURL(f);
         a.click();
         a.remove();
