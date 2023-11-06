@@ -4,39 +4,36 @@
 .card-tag-filters-container {
     display: grid;
     place-items: center;
-    margin-bottom: 0;
+    // margin-bottom: 0.5rem;
 
     // show/hide button and clear all button
     .buttons {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-    }
-
-    // the actual filters
-    .card-tag-filters {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-
-        width: 70%;
-        margin-top: 1rem;
-
-        @include mobile {
-            // display
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-
-            // wider
-            width: 100%; 
-        }
+        margin-bottom: 0.5rem;
     }
 }
 
+// the actual filters
+.card-tag-filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
 
+    width: 70%;
+    // margin-top: 1rem;
 
+    @include mobile {
+        // display
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
 
+        // wider
+        width: 100%; 
+    }
+}
 
 .red-btn {
     background-color: var(--colour-red);

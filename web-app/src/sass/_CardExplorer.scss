@@ -28,13 +28,18 @@
         /* flex-wrap: wrap; */
         /* gap: 4rem; */
     
+        // display
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-auto-rows: auto;
         grid-row-gap: 2rem;
         place-items: center;
     
+        // size
         width: 80vw;
+
+        // margin
+        margin-top: 2rem;
 
         // Mobile layout
         @include mobile {
@@ -61,6 +66,41 @@
         @extend .card-grid;
 
         width: 90%;
+    }
+}
+
+// Advanced Search Options Menu
+.card-search-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    margin-bottom: 1rem;
+}
+
+// Button to show/hide options menu
+.card-search-options-btn {
+    // size
+    height: 3rem;
+    // transform-origin: top center;
+    transition: all 200ms;
+    transition-delay: 500ms;
+
+    &.active {
+        transform: rotate(180deg);
+    }
+}
+
+// Chevron Icon
+.card-search-options-icon {
+    height: 100%;
+    color: $colour-dark;
+
+    &:hover {
+        cursor: pointer;
+        color: $colour-accent;
+        transform: scale(1.1);
     }
 }
 

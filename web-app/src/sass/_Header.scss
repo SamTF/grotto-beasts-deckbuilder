@@ -61,6 +61,9 @@ header {
         // design
         background-color: transparent;
 
+        // transitions
+        transition: all 200ms;
+
         // Logo
         .logo {
             display: none;
@@ -69,6 +72,15 @@ header {
         // Discord login
         .login-container {
             display: none;
+        }
+
+        // Hide header when user scrolls down
+        &.hide {
+            bottom: -10rem;
+        }
+        // Show header when user scrolls back up
+        &.show {
+            bottom: 3rem;
         }
     }
 }

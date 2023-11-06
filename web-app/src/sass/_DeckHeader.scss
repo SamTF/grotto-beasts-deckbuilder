@@ -128,6 +128,7 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
             @include mobile {
                 font-size: 1rem;
                 font-weight: 400;
+                justify-content: center;
 
                 li {
                     display: grid;

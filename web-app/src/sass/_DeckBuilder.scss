@@ -56,15 +56,15 @@
         margin: auto;
 
         // size
-        height: 95vh;
+        height: 95dvh;
         width: 90vw;
 
         z-index: 10;
         transition: all 200ms ease;
 
         &.hidden {
-            background-color: green;
-            top: 56rem;
+            // top: 56rem;
+            top: 100dvh;
             transition: all 200ms ease;
         }
     }

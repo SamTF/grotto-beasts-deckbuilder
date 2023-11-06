@@ -1,0 +1,47 @@
+// Menu with Toggle Buttons to switch between alternate card versions
+
+// The main container
+.card-versions-container {
+    // display
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 100%;
+
+    // margins
+    // margin-top: 0.5rem;
+    // margin-bottom: 0.5rem;
+
+    // Mobile layout - wider
+    @include mobile() {
+        width: 80vw;
+        // margin-bottom: 2rem;
+
+        button {
+            font-size: 1.25rem;
+        }
+    }
+}
+
+// Toggle buttons for each version available
+.card-versions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    // margin-top: var(--space-sm);
+
+    // Each button
+    button {
+        width: 100%;
+    }
+
+    // Mobile - column layout
+    @include mobile() {
+        width: 100%;
+        flex-direction: column;
+    }
+}

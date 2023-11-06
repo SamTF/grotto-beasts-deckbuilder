@@ -26,6 +26,8 @@
 @import 'Account';
 @import 'Sorting';
 @import 'UserProfile';
+@import 'CardVersions';
+@import 'DeckBuilderCard';
 
 * {
     box-sizing: border-box;
@@ -80,6 +82,8 @@ a {
     transition: all 200ms;
     
     img {
+        max-height: 360px;
+        
         border-radius: 20px;
         // border-radius: 2cqh;
         filter: drop-shadow(0 0 0.75rem $colour-dark);
