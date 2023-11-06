@@ -197,7 +197,7 @@
             
             <ul class="deck-tags">
                 {#each $deckTags as tag}
-                    <li><a href={$page.url.pathname}>{tag}</a></li>
+                    <li>{tag}</li>
                 {/each}
                 <button on:click={() => openModal(PopupTags)}>Edit Tags</button>
             </ul>
