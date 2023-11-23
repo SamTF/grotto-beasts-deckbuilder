@@ -3,11 +3,12 @@
 <!-- JS -->
 <script>
     export let checked = false
+    export let onClick = () => {}
 </script>
 
 <!-- HTML -->
 <label class="toggler-wrapper style-1">
-    <input type="checkbox" bind:checked={checked}>
+    <input type="checkbox" bind:checked={checked} on:click={onClick}>
     <div class="toggler-slider">
         <div class="toggler-knob"></div>
     </div>
