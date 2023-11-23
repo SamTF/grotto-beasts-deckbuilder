@@ -4,7 +4,7 @@
 <script>
     // Imports
     import versions from '$lib/versions.js'
-    import { fade, blur, fly, slide, scale } from "svelte/transition"
+    import { slide } from "svelte/transition"
     import { quintOut } from "svelte/easing"
 
     // Props
@@ -18,7 +18,7 @@
 </script>
 
 <!-- HTML -->
-<div class="card-versions-container" transition:slide>
+<div class="card-versions-container">
     {#if showMenu}
         <button class="btn" on:click={toggleMenu}>Hide Versions ▲</button>
     {:else}
@@ -27,7 +27,7 @@
 </div>
 
 {#if showMenu}
-    <div class="card-versions" transition:slide={{ delay: 0, duration: 500, easing: quintOut }}>
+    <div class="card-versions" transition:slide>
         <button
             class="btn-toggle"
             class:active="{currentVersion == 'original'}"
@@ -41,7 +41,7 @@
             class:active="{currentVersion == 'patched'}"
             on:click={() => { currentVersion = 'patched'; onClick() }}
         >
-            Patched 🤖
+            Digital 🤖
         </button>
     </div>
 {/if}
