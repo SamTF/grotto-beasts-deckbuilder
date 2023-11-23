@@ -1,5 +1,6 @@
 // Contains all icons used
 
+// Card Type Icons
 // $icon-challenger: "👑";
 $icon-challenger: url("/images/icons/challenger.svg");
 // $icon-beast: "🐾";
@@ -10,10 +11,32 @@ $icon-grotto: url("/images/icons/grotto.svg");
 $icon-wish: url("/images/icons/wish.svg");
 $icon-all: "⭐";
 
+// Game Version Icons
+$icon-original: url("/images/icons/meowdy icon.svg");
+$icon-digital: url("/images/icons/robot.svg");
+
 // CSS Vars
 :root {
     --icon-challenger: url("/images/icons/challenger.svg");
     --icon-beast: url("/images/icons/beast.svg");
     --icon-grotto: url("/images/icons/grotto.svg");
     --icon-wish: url("/images/icons/wish.svg");
+    --icon-original: url("/images/icons/meowdy.png");
+    --icon-digital: url("/images/icons/robot.svg");
+}
+
+// Icon Styles
+.icon-original {
+    &::before {
+        content: $icon-original;
+        margin-right: 0.25rem;
+        vertical-align: -10%;
+    }
+}
+.icon-digital {
+    &::after {
+        content: $icon-digital;
+        margin-left: 0.25rem;
+        vertical-align: -10%;
+    }
 }
