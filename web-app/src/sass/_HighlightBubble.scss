@@ -1,0 +1,48 @@
+// Simple design component for a colourful bubble with text info and an icon
+
+// Highlight Bubble main
+.highlight-bubble {
+    // display
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    // padding / margins
+    padding: 0.25rem 0.5rem;
+
+    // design
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    // font
+    color: var(--colour-blue-dark);
+    font-weight: 700;
+
+    // Hover effect
+    &:hover {
+        // background-color: var(--colour-blue-dark);
+        background-color: var(--colour-accent);
+        color: white;
+        cursor: pointer;
+    }
+}
+
+// Dark blue colour scheme
+.highlight-bubble-alt {
+    @extend .highlight-bubble;
+    
+    // Hover effect
+    &:hover {
+        background-color: var(--colour-blue-dark);
+        color: white;
+        cursor: pointer;
+    }
+}
+
+// Lighter colour scheme
+.highlight-bubble-light {
+    @extend .highlight-bubble;
+
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
