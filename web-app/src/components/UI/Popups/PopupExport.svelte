@@ -11,7 +11,7 @@
     export let deckName = 'decklist'
 
     // Waiting for TTS Mod to release
-    const hasModReleased = false
+    const hasModReleased = true
 
     const exportDecklist = async () => {
         // fetching the decklist in correct format as plain text
@@ -45,7 +45,8 @@
 
         await navigator.clipboard.writeText(deckcode);
 
-        toast.success("Deck code copied!")
+        // toast.success("Deck code copied to your clipboard!")
+        toast.success(`${deckcode} copied to your clipboard!`)
 
         closeModal()
     }
