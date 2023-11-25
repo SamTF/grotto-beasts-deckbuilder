@@ -27,7 +27,7 @@ export async function load({ url, params, route, fetch }) {
         filter = filter.slice(0, -2)
     }
 
-    const result = await pb.collection("decks").getList(1, 50, {
+    const result = await pb.collection("decks").getList(1, 200, {
         sort: 'created',
         expand: 'challenger, author',
         filter: filter
