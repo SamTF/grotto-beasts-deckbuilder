@@ -147,7 +147,6 @@ button {
     margin-top: 1rem;
     color: var(--colour-blue-dark);
     font-weight: 700;
-    opacity: 0.75;
 
     // The actual deck code text
     span {
@@ -166,9 +165,9 @@ button {
             opacity: 1;
         }
     }
+}
 
-    // The icon
-    .deck-code-icon {
-        height: 1rem;
-    }
+// The icon
+.deck-code-icon {
+    height: 1rem;
 }
