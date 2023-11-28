@@ -9,6 +9,7 @@
     import { page } from "$app/stores"
     import { get } from 'svelte/store'
 	import Meta from '$components/Meta/Meta.svelte'
+    import CardVersions from '$components/Cards/CardVersions.svelte'
     import { slide } from "svelte/transition"
     import Icon from '$components/UI/Icon.svelte'
 
@@ -21,16 +22,29 @@
         searchTerms: `${card.name} ${card.type} ${card.subtype}`
     }))
 
+    // searchable patched version
+    let searchableCards_v2 = data.patched.map((card) => ({
+        ...card,
+        searchTerms: `${card.name} ${card.type} ${card.subtype}`
+    }))
+    
+    
     // Svelte store stuff
     // let searchStore = createSearchStore(searchableCards)
-    const searchStore = createSearchStore(searchableCards)
+    const searchStore_v1 = createSearchStore(searchableCards)
+    const searchStore_v2 = createSearchStore(searchableCards_v2)
+    let searchStore = searchStore_v1
 
     // watch for changes in the data
-    const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+    // const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+    const unsub_v1 = searchStore_v1.subscribe(model => searchHandlerAdvance(model))
+    const unsub_v2 = searchStore_v2.subscribe(model => searchHandlerAdvance(model))
 
     // unsub to avoid memory leaks
     onDestroy(() => {
-        unsub()
+        // unsub()
+        unsub_v1()
+        unsub_v2()
     })
 
     // SEARCH OPTIONS
@@ -60,6 +74,10 @@
                 $searchStore.types = types
             }
         }
+
+        // let query = new URLSearchParams($page.url.searchParams.toString());
+        // query.set('tags', 'draw');
+        // goto(`?${query.toString()}`);
     } else {
         // console.log("boblin")
         let types = []
@@ -106,8 +124,9 @@
 
     // Get tags from query (if any)
     onMount(() => {
-        const tagParams = $page.url.searchParams.get('tags')
-        // const tagParams = get(page.url.searchParams.get('tags'))
+        // const tagParams = $page.url.searchParams.get('tags')
+        const tagParams = get(page).url.searchParams.get('tags')
+
         if (tagParams) {
             const tags = tagParams.split(',')
             tagFilters = [...tags]
@@ -135,6 +154,37 @@
         const ascending = cardSort[method]
         searchStore.sort(method, ascending)
     }
+
+    // Toggling between original and laternate versions of cards
+    let currentVersion = 'original'
+    $: setVersion(currentVersion)
+
+    // Update the Search Store to reflect the chosen card version
+    const setVersion = (version) => {
+        const searchTerm = $searchStore.search
+
+        // change search store
+        currentVersion == 'original' ? searchStore = searchStore_v1 : searchStore = searchStore_v2
+
+        // set search term
+        $searchStore.search = searchTerm
+
+        // set sorting method
+        const method = Object.keys(cardSort)[0]
+        searchStore.sort(method, cardSort[method])
+
+        // set tag filters
+        $searchStore.tags = tagFilters
+
+        // set type filters
+        let types = []
+        for (const [key, value] of Object.entries(typeFilters)) {
+            if (value == true) {
+                types.push(key)
+            }
+        }
+        $searchStore.types = types
+    }
 </script>
 
 <!-- META -->
@@ -157,9 +207,8 @@
         <button on:click={clearSearch}>✖</button>
     </div>
 
-    <!-- Main container for ALL search filter options and toggles -->
+    <!-- Advanced Search Options -->
     {#if showSearchOptions}
-
         <!-- Filtering by type -->
         <div class="type-filters" transition:slide>
             <BtnToggle bind:toggle={typeFilters.challenger} text={'Challengers'}    cardType={'challenger'} onClick={() => typeFilters.challenger != typeFilters.challenger} />
@@ -169,11 +218,12 @@
 
         </div>
 
+        <!-- Main container for ALL search filter options and toggles -->
         <div class="card-search-options" transition:slide>
             <!-- Filtering by Tag -->
             <TagFilters bind:tagFilters={tagFilters} />
 
-            <!-- Sorting cards show/hide -->
+            <!-- Sorting Cards -->
             <div class="sorting-options-container">
                 {#if !sortingVisible}
                     <div class="buttons">
@@ -186,7 +236,6 @@
                 {/if}
             </div>
 
-            <!-- Sorting cards -->
             {#if sortingVisible}
                 <!-- Sorting buttons -->
                 <div class="sorting-options" transition:slide>
@@ -199,6 +248,12 @@
                     {/each}
                 </div>
             {/if}
+
+            <!-- Card Versions -->
+            <CardVersions
+                bind:currentVersion={currentVersion}
+                onClick={() => {}}
+            />
         </div>
     {/if}
 

@@ -1,55 +1,69 @@
 <!-- JS -->
 <script>
     // Imports
-    import DeckbuilderCard from '$components/Cards/DeckbuilderCard.svelte';
-    import DecklistSidebar from '$components/DeckBuilder/DecklistSidebar.svelte';
-    import BtnToggle from '$components/BtnToggle.svelte';
-    import TagFilters from '$components/TagFilters.svelte';
+    import DeckbuilderCard from '$components/Cards/DeckbuilderCard.svelte'
+    import DecklistSidebar from '$components/DeckBuilder/DecklistSidebar.svelte'
+    import BtnToggle from '$components/BtnToggle.svelte'
+    import TagFilters from '$components/TagFilters.svelte'
     import { createSearchStore, searchHandlerAdvance } from '$lib/stores/search'
     import { decklistAdvance } from '$lib/stores/decklist'
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte'
     import { slide } from "svelte/transition"
     import Icon from '$components/UI/Icon.svelte'
+    import Meta from '$components/Meta/Meta.svelte'
 
     // API data
     export let data
 
-    // // Save Decklist to session cookies
-    // let saveStore = false
-    // $: if ($decklistAdvance && saveStore) {
-    //     window.sessionStorage.setItem("decklist", JSON.stringify($decklistAdvance))
-    // }
+    let currentVersion = 'original'
+    let saveStore = false
 
-    // onMount(() => {
-    //     let store = window.sessionStorage.getItem("decklist")
-    //     console.log("STORE:")
-    //     console.log(store)
+    onMount(() => {
+        let store = localStorage.deckInfo
 
-    //     if (store) {
-    //         $decklistAdvance = JSON.parse(store)
-    //     }
+        if (store) {
+            let deckInfo = JSON.parse(store)
+            currentVersion = deckInfo.patched ? 'patched' : 'original'
+            console.log(deckInfo)
+            console.log(currentVersion)
+        }
 
-    //     saveStore = true
-    // })
+        saveStore = true
+    })
 
-    // console.log($decklistAdvance)
 
     // Searchable data
-    const searchableCards = data.cards.map((card) => ({
+    let searchableCards = data.cards.map((card) => ({
         ...card,
         searchTerms: `${card.name} ${card.type} ${card.subtype}`
     }))
 
+    // searchable patched version
+    let searchableCards_v2 = data.patched.map((card) => ({
+        ...card,
+        searchTerms: `${card.name} ${card.type} ${card.subtype}`
+    }))
+
+    // Check whether to show only ORIGINAL cards or show PATCHED TTS cards
+    // $: searchableCards = deckInfo.patched ? searchableCards_v2 : searchableCards_original
+    console.log(searchableCards)
+
     // Svelte store stuff
-    const searchStore = createSearchStore(searchableCards)
-    // const decklistStore = createDecklistStore([])
+    // let searchStore = createSearchStore(searchableCards)
+    const searchStore_v1 = createSearchStore(searchableCards)
+    const searchStore_v2 = createSearchStore(searchableCards_v2)
+    let searchStore = searchStore_v1
 
     // watch for changes in the data
-    const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+    // const unsub = searchStore.subscribe(model => searchHandlerAdvance(model))
+    const unsub_v1 = searchStore_v1.subscribe(model => searchHandlerAdvance(model))
+    const unsub_v2 = searchStore_v2.subscribe(model => searchHandlerAdvance(model))
 
     // unsub to avoid memory leaks
     onDestroy(() => {
-        unsub()
+        // unsub()
+        unsub_v1()
+        unsub_v2()
     })
 
     // SEARCH OPTIONS
@@ -129,7 +143,51 @@
         const ascending = cardSort[method]
         searchStore.sort(method, ascending)
     }
+
+    // Toggling between original and laternate versions of cards
+    $: setVersion(currentVersion)
+
+    // Update the Search Store to reflect the chosen card version
+    const setVersion = (version) => {
+        const searchTerm = $searchStore.search
+
+        // change search store
+        currentVersion == 'original' ? searchStore = searchStore_v1 : searchStore = searchStore_v2
+
+        // set search term
+        $searchStore.search = searchTerm
+
+        // set sorting method
+        const method = Object.keys(cardSort)[0]
+        searchStore.sort(method, cardSort[method])
+
+        // set tag filters
+        $searchStore.tags = tagFilters
+
+        // set type filters
+        let types = []
+        for (const [key, value] of Object.entries(typeFilters)) {
+            if (value == true) {
+                types.push(key)
+            }
+        }
+        $searchStore.types = types
+
+        // save version to Deck Info
+       
+        if (!saveStore) return
+
+        let store = localStorage.deckInfo
+        let deckInfo = JSON.parse(store)
+        deckInfo.patched = currentVersion != 'original'
+
+        sessionStorage.setItem("deckInfo", JSON.stringify(deckInfo))
+        localStorage.setItem("deckInfo", JSON.stringify(deckInfo))
+    }
 </script>
+
+<!-- METADATA -->
+<Meta title={'Deck Builder'} description={'Build your own Grotto Beasts deck!'} />
 
 <!-- HTML -->
 <div class="header-divider"></div>
@@ -215,6 +273,12 @@
                         {/each}
                     </div>
                 {/if}
+
+                <!-- Card Versions -->
+                <!-- <CardVersions
+                    bind:currentVersion={currentVersion}
+                    onClick={() => {}}
+                /> -->
             </div>
         {/if}
 

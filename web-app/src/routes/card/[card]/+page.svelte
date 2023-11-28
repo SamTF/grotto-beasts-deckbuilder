@@ -2,13 +2,17 @@
 <script>
     // Imports
     import { CardTypes } from "$lib/cardUtils"
-    import Meta from "$components/Meta/Meta.svelte";
+    import Meta from "$components/Meta/Meta.svelte"
+    import CardVersions from '$components/Cards/CardVersions.svelte'
+    import { page } from "$app/stores"
+    import { get } from 'svelte/store'
 
     // Receive data from API
     export let data
-
-    // image file name
-    const cardImg = `${data.card.number}. ${data.card.name}.webp`
+    let card = data.card
+    
+    // image file name - this is now set directly from the backend API
+    // const cardImg = `${data.card.number}. ${data.card.name}.webp`
 
     // card tags
     const cardTags = data.card.tags.split(",")
@@ -18,11 +22,52 @@
     if (data.card.type == CardTypes.GROTTO || data.card.type == CardTypes.WISH) {
         headerStyle = "grid-column: span 2;"
     }
+
+    // Check if card has a patched other versions
+    // const cardHasAltVersions = 'patchedVersion' in data.card
+    const cardHasAltVersions = Object.keys(data).length > 1 // if there are multiple card objects sent by the API
+
+    // Store different versions of card data
+    const versions = ['original', 'patched']
+    let currentVersion = 'original'
+    const cardVersions = {
+        original: data.card,
+        patched: cardHasAltVersions ? data.patched : null
+    }
+    $: setVersion(currentVersion)
+
+    // Show other versions of card
+    let showVersions = false
+    const toggleVersions = () => showVersions = !showVersions
+    
+    // choose which card version to display
+    const setVersion = v => {
+        // check if a valid version was given
+        if (!versions.includes(v.toLowerCase())) {
+            console.error("invalid version given")
+            return
+        }
+
+        // check if version is not already selected
+        // if (v.toLowerCase() == currentVersion) {
+        //     console.log("selected the current version. ignoring...")
+        //     return
+        // }
+
+        // update card info to match selected version
+        currentVersion = v
+        card = cardVersions[v]
+    }
+
+    // Automatically set version if query param was given
+    if (get(page).url.searchParams.get('version') != 'original') {
+        setVersion(versions[1])
+    }
     
 </script>
 
 <!-- META -->
-<Meta title={data.card.name} description={data.card.effect} thumbnail={`/images/cards/${cardImg}`} bigMode={true}/>
+<Meta title={card.name} description={card.effect} thumbnail={card.imageURL} bigMode={true}/>
 
 <!-- HTML -->
 <div class="header-divider" style="height: 6rem;"></div>
@@ -31,7 +76,7 @@
     <div class="page-body">
         <div class="card-page-container">
             <div class="card-image-large">
-                <img src={`/images/cards/${cardImg}`} alt={cardImg}>
+                <img src={card.imageURL} alt={card.imageURL} loading="lazy">
             </div>
 
             <!-- All Card related info -->
@@ -39,16 +84,16 @@
                 <!-- Top Line -->
                 <div class="header">
 
-                    {#if data.card.type == "Challenger"}
+                    {#if card.type == "Challenger"}
                         <!-- Challenger Goal -->
                         <div class="card-goal">
-                            <span>{data.card.goal}</span>
+                            <span>{card.goal}</span>
                         </div>
 
                     {:else}
                         <!-- Summoning Cost -->
                         <div class="card-cost">
-                            <span>{data.card.cost}</span>
+                            <span>{card.cost}</span>
                             <div class="icon">🌟</div>
                         </div>
                     {/if}
@@ -56,21 +101,21 @@
                     <!-- Name and Type -->
                     <div class="text" style={headerStyle}>
                         <div class="card-name">
-                            <h1>{data.card.name}</h1>
-                            <span class="card-number">#{data.card.number}</span>
+                            <h1>{card.name}</h1>
+                            <span class="card-number">#{card.number}</span>
                         </div>
 
                         <h2 class="card-type">
-                            {data.card.epic ? 'Epic✦' : ''}
-                            {data.card.subtype} 
-                            {data.card.type}
+                            {card.epic ? 'Epic✦' : ''}
+                            {card.subtype} 
+                            {card.type}
                         </h2>
                     </div>
 
                     <!-- Power -->
-                    {#if data.card.type == "Challenger" || data.card.type == "Beast"}
+                    {#if card.type == "Challenger" || card.type == "Beast"}
                         <div class="card-power">
-                            <span>{data.card.power}</span>
+                            <span>{card.power}</span>
                         </div>
                     {/if}
                     
@@ -85,19 +130,61 @@
 
                 <!-- Card Effect -->
                 <div class="card-effect">
-                    <p>{data.card.effect}</p>
+                    <p>{card.effect}</p>
                 </div>
 
                 <!-- Flavour Text -->
                 <div class="flavour-text">
-                    {#if data.card.flavour}
+                    {#if card.flavour}
                         <hr>
-                        <p>{data.card.flavour}</p>
+                        <p>{card.flavour}</p>
                     {/if}
                 </div>
             </div>
+
+            <!-- Toggle card version -->
+            <!-- first check if there is a patched version -->
+            {#if cardHasAltVersions}
+                <!-- Card Versions -->
+                <!-- <div class="card-versions-wrapper">
+                    <CardVersions
+                        bind:currentVersion={currentVersion}
+                        onClick={() => {}}
+                    />
+                </div> -->
+
+                {#if currentVersion == 'original'}
+                    <button class="highlight-bubble" on:click={() => currentVersion = 'patched'}>
+                        <span>Original</span>
+                        <img src="/images/emotes/meowdy.png" alt="original" height="20">
+                    </button>
+                {:else}
+                    <button class="highlight-bubble-alt" on:click={() => {currentVersion = 'original'}}>
+                        <span>Digital</span>
+                        <img src="/images/icons/robot.svg" alt="digital" height="20">
+                    </button>
+                {/if}
+            {/if}
+            
         </div>
     </div>
 </div>
 
 <div class="header-divider" style="margin-bottom: 0;"></div>
+
+<style>
+    .card-versions-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        margin: 1rem 0rem;
+    }
+
+    .highlight-bubble, .highlight-bubble-alt {
+        margin-top: 0.5rem;
+        font-size: 1.25rem;
+        padding: .25rem 1rem;
+    }
+</style>
