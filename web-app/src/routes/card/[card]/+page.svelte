@@ -60,7 +60,7 @@
     }
 
     // Automatically set version if query param was given
-    if (get(page).url.searchParams.get('version') != 'original') {
+    if (get(page).url.searchParams.get('version') == 'digital' && cardHasAltVersions) {
         setVersion(versions[1])
     }
     
