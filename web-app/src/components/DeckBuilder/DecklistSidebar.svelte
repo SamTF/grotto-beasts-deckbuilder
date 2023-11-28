@@ -32,8 +32,6 @@
         }
 
         saveStore = true
-
-        console.log($decklistAdvance)
     })
     
     // Count cards in decklist
