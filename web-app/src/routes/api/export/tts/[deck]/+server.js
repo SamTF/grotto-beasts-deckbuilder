@@ -6,6 +6,10 @@ import { json } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 
 const collection = "decks"
+const deckPrefix = {
+    original: 'GBv',
+    digital: 'GB!'
+}
 
 export async function GET({ url, params }) {
     // console.log(url)
@@ -28,7 +32,7 @@ export async function GET({ url, params }) {
         let cardsSorted = deck.cards_json.deck.sort((a, b) => (a.id > b.id) ? 1 : -1);
         console.log(cardsSorted)
         
-        let deckCode = 'GBv'
+        let deckCode = deck.version == 'original' ? deckPrefix.original : deckPrefix.digital
         let previousID = 0
         cardsSorted.forEach(card => {
             let qty = qtyToValue(card.quantity)
