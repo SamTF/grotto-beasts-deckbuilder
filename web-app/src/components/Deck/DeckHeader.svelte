@@ -6,7 +6,7 @@
     import { decklistAdvance } from '$lib/stores/decklist'
     import { goto } from '$app/navigation'
     import Icon from '$components/UI/Icon.svelte'
-    import { openModal } from 'svelte-modals'
+    import { openModal, closeModal } from 'svelte-modals'
     import Popup from '$components/UI/Popups/Popup.svelte'
     import PopupDeleteDeck from '$components/UI/Popups/PopupDeleteDeck.svelte'
     import PopupExport from '$components/UI/Popups/PopupExport.svelte'
@@ -65,6 +65,7 @@
             })
             console.log(data)
             openModal(Popup, { title: 'Deck bookmarked', icon: 'sparkles' })
+            toast.success('Deck successfully bookmarked!')
         } catch (error) {
             openModal(Popup, { title: 'Error x(', message: error })
         }
@@ -80,31 +81,52 @@
             })
 
             openModal(Popup, { title: 'Deck removed from bookmarks', icon: 'sparkles' })
+            toast.success('Deck removed from bookmarks')
         } catch (error) {
             openModal(Popup, { title: 'Error x(', message: error })
         }
     }
 
+    // Open the export options modal
     const exportDeck = async () => {
-        // Open the export options modal
         openModal(PopupExport, { deckID: deck.id, deckName: name })
+    }
 
-        // // fetching the decklist in correct format as plain text
-        // const res = await fetch(`/api/export/${deck.id}`)
-        // let cards = await res.text()
+    // Fetch deck code and copy to clipboard
+    const exportCode = async () => {
+        const res = await fetch(`/api/export/tts/${deck.id}`)
+        let deckcode = await res.text()
 
-        // // saving the decklist as a TXT
-        // const f = new File([cards], 'deck.txt', {
-        //     type: 'text/plain',
-        // })
+        console.log(deckcode)
 
-        // // downloading the file
-        // var a = document.createElement('a');
-        // document.body.append(a);
-        // a.download = `${deck.name}.txt`;
-        // a.href = URL.createObjectURL(f);
-        // a.click();
-        // a.remove();
+        await navigator.clipboard.writeText(deckcode);
+
+        toast.success(`${deckcode} copied to your clipboard!`)
+
+        closeModal()
+    }
+
+    // Game version hint text
+    const gameVersionHint = (original = true) => {
+        let _original = {
+            icon: '🐱',
+            text: 'This deck was created for the original IRL version of GB - aka the "vintage" version',
+        }
+
+        let _digital = {
+            icon: '🤖',
+            text: 'This deck was created for the digital Tabletop Simulator version of GB - aka the "modern" version',
+        }
+
+        let msg = original ? _original : _digital
+
+        toast.success(
+            msg.text,
+            {
+                icon: msg.icon,
+                duration: 5000
+            }
+        )
     }
 </script>
 
@@ -127,14 +149,29 @@
                 </div>
             {/if}
 
-            <!-- TTS Deck Code -->
-            <!-- Waiting for the TTS Grotto Beasts mod to release before this becomes official -->
-            <!-- <div class="deck-code">
-                <span on:click={() => toast.success("Deck code copied!")}>
+
+            <!-- Game Version -->
+            <div class="header-bottom-line" title="Which version of Grotto Beasts this deck was built for">
+                {#if deck.version == 'original' || deck.version == ''}
+                    <!-- Original -->
+                    <button class="highlight-bubble" on:click={gameVersionHint}>
+                        <span>Original</span>
+                        <img src="/images/emotes/meowdy.png" alt="original" height="16">
+                    </button>
+                {:else}
+                    <!-- Digital -->
+                    <button class="highlight-bubble-alt" on:click={() => {gameVersionHint(false)}}>
+                        <span>Digital</span>
+                        <img src="/images/icons/robot.svg" alt="digital" height="16">
+                    </button>
+                {/if}
+
+                <!-- TTS Deck Code -->
+                <button class="highlight-bubble-alt" on:click={exportCode} title="Copy TTS Deck Code to your clipboard">
                     <Icon name='copy' class='deck-code-icon' strokeWidth='2' solid={false}/>
-                    GBv31i10j1j1j1j3j6j5i13j4l6j27l9j1j4l3j23i3j5j34i8j
-                </span>
-            </div> -->
+                    <span>TTS Deck Code</span>
+                </button>
+            </div>
         </div>
 
         <!-- Special Controls for the deck author -->
@@ -196,11 +233,15 @@
 <div class="header-divider"></div>
 
 <style>
-    .remix {
+    .remix, .header-bottom-line {
         margin-top: 1rem;
         color: var(--colour-blue-dark);
         font-weight: 700;
-        opacity: 0.75;
+        /* opacity: 0.75; */
+
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .remix a {

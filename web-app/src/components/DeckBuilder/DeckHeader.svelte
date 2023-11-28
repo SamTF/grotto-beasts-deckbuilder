@@ -12,14 +12,19 @@
     import PopupPublishUser from '$components/UI/Popups/PopupPublishUser.svelte'
     import PopupTags from '$components/UI/Popups/PopupTags.svelte'
     import { openModal } from 'svelte-modals'
+    import Checkbox from '$components/UI/Checkbox.svelte'
+    import toast from 'svelte-french-toast'
+    import Meta from '$components/Meta/Meta.svelte'
     
     // Deck Info
     let deckInfo = {
         name: '',
         // author: '',
         author: $currentUser ? $currentUser.username : 'Guest User',
-        tags: []
+        tags: [],
+        patched: false
     }
+
 
     // DECK NAME: Allow only alphanumeric character and spaces, but remove extra spaces later
     $: if (deckInfo.name.length > 1) {
@@ -109,28 +114,39 @@
 
         // get ID of challenger
         const challengerID = $decklistAdvance.find(x => x.type === 'Challenger').id
+        let challenger = $decklistAdvance.find(x => x.type === 'Challenger')
+
+        const res = await fetch(`/api/card/${challenger.number}`)
+        const c = await res.json()
+
+        // If using a Patched Challenger, fetch the original version of that Challenger
+        if (challenger.collectionName != 'cards') {
+            const res = await fetch(`/api/card/${challenger.number}`)
+            challenger = await res.json()
+        }
 
         // Try to POST the deck data to pocketbase
         try {
             const data = {
                 name: deckInfo.name,
                 author: $currentUser ? $currentUser.id : '000000000000000', // use logged in user id if available, otherwise use guest user id
-                challenger: challengerID,
+                challenger: challenger.id,
                 cards_json: JSON.stringify({deck: deck}),
                 tags: deckInfo.tags,
                 author_name: deckInfo.author,
                 remix: deckInfo.remix || false,
-                remix_of: deckInfo.remix_of || ''
+                remix_of: deckInfo.remix_of || '',
+                version: deckInfo.patched ? 'digital' : 'original',
             }
 
             // edit deck instead of posting new one if in edit mode
             if (deckInfo.edit == true) {
-                console.log("EDIT MODE!! \nEDIT MODE EDMOEMOEMOE!!!")
                 const updatedRecord = await pb.collection('decks').update(deckInfo.deckID, {
                     name: deckInfo.name,
-                    challenger: challengerID,
+                    challenger: challenger.id,
                     cards_json: JSON.stringify({deck: deck}),
                     tags: deckInfo.tags,
+                    version: deckInfo.patched ? 'digital' : 'original',
                 })
             }
             // otherwise create a new deck
@@ -145,7 +161,8 @@
                 author: '',
                 tags: [],
                 edit: false,
-                deckID: ''
+                deckID: '',
+                patched: false
             }
 
             decklistAdvance.reset()
@@ -165,7 +182,79 @@
             openModal(Popup, { title: 'An error occured :(', message: 'Try again I guess ^^"' })
         }
     }
+
+    // Update cards when version changes
+    let x = 0
+    // $: version, x++, testFunc()
+    $: version = deckInfo.patched
+
+    const onVersionSwitched = async () => {
+        toast.success(`Switching game version to ${version ? 'Digital' : 'Original'}`)
+
+        await toggleDeckVersion()
+    }
+
+    // Reset decklist store and local storage
+    const resetDecklist = () => {
+        decklistAdvance.reset()
+        localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
+        setTimeout(() => location.reload(), '400')
+    }
+
+    const toggleDeckVersion = async () => {
+        let res = await fetch('/api/cards')
+        let allCards = await res.json()
+
+        let newCards = []
+        $decklistAdvance.forEach(card => {
+            // 
+        });
+
+        const deckCardIds = Array.from($decklistAdvance, x => x.number)
+
+        // filter all cards to only cards present in deck, and add their quantity
+        // fetch correct version of cards depending on deck game version
+        let fullCards = deckInfo.patched == false ? 
+            allCards.original.filter(x => deckCardIds.includes(x.number))
+            : allCards.patched.filter(x => deckCardIds.includes(x.number))
+
+        // set the quantity value of each card
+        for (let i = 0; i < fullCards.length; i++) {
+            const element = fullCards[i];
+            element.quantity = $decklistAdvance.find(x => x.number == element.number).quantity
+        }
+
+        decklistAdvance.set(fullCards)
+        localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
+        setTimeout(() => location.reload(), '400')
+    }
+
+    // Game version hint text
+    const gameVersionHint = (original = true) => {
+        let _original = {
+            icon: '🐱',
+            text: 'This deck was created for the original IRL version of GB - aka the "vintage" version',
+        }
+
+        let _digital = {
+            icon: '🤖',
+            text: 'This deck was created for the digital Tabletop Simulator version of GB - aka the "modern" version',
+        }
+
+        let msg = original ? _original : _digital
+
+        toast.success(
+            msg.text,
+            {
+                icon: msg.icon,
+                duration: 5000
+            }
+        )
+    }
 </script>
+
+<!-- METADATA -->
+<Meta title={'Deck Builder'} description={'Build your own Grotto Beasts deck!'} />
 
 <!-- HTML -->
 <div class="deck-builder-header">
@@ -201,6 +290,23 @@
                 {/each}
                 <button on:click={() => openModal(PopupTags)}>Edit Tags</button>
             </ul>
+
+            <!-- Version -->
+            <div class="header-bottom-line" title="Which version of Grotto Beasts this deck was built for">
+                {#if !deckInfo.patched}
+                    <!-- Original -->
+                    <button class="highlight-bubble" on:click={gameVersionHint}>
+                        <span>Original</span>
+                        <img src="/images/emotes/meowdy.png" alt="original" height="16">
+                    </button>
+                {:else}
+                    <!-- Digital -->
+                    <button class="highlight-bubble-alt" on:click={() => {gameVersionHint(false)}}>
+                        <span>Digital</span>
+                        <img src="/images/icons/robot.svg" alt="digital" height="16">
+                    </button>
+                {/if}  
+            </div>
         </div>
 
         <div class="header-btns">
@@ -230,4 +336,36 @@
     </div>
 </div>
 
-<div class="header-divider-alt"></div>
+<div class="header-divider-alt">
+    <div class="test">
+        <span class="icon-original">Original</span>
+        <Checkbox bind:checked={ deckInfo.patched } onClick={onVersionSwitched} />
+        <span class="icon-digital">Digital</span>
+    </div>
+</div>
+
+<style>
+    .header-divider-alt {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .test {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+
+        font-weight: bold;
+    }
+    .remix, .header-bottom-line {
+        margin-top: 1rem;
+        color: var(--colour-blue-dark);
+        font-weight: 700;
+        /* opacity: 0.75; */
+
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
