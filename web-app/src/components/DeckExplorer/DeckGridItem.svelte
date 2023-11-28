@@ -12,6 +12,16 @@
     <h2 class="deck-item-name">{deck.name}</h2>
     <p class="deck-item-author">{deck.expand.author.username}</p>
     <div class="deck-info-bottom">
+        <div class="highlight-bubble-light">
+            {#if deck.version == 'original' || deck.version == ''}
+                <span>Original</span>
+                <img src="/images/emotes/meowdy.png" alt="original" height="16">
+            {:else}
+                <span class="icon-digital">Digital</span>
+                <!-- <img src="/images/icons/robot.svg" alt="digital" height="16"> -->
+            {/if}
+        </div>
+        
         <p class="deck-item-info">{deck.expand.challenger.name}</p>
     </div>
 </a>
