@@ -13,7 +13,8 @@ const collection_v2 = versions[1].collection
 export async function GET({ url, params }) {
     // ORIGINAL CARDS
     const result = await pb.collection(collection).getList(1, 200, {
-        '$autoCancel' : false
+        '$autoCancel' : false,
+        sort: 'number',
     })
 
     // set the original card's image URL directly on the object
@@ -38,6 +39,16 @@ export async function GET({ url, params }) {
             small: `https://pb.grotto.builders/api/files/${patched.collectionId}/${patched.id}/${patched.image}`
         }
     }
+
+    // Copy missing cards from original list (these are cards without an alternate version)
+    for (let i = 0; i < result.items.length; i++) {
+        const original = result.items[i]
+        if (!result_v2.items.some(x => x.number == original.number)) {
+            result_v2.items.push(original)
+        }
+    }
+    // Sort patched cards by ID after adding missing cards
+    result_v2.items.sort((a, b) => a.number > b.number)
 
     return json({ original: result.items, patched: result_v2.items })
 }
