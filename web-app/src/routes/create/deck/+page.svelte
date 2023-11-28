@@ -1,12 +1,12 @@
 <!-- JS -->
 <script>
-    import Deck from '$components/Deck/Deck.svelte';
-    import DeckHeader from "$components/DeckBuilder/DeckHeader.svelte";
-    import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte";
-    import HandPreview from "$components/Deck/HandPreview.svelte";
-    import DeckGraphs from "$components/Deck/DeckGraphs.svelte";
+    import Deck from '$components/Deck/Deck.svelte'
+    import DeckHeader from "$components/DeckBuilder/DeckHeader.svelte"
+    import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte"
+    import HandPreview from "$components/Deck/HandPreview.svelte"
+    import DeckGraphs from "$components/Deck/DeckGraphs.svelte"
     import { decklistAdvance } from '$lib/stores/decklist'
-    import { onMount } from 'svelte';
+    import { onMount } from 'svelte'
 
     // Receive props from API
     export let data
@@ -34,7 +34,6 @@
 
     // total number of cards in a deck
     $: deckSum = decklistAdvance.sum($decklistAdvance)
-
 </script>
 
 <!-- HTML -->
@@ -42,9 +41,12 @@
 <DeckHeader />
 
 <!-- DECK -->
-<div class="center">
-    <Deck {deck} />
-</div>
+{#key fullCards}
+    <div class="center">
+        <Deck {deck} fullCards={fullCards} />
+    </div>
+{/key}
+
 
 <!-- Stats Bar -->
 {#key deck}<DeckStatsBar {deck} />{/key}
