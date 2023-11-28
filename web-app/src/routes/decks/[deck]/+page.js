@@ -17,20 +17,42 @@ export async function load({ url, params}) {
     }
 
     // --- EXPAND CARD INFO --------
-    // get all cards
-    const allCards = await pb.collection('cards').getFullList({
-        sort: 'number',
-    });
+    // get all cards from local API data
+    const res = await fetch(`${url.origin}/api/cards/`)
+    let allCards = await res.json()
 
     // array of all card IDs in deck
     const deckCardIds = Array.from(deck.cards_json.deck, x => x.id)
 
+    // Copy missing cards from original list (these are cards without an alternate version)
+    for (let i = 0; i < allCards.original.length; i++) {
+        const original = allCards.original[i]
+        if (!allCards.patched.some(x => x.number == original.number)) {
+            allCards.patched.push(original)
+        }
+    }
+    // Sort patched cards by ID after adding missing cards
+    allCards.patched.sort((a, b) => a.number > b.number)
+
     // filter all cards to only cards present in deck, and add their quantity
-    let fullCards = await allCards.filter(x => deckCardIds.includes(x.number))
+    // fetch correct version of cards depending on deck game version
+    let fullCards = deck.version == 'original' ? 
+        allCards.original.filter(x => deckCardIds.includes(x.number))
+        : allCards.patched.filter(x => deckCardIds.includes(x.number))
+
     for (let i = 0; i < fullCards.length; i++) {
         const element = fullCards[i];
         element.quantity = deck.cards_json.deck[i].quantity
-        
+
+        // Set the card's image URL directly - depending if it's original or digital
+        // original card
+        // if (element.collectionName == "cards") {
+        //     element.imageURL = `/images/cards/${element.number}. ${element.name}.webp`
+        // }
+        // // digital TTS card
+        // else {
+        //     element.imageURL = `https://pb.grotto.builders/api/files/${element.collectionId}/${element.id}/${element.image}`
+        // }
     }
     
     // Return simplified deck and full expanded cards
