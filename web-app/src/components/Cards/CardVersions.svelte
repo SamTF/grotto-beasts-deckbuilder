@@ -33,7 +33,8 @@
             class:active="{currentVersion == 'original'}"
             on:click={() => { currentVersion = 'original'; onClick() }}
         >
-            Original 👴
+            <span>Original</span>
+            <img src="/images/emotes/meowdy.png" alt="meowdy" height="16">
         </button>
 
         <button
@@ -41,7 +42,17 @@
             class:active="{currentVersion == 'patched'}"
             on:click={() => { currentVersion = 'patched'; onClick() }}
         >
-            Digital 🤖
+            <span>Digital</span>
+            <img src="/images/icons/robot.svg" alt="meowdy" height="16">
         </button>
     </div>
 {/if}
+
+<style>
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+</style>
