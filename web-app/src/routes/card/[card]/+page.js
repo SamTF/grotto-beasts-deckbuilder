@@ -23,5 +23,27 @@ export async function load({ url, params}) {
 
     // if a card was found successfully
     const card = results.items[0]
-    return { card }
+
+    // set the card's image URL directly on the object
+    card.imageURL = `/images/cards/${card.number}. ${card.name}.webp`
+
+    // check if it has other versions
+    const altVersions = await pb.collection("cards_patched").getList(1, 1, {
+        filter: `number = ${card.number}`
+    })
+    
+    // no alternate versions exist
+    if (altVersions.items.length < 1) {
+        console.log("No alternate versions exist for ", card.name)
+        return { card }
+    }
+
+    // if a patched version exists, append it to the data
+    const patched = altVersions.items[0]
+
+    // set the patched card image's URL via pocketbase
+    patched.imageURL = `https://pb.grotto.builders/api/files/${patched.collectionId}/${patched.id}/${patched.image}`
+
+    // return both versions - original & patched
+    return { card, patched }
 }
