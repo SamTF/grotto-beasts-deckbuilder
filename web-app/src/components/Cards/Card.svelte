@@ -6,12 +6,14 @@
     export let card
 
     const imageURL = `/images/cards/360/${card.number}. ${card.name}.webp`
+
+    $: cardURL = card.collectionName == 'cards' ? `/card/${card.number}` : `/card/${card.number}?version=digital`
 </script>
 
 <!-- HTML -->
 <div class="card" id={card.number}>
     <div class="card-image">
-        <a href={`/card/${card.number}`}>
+        <a href={cardURL}>
             <img
                 src={card.imageURL.small || imageURL}
                 alt={card.name}
