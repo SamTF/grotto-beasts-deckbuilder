@@ -3,14 +3,19 @@
     import { createEventDispatcher } from "svelte"
     
     // Props
-    export let id, name, type, quantity
+    export let id, name, type, quantity, imageURL, collection
+    export let fullCard
+
+    // imageURL = fullCard?.imageURL
+    imageURL = typeof fullCard?.imageURL === "string" ? fullCard?.imageURL : fullCard?.imageURL.small;
+    collection = fullCard?.collectionName
 
     // Event dispatcher
     const dispatch = createEventDispatcher()
 
     // Hover effect
     const onHover = () => {
-        dispatch('cardHover', { id, name })
+        dispatch('cardHover', { id, name, imageURL, collection })
     }
 </script>
 
