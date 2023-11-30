@@ -53,9 +53,6 @@
         $deckTags = tags
     }
 
-    $: console.log(tags)
-    
-
     const clearAll = () => tags = []
 </script>
 

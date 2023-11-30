@@ -67,7 +67,6 @@ export const searchHandlerAdvance = (store) => {
     if (typesFilter.length >= 1) {
         store.filtered = store.data
             .filter(card => {
-                console.log(card.type)
                 return typesFilter.includes(card.type.toLowerCase())
             })
     } else {

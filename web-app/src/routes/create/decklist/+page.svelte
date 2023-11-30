@@ -24,8 +24,6 @@
         if (store) {
             let deckInfo = JSON.parse(store)
             currentVersion = deckInfo.patched ? 'patched' : 'original'
-            console.log(deckInfo)
-            console.log(currentVersion)
         }
 
         saveStore = true
@@ -46,7 +44,6 @@
 
     // Check whether to show only ORIGINAL cards or show PATCHED TTS cards
     // $: searchableCards = deckInfo.patched ? searchableCards_v2 : searchableCards_original
-    console.log(searchableCards)
 
     // Svelte store stuff
     // let searchStore = createSearchStore(searchableCards)
@@ -87,7 +84,6 @@
     $: if ( Object.values(typeFilters).some(element => element == true) ) {
         let types = []
         for (const [key, value] of Object.entries(typeFilters)) {
-            console.log(key, value);
             if (value == true) {
                 types.push(key)
                 $searchStore.types = types
@@ -95,7 +91,6 @@
         }
 
     } else {
-        // console.log("boblin")
         let types = []
         $searchStore.types = types
     }

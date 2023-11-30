@@ -10,8 +10,6 @@ export async function GET({ url, params }) {
 
     const id = params.deck
 
-    console.log(`URL SLUG : ${params.deck}`)
-
     // Load Deck data if a deck exists with the given ID
     let deck = null
     try {

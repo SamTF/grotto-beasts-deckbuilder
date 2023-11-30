@@ -12,9 +12,7 @@
 
     const deckPublishUser = (choice) => {
         localStorage.setItem('deckPublishUser', choice)
-        console.log('user: ', localStorage.getItem('deckPublishUser'))
         $publishUser = choice
-        console.log('publish user: ', $publishUser)
         closeModal()
     }
 </script>

@@ -13,7 +13,6 @@ export async function GET({ url, params }) {
     })
 
     const cardsSimplified = result.items.map(x => ({ number: x.number, name: x.name, type: x.type }))
-    console.log(cardsSimplified)
 
     return json(cardsSimplified)
 }

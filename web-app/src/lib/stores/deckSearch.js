@@ -67,8 +67,6 @@ export const searchHandlerAdvance = (store) => {
     if (tagFilters.length >= 1) {
         store.filtered = store.data.filter(item => {
             const deckTags = item.tags
-            console.log(deckTags)
-            console.log(deckTags.some(tag => tagFilters.includes(tag)))
             return deckTags.some(tag => tagFilters.includes(tag))
         })
     } else {

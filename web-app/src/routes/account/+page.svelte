@@ -19,8 +19,6 @@
             // must do a deep copy of the object, not a reference
             integrations = JSON.parse(JSON.stringify($currentUser.integrations));
         }
-
-        console.log(integrations)
     })
 
     // log in user via Discord

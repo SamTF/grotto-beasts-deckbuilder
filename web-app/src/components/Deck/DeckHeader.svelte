@@ -57,13 +57,10 @@
     const bookmarkDeck = async () => {
         try {
             const data = await pb.collection('users').getOne($currentUser.id)
-            console.log(data.bookmarks)
             const bookmarks = [...data.bookmarks, deck.id]
-            console.log(bookmarks)
             const update = await pb.collection('users').update($currentUser.id, {
                 bookmarks: bookmarks
             })
-            console.log(data)
             openModal(Popup, { title: 'Deck bookmarked', icon: 'sparkles' })
             toast.success('Deck successfully bookmarked!')
         } catch (error) {

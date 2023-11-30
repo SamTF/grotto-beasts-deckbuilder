@@ -16,7 +16,6 @@
     const deleteDeck = async () => {
         try {
             const data = await pb.collection('decks').delete(deckID)
-            console.log(data)
             closeModal()
             openModal(Popup, { title: 'Deck successfully deleted', icon: 'sparkles' })
             goto('/decks')
