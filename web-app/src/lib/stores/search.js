@@ -2,6 +2,7 @@
 
 // Imports
 import { writable } from 'svelte/store'
+import { sortByKey } from '../utils'
 
 // Create the store
 export const createSearchStore = (data) => {
@@ -21,27 +22,25 @@ export const createSearchStore = (data) => {
         sort: (method = 'number', ascending = true) => update(data => {
             switch (method.toLowerCase()) {
                 case 'number':
-                    data.data.sort((a, b) => (ascending ? a.number > b.number : a.number < b.number))
+                    sortByKey(data.data, 'number', ascending)
                     return data
                 
                 case 'name':
-                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    sortByKey(data.data, 'name', ascending)
                     return data
                 
                 case 'cost':
-                    data.data.sort((a, b) => (ascending? a.cost > b.cost : a.cost < b.cost))
+                    sortByKey(data.data, 'cost', ascending)
                     return data
 
                 case 'power':
-                    data.data.sort((a, b) => (ascending ? a.power > b.power : a.power < b.power))
+                    sortByKey(data.data, 'power', ascending)
                     return data
             
                 default:
-                    data.data.sort((a, b) => (ascending ? a.number > b.number : a.number < b.number))
+                    sortByKey(data.data, 'number', ascending)
                     return data
             }
-
-            // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
         })
     }
 }

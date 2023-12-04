@@ -2,6 +2,7 @@
 
 // Imports
 import { writable } from 'svelte/store'
+import { sortByKey } from '../utils'
 
 // Create the store
 export const createSearchStore = (data) => {
@@ -21,27 +22,25 @@ export const createSearchStore = (data) => {
         sort: (method = 'name', ascending = true) => update(data => {
             switch (method.toLowerCase()) {
                 case 'name':
-                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    sortByKey(data.data, 'name', ascending)
                     return data
                 
                 case 'creation':
-                    data.data.sort((a, b) => (ascending? a.created > b.created : a.created < b.created))
+                    sortByKey(data.data, 'created', ascending)
                     return data
                 
                 case 'author':
-                    data.data.sort((a, b) => (ascending? a.author_name.toLowerCase() > b.author_name.toLowerCase() : a.author_name.toLowerCase() < b.author_name.toLowerCase()))
+                    sortByKey(data.data, 'author_name', ascending)
                     return data
 
                 case 'challenger':
-                    data.data.sort((a, b) => (ascending ? a.challenger > b.challenger : a.challenger < b.challenger))
+                    sortByKey(data.data, 'challenger', ascending)
                     return data
             
                 default:
-                    data.data.sort((a, b) => (ascending ? a.name.toLowerCase() > b.name.toLowerCase() : a.name.toLowerCase() < b.name.toLowerCase()))
+                    sortByKey(data.data, 'name', ascending)
                     return data
             }
-
-            // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
         })
     }
 }

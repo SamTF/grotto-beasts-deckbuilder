@@ -2,6 +2,7 @@
 
 // Imports
 import { writable } from 'svelte/store'
+import { sortByKey } from '../utils'
 
 // Create the store
 export const createDecklistStore = (data) => {
@@ -64,16 +65,20 @@ export const createDecklist = () => {
 
             switch (method.toLowerCase()) {
                 case 'name':
-                    return cards.sort((a, b) => (ascending ? a.name > b.name : a.name < b.name))
+                    sortByKey(cards, 'name', ascending)
+                    return cards
                 
                 case 'cost':
-                    return cards.sort((a, b) => ( ascending? a.cost > b.cost : a.cost < b.cost))
+                    sortByKey(cards, 'cost', ascending)
+                    return cards
                 
                 case 'type':
-                    return cards.sort((a, b) => (ascending ? a.type > b.type : a.type < b.type))
+                    sortByKey(cards, 'type', ascending)
+                    return cards
             
                 default:
-                    return cards.sort((a, b) => (ascending ? a.name > b.name : a.name < b.name))
+                    sortByKey(cards, 'name', ascending)
+                    return cards
             }
 
             // https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
