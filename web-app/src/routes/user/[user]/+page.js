@@ -23,6 +23,14 @@ export async function load({ url, params}) {
         filter: `author = "${user.id}"`
     });
     let decks = results.items
+
+    // check if user is a VIP
+    const vipUsers = import.meta.env.VITE_VIPS.split(',').map(str => str.trim());
+
+    if (vipUsers.includes(username)) {
+        console.log("USER IS A SUPPORTER!!")
+        user.supporter = true
+    }
     
     // Return
     return { user: user, username: params.user, decks: decks }
