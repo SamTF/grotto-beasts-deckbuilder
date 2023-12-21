@@ -43,14 +43,6 @@
         decksInfo.wishNum = countCardType(combinedCards, CardTypes.WISH)
     })
 
-    // Three random adjectives, why not?
-    const getAdjectives = async () => {
-        const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
-        const adjs = await res.json()
-
-        return adjs
-    }
-
     // whether this deck was created by the current authenticated user
     const isUsersPage = $currentUser ? data.user.id == $currentUser.id : false
 
@@ -97,11 +89,9 @@
             <h1>{data.user.username}</h1>
             <p class="deck-author">Grotto Builder since {joinDate}</p>
             <ul class="deck-tags">
-                {#await getAdjectives() then tags}
-                    {#each tags as tag}
-                        <li>{tag}</li>
-                    {/each}
-                {/await}
+                {#each data.adjs as tag}
+                    <li>{tag}</li>
+                {/each}
             </ul>
 
             <!-- Profile Links -->

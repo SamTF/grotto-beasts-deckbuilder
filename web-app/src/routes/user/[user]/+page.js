@@ -31,7 +31,11 @@ export async function load({ url, params}) {
         console.log("USER IS A SUPPORTER!!")
         user.supporter = true
     }
+
+    // fetch random user adjectives
+    const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
+    const adjs = await res.json()
     
     // Return
-    return { user: user, username: params.user, decks: decks }
+    return { user: user, username: params.user, decks: decks, adjs: adjs }
 }
