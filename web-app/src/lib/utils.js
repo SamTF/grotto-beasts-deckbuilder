@@ -13,3 +13,16 @@ export const sortByKey = (data, key, ascending = true) => {
         return 0;
     });
 };
+
+// Export array of Objects by a given property
+export const groupBy = (data, key) => {
+    return data.reduce((x, y) => {
+        (x[y[key]] = x[y[key]] || []).push(y);
+        return x;
+    }, {});
+}
+
+// Random number between 0 and 100
+export const rng = () => {
+    return Math.floor(Math.random() * 100)
+}
