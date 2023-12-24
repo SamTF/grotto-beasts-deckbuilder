@@ -21,6 +21,9 @@
     // Date when the user's account was created
     let joinDate = new Date(data.user.created).toLocaleDateString()
 
+    // Seasonal Events
+    const christmas = true
+
     onMount(() => {
         // set the user's bio description
         bio = data.user.bio
@@ -83,6 +86,17 @@
                 alt="User avatar"
                 class="discord-avatar mobile-only"
             >
+
+            <!-- Seasonal Hat overlay -->
+            {#if christmas}
+                <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
+            {/if}
+
+            <!-- Show Hat overlay if the user is a Supporter -->
+            {#if data.user.supporter === true && christmas !== true}
+                <img src="/images/hats/meowdy.svg" alt="cowboy hat" class="cowboy-hat">
+            {/if}
+
         </div>
         
         <div class="info-container">
@@ -122,15 +136,20 @@
         </div>
 
         <div class="header-btns">
-            <div class="avatar-container">
+            <div class="avatar-container desktop-only">
                 <img
                     src={data.user.avatarURL != "" ? data.user.avatarURL : `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${data.username}&backgroundColor=25609a,2bddf8,ade985,2a481e,fac648,de3852`}
                     alt="User avatar"
-                    class="discord-avatar desktop-only"
+                    class="discord-avatar"
                 >
 
+                <!-- Seasonal Hat overlay -->
+                {#if christmas}
+                    <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
+                {/if}
+
                 <!-- Show Hat overlay if the user is a Supporter -->
-                {#if data.user.supporter === true}
+                {#if data.user.supporter === true && christmas !== true}
                     <img src="/images/hats/meowdy.svg" alt="cowboy hat" class="cowboy-hat">
                 {/if}
             </div>
