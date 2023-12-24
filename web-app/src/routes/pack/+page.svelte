@@ -2,148 +2,79 @@
 <script>
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
-    import { browser } from '$app/environment'
-    import { onMount } from 'svelte';
-    import svelteTilt from 'vanilla-tilt-svelte';
-    import { slide, fade } from "svelte/transition"
-
-    let rotatation = { x:0, y:0, z:0 }
-
-    const onMouseMove = (event, element) => {
-        const maxDeg = 20
-        const mouse = { x: event.clientX, y: event.clientY }
-        const size = { height: event.target.height, width: event.target.width }
-        // console.log(mouse)
-        // console.log(window.innerWidth)
-        // console.log(window.innerHeight)
-        // console.log(event)
-        // console.log(`${event.offsetX} + ${event.offsetY}`)
-        // console.log(size)
-
-        // find the middle
-        const middle = {
-            x: size.width / 2,
-            y: size.height / 2
-        }
-
-        // find offset position within element
-        const offset = {
-            x: event.offsetX,
-            y: event.offsetY
-        }
-
-        // find position relative to center
-        const relative = {
-            x: offset.x - middle.x,
-            y: offset.y - middle.y
-        }
-
-        // get middle offset as percentage
-        const percentage = {
-            x: Math.round((relative.x / middle.x) * 100) / 100,
-            y: Math.round((relative.y / middle.y) * 100) / 100
-        }
-
-        const degrees = {
-            x: percentage.x * maxDeg,
-            y: percentage.y * maxDeg,
-        }
-
-        // console.log(offset)
-        // console.log(relative)
-        // console.log(percentage)
-        console.log(degrees)
-
-        event.target.style.setProperty('--rotateX', degrees.x + 'deg')
-        event.target.style.setProperty('--rotateY', -1 * degrees.y + 'deg')
-        // event.target.style.setProperty('background-color', 'red')
-    }
-
-    const onMouseLeave = (event) => {
-        event.target.style.setProperty('--rotateX', 0 + 'deg')
-        event.target.style.setProperty('--rotateY', 0 + 'deg')
-    }
-
-    let card
-    let bounds;
-
-    if (browser) {
-        card = document.querySelector('.card');;
-        console.log(card);
-    }
-
-    onMount(() => {
-        // card = document.querySelector('.card');;
-        // console.log(card);
-
-        // function rotateToMouse(e) {
-        //     const mouseX = e.clientX;
-        //     const mouseY = e.clientY;
-        //     const leftX = mouseX - bounds.x;
-        //     const topY = mouseY - bounds.y;
-        //     const center = {
-        //         x: leftX - bounds.width / 2,
-        //         y: topY - bounds.height / 2
-        //     }
-        //     const distance = Math.sqrt(center.x**2 + center.y**2);
-            
-        //     card.style.transform = `
-        //         scale3d(1.07, 1.07, 1.07)
-        //         rotate3d(
-        //         ${center.y / 100},
-        //         ${-center.x / 100},
-        //         0,
-        //         ${Math.log(distance)* 3}deg
-        //         )
-        //     `;
-            
-        //     card.querySelector('.glow').style.backgroundImage = `
-        //         radial-gradient(
-        //         circle at
-        //         ${center.x * 2 + bounds.width/2}px
-        //         ${center.y * 2 + bounds.height/2}px,
-        //         #ffffff55,
-        //         #0000000f
-        //         )
-        //     `;
-        // }
-
-        // card.addEventListener('mouseenter', () => {
-        //     bounds = card.getBoundingClientRect();
-        //     document.addEventListener('mousemove', rotateToMouse);
-        // });
-
-        // card.addEventListener('mouseleave', () => {
-        //     document.removeEventListener('mousemove', rotateToMouse);
-        //     card.style.transform = '';
-        //     card.style.background = '';
-        // });
-    })
+    import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte"
+    import BtnToggle from '$components/BtnToggle.svelte'
+    import svelteTilt from 'vanilla-tilt-svelte'
+    import { slide, fade, fly } from "svelte/transition"
+    import toast from 'svelte-french-toast'
 
     let showPack = true
+    let fadePack = false
+    let cardsFlipped = 0
+    let deck = []
 
     const pullCards = async () => {
+        fadePack = true
+
         const res = await fetch('/api/pack')
         const data = await res.json()
 
-        console.log(data)
+        // update current pack
         pulledCards = data
 
+        // update total cards pulled
+        deck = [...deck, ...pulledCards]
+
+        // hide the pack image
         showPack = false
     }
 
     $: pulledCards = []
 
     const flipCard = (event) => {
-        // event.target.style.setProperty('--rotateX', degrees.x + 'deg')
-        // flip = true
-        console.log("AAAaaa")
-        console.log(event.target.parentElement.parentElement)
+
+        // console.log(event.target.parentElement.parentElement)
+        // rotate the card via CSS property
         event.target.parentElement.parentElement.style.setProperty('--rotateY', '180deg')
+        cardsFlipped++
     }
 
     let flip = false;
     
+    const showHelp = () => {
+        const msg = {
+            icon: '🎰',
+            text: `1st card - 100% Beast
+            2nd card - 85% Challenger, 15% Beast
+            3rd card - 100% Beast
+            4th card - 100% Wish
+            5th card - 75% Grotto, 25% Beast
+            6th card - 100% Beast
+            7th card - 100% Beast
+            8th card - 90% Wish, 10% Grotto
+            9th card - 100% Rare (Challenger if card 2 is a Beast)
+            10th card - 100% Holo
+            
+            Based on real data collected by Brandon
+            `
+        }
+
+        toast.success(
+            msg.text,
+            {
+                icon: msg.icon,
+                duration: 5000
+            }
+        )
+    }
+
+    const reset = () => {
+        // location.reload()
+        showPack = true
+        pulledCards = []
+        cardsFlipped = 0
+        fadePack = false
+    }
     
 </script>
 
@@ -151,15 +82,50 @@
 <Meta title='Pack Opening' />
 
 <!-- HTML -->
-<div class="header-divider" style="margin-bottom: 0;"></div>
+<!-- <div class="header-divider" style="margin-bottom: 0;"></div> -->
 
 <div class="pack-sim-container">
-    <div class="explorer-filters">
-        <h1>Pack Opening Sim</h1>
-        <div style="margin-bottom: 2rem;"></div>
+    <!-- HEADER -->
+    <div class="deck-header">
+        <div class="deck-data-container">
+            <!-- Info -->
+            <div class="info-container">
+                <!-- Title -->
+                <p class="deck-author">100% free! (cards not included)</p>
+                <h1 class="deck-name desktop-only">Pack Opening Simulator</h1>
+                <h1 class="deck-name mobile-only">Pack Opening Sim</h1>
+
+                <!-- Tags -->
+                <ul class="deck-tags">
+                    <li>Exciting</li>
+                    <li>Suspenseful</li>
+                    <li>Gambling</li>
+                </ul>
+
+                <!-- Hightlight Buttons -->
+                <div class="header-bottom-line">
+                    <button class="highlight-bubble" on:click={showHelp}>
+                        <span>Show Chances</span>
+                        <img src="/images/emotes/meowdy.png" alt="original" height="16">
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Header Buttons -->
+            <div class="header-btns">
+                <h1>{cardsFlipped}</h1>
+                <h1>{deck.length}</h1>
+            </div>
+        </div>
     </div>
 
+    <!-- Divider -->
+    <div class="header-divider"></div>
+
+    <!-- Main Page Content -->
     <div class="page center">
+
+        <!-- Card Pack -->
         {#if showPack}
             <div
                 class="tilt"
@@ -171,31 +137,15 @@
                     reset: true,
                     perspective: 1000
             }}>
-                <img src="images/pack_front.webp" alt="aaaa">
+                <img src="images/pack_front.webp" alt="grotto beasts card pack" class:fade={fadePack}>
             </div>
         {/if}
         
-        <!-- <div class="card-pack">
-            <img src="images/pack_front.webp" alt="aaaa" on:mousemove={onMouseMove} on:click={() => {}}>
-        </div> -->
-        <!-- <div class="card">
-            3D Card
-            <div class="glow"></div>
-        </div> -->
-
-        <!-- <div class="card">
-            <img src="images/cards/back.webp" alt="aaaa" on:mousemove={onMouseOver} on:mouseleave={onMouseLeave}>
-            <div class="glow"></div>
-        </div> -->
-
+        <!-- Pulled Cards -->
         <div class="pulled-cards-container">
             {#each pulledCards as card}
-                <!-- <p>{card}</p> -->
-                <!-- <div class="card-image" use:svelteTilt={{ reverse: true }}>
-                    <img src="images/cards/back.webp" alt="card">
-                </div> -->
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div class="flip-card" use:svelteTilt={{ reverse: true, glare: false, "max-glare": 0.5 }} on:click={flipCard} transition:fade>
+                <div class="flip-card" use:svelteTilt={{ reverse: true, glare: false, "max-glare": 0.5 }} on:click={flipCard} in:fade={{ duration: 500 }}>
                     <div class="flip-card-inner" class:flip={flip}>
                         <div class="flip-card-front card-image">
                             <img src="images/cards/back.webp" alt="card">
@@ -207,19 +157,34 @@
                 </div>
             {/each}
         </div>
+
+        <!-- Open Another -->
+        {#if cardsFlipped === 10}
+            <button
+                class="btn-try-another"
+                on:click={reset}
+                in:fade={{ duration: 1000 }}
+            >
+            <img src="/images/icons/try another.png" alt="Try Another!">
+                <span>🍾Try Another!</span>
+            </button>
+        {/if}
+        
     </div>
+
+    <!-- Stats Bar -->
+    {#key deck}
+        <DeckStatsBar {deck} />
+    {/key}
 </div>
 
 <!-- CSS -->
 <style>
-    :global(body) {
-        font-family: system-ui, sans-serif;
-        perspective: 1500px;
-        /* background: linear-gradient(white, #efefef); */
-    }
     .page {
         /* height: 70dvh; */
         perspective: 1500px;
+        margin-bottom: 2rem;
+        min-height: 50dvh;
     }
 
     .pulled-cards-container {
@@ -234,12 +199,17 @@
     .tilt img {
         max-height: 400px;
         filter: drop-shadow(0 0 0.33rem #370101);
-        transition: all 150ms;
+        transition: all 200ms;
+        opacity: 1.0;
     }
     .tilt img:hover {
-        filter: drop-shadow(0 0 0.75rem #370101) hue-rotate(30deg);
         transform: scale(1.1);
         cursor: pointer;
+        filter: drop-shadow(0 1rem 1rem #370101);
+    }
+    .tilt img.fade {
+        opacity: 0.0;
+        transition: all 300ms;
     }
 
     .card-image {
@@ -293,83 +263,55 @@
         transform: rotateY(180deg);
     }
 
-    /* .flip {
-        transform: rotateY(180deg);
-    } */
-
-    .card-pack img {
-        --rotateX: 0;
-        --rotateY: 0;
-
+    .btn-try-another {
+        /* display */
         position: relative;
-        filter: drop-shadow(0 0 0.33rem #370101);
-        max-height: 400px;
-        transform-style: preserve-3d;
-        transform: rotateX(var(--rotateX)) rotateY(var(--rotateY)) perspective(1500px);
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: end;
 
-        transition: all 100ms;
-    }
-
-    .card-pack img:hover {
-        /* transform: rotate3d(2, 0, 0, 10deg) scale(1.0); */
-        transform: scale3d(1.10, 1.10, 1.10) rotateX(var(--rotateX)) rotateY(var(--rotateY));
-        filter: drop-shadow(0 0 0.75rem #370101);
-    }
-
-    .card {
-        font-weight: bold;
-        padding: 1em;
-        text-align: right;
-        color: #181a1a;
+        /* font */
+        font-size: 1.5rem;
+        font-family: "Alegreya Sans","Roboto",sans-serif;
+        font-weight: 700;
+        font-style: italic;
+        color: white;
         
-        /* width:  300px;
-        height: 400px; */
-        /* box-shadow: 0 1px 5px #00000099; */
-        
-        border-radius: 10px;
-        /* background-image: url(https://images.unsplash.com/photo-1557672199-6e8c8b2b8fff?ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80); */
-        /* background-image: url(images/pack_front.webp);
-        background-size: cover; */
-        
-        position: relative;
-        
-        transition-duration: 300ms;
-        transition-property: transform, box-shadow;
-        transition-timing-function: ease-out;
-        transform: rotate3d(0);
+        /* margins */
+        margin: 4rem 0rem 2rem 0rem;
+        padding: 0.25rem 4rem 0.25rem 1rem;
 
-        /* background-color: red; */
-        /* width: 500px;
-        height: 600px; */
-
-        /* display: grid;
-        place-items: center; */
-    }
-
-    .card:hover {
-        transition-duration: 150ms;
-        /* box-shadow: 0 5px 20px 5px #00000044; */
-    }
-
-    .card .glow {
-        position: absolute;
-        width: 92%;
-        height: 93%;
-        left: 4%;
-        top: 3%;
-
+        /* design */
         border-radius: 1rem;
-        
-        background-image: radial-gradient(circle at 50% -20%, #ffffff22, #0000000f);
-    }
+        background-color: var(--colour-red);
+        outline: 2px solid var(--colour-accent);
+        filter: drop-shadow(0 0 0.25rem #370101);
 
-    .card img {
-        max-height: 480px;
-        filter: drop-shadow(0 0 0.33rem #370101);
+        cursor: pointer;
+
         transition: all 150ms;
     }
+    .btn-try-another img {
+        /* max-height: 5rem; */
+        object-fit: contain;
+        height: 4rem;
 
-    .card img:hover {
-        filter: drop-shadow(0 0 0.75rem #370101);
+        position: absolute;
+        bottom: 0;
+        right: 0;
+
+        transition: all 150ms;
+
+        filter: drop-shadow(0 0 0.25rem #370101);
+    }
+    .btn-try-another:hover {
+        /* transform: scale(1.1); */
+        font-size: 1.7rem;
+        filter: drop-shadow(0 0 0.5rem #370101);
+    }
+    .btn-try-another:hover img {
+        transform: scale(1.25);
+        right: -1rem;
+        filter: drop-shadow(0 0 0.5rem #370101);
     }
 </style>
