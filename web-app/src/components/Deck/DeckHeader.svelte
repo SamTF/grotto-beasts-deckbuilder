@@ -230,17 +230,6 @@
 <div class="header-divider"></div>
 
 <style>
-    .remix, .header-bottom-line {
-        margin-top: 1rem;
-        color: var(--colour-blue-dark);
-        font-weight: 700;
-        /* opacity: 0.75; */
-
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
     .remix a {
         margin-left: 0.25rem;
         padding: 0.25rem 0.5rem;
