@@ -22,6 +22,7 @@ export async function GET({ url, params }) {
     const res = await fetch(`${url.origin}/api/cards/`)
     let data = await res.json()
     let allCards = data.original
+    allCards.forEach(card => card.quantity = 1)
 
     // Group the cards by type
     // let cardsGrouped = groupBy(allCards.original, 'type')
