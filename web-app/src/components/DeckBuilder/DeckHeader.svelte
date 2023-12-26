@@ -337,7 +337,7 @@
 </div>
 
 <div class="header-divider-alt">
-    <div class="test">
+    <div class="game-version-toggle">
         <span class="icon-original">Original</span>
         <Checkbox bind:checked={ deckInfo.patched } onClick={onVersionSwitched} />
         <span class="icon-digital">Digital</span>
@@ -350,22 +350,12 @@
         align-items: center;
         justify-content: center;
     }
-    .test {
+    .game-version-toggle {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 1rem;
 
         font-weight: bold;
-    }
-    .remix, .header-bottom-line {
-        margin-top: 1rem;
-        color: var(--colour-blue-dark);
-        font-weight: 700;
-        /* opacity: 0.75; */
-
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
     }
 </style>

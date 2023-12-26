@@ -136,6 +136,19 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
                 }
             }
         }
+
+        // Bottom line (highlight buttons)
+        .remix, .header-bottom-line {
+            // display
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            // design
+            margin-top: 1rem;
+            color: $colour-blue-dark;
+            font-weight: 700;
+        }
     }
 
     // Div container for Buttons
