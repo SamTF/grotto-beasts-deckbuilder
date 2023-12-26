@@ -24,5 +24,11 @@ export async function GET({ url, params }) {
     }
 
     const card = result.items[0]
+
+    // Cache the results for 10 mins
+    setHeaders({
+        "cache-control": "max-age=600",
+    })
+    
     return json(card)
 }

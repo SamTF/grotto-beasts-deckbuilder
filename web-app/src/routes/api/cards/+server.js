@@ -10,7 +10,7 @@ import versions from '$lib/versions.js'
 const collection = versions[0].collection
 const collection_v2 = versions[1].collection
 
-export async function GET({ url, params }) {
+export async function GET({ url, params, setHeaders }) {
     // ORIGINAL CARDS
     const result = await pb.collection(collection).getList(1, 200, {
         '$autoCancel' : false,
@@ -49,6 +49,11 @@ export async function GET({ url, params }) {
     }
     // Sort patched cards by ID after adding missing cards
     result_v2.items.sort((a, b) => a.number > b.number)
+
+    // Cache the results for 10 mins
+    setHeaders({
+        "cache-control": "max-age=600",
+    })
 
     return json({ original: result.items, patched: result_v2.items })
 }

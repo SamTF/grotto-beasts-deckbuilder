@@ -14,5 +14,10 @@ export async function GET({ url, params }) {
 
     const cardsSimplified = result.items.map(x => ({ number: x.number, name: x.name, type: x.type }))
 
+    // Cache the results for 10 mins
+    setHeaders({
+        "cache-control": "max-age=600",
+    })
+
     return json(cardsSimplified)
 }
