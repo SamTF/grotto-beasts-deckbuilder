@@ -8,7 +8,7 @@
     import PopupPackOdds from '$components/UI/Popups/PopupPackOdds.svelte'
     import { openModal, closeModal } from 'svelte-modals'
     import { decklistAdvance } from '$lib/stores/decklist'
-    import svelteTilt from 'vanilla-card-pack-svelte'
+    import svelteTilt from 'vanilla-tilt-svelte'
     import { slide, fade, fly } from "svelte/transition"
     import toast from 'svelte-french-toast'
     import { goto } from '$app/navigation'
