@@ -37,9 +37,6 @@
     </div>
 
     <div class="buttons-panel">
-        <!-- <a href="/cards" class="btn">Explore Cards</a>
-        <a href="/decks" class="btn">Explore Decks</a>
-        <a href="/create/deck" class="btn">Create Deck</a> -->
         <a href="/cards" class="route-icon-btn">
             <img src="/images/icons/cards.svg" alt="Cards" class="icon">
             <span>Explore Cards</span>
@@ -51,6 +48,10 @@
         <a href="/create/deck" class="route-icon-btn">
             <Icon name='plus-circle' solid={true} strokeWidth='0' />
             <span>Create Deck</span>
+        </a>
+        <a href="/pack" class="route-icon-btn">
+            <img src="/images/icons/pack.svg" alt="Card Pack" class="icon">
+            <span>Open Packs</span>
         </a>
     </div>
 
