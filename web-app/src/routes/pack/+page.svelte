@@ -25,9 +25,10 @@
 
     // Reactive values
     $: pulledCards = []
-    $: packsOpened = deck.length / 10
+    $: totalCards = deck.reduce((total, item) => total + item.quantity, 0)
+    $: packsOpened = totalCards / 10
     $: moneySpent = (packCost * packsOpened)
-    $: cardsCollected = showPack ? deck.length : Math.max(deck.length - 10 + cardsFlipped, 0)
+    $: cardsCollected = showPack ? totalCards : Math.max(totalCards - 10 + cardsFlipped, 0)
 
     const getShippingCost = () => {
         if (packsOpened == 0)
@@ -94,11 +95,13 @@
         pulledCards = []
         cardsFlipped = 0
         fadePack = false
+
+        deck = simplifyCards(deck)
     }
 
     const helpMoney = () => {
         toast.success(
-            `${deck.length / 10} Packs:....$${moneySpent.toFixed(2)}
+            `${packsOpened} Packs:....$${moneySpent.toFixed(2)}
             Sales Tax:.\t$${getTax()}
             Shipping:.\t$${getShippingCost()}
             
@@ -112,32 +115,30 @@
     }
 
     function simplifyCards(cards) {
-        // Create an object to keep track of unique cards and their quantities
-        const uniqueCards = {};
+        // array to keep track of unique cards and their quantities
+        let uniqueCardsList = []
+        let uniqueCardIds = []
 
-        // Iterate over the array of cards
         cards.forEach(card => {
-            const { name, number, id } = card;
-            const cardKey = `${name}_${number}_${id}`;
-
-            // If the card is not already in the uniqueCards object, add it
-            if (!uniqueCards[cardKey]) {
-            uniqueCards[cardKey] = { ...card, quantity: 0 };
+            // check if card is in array
+            if (uniqueCardIds.includes(card.number)) {
+                // if it is, increment its quantity
+                uniqueCardsList.find(i => i.number == card.number).quantity += card.quantity
             }
 
-            // Increment the quantity for the current card
-            uniqueCards[cardKey].quantity += 1;
-        });
+            // if not, add it
+            else {
+                uniqueCardsList.push(card)
+                uniqueCardIds.push(card.number)
+            }
+        })
 
-        // Convert the unique cards object back to an array
-        const simplifiedArray = Object.values(uniqueCards);
-
-        return simplifiedArray;
+        return uniqueCardsList
     }
 
     const exportCards = () => {
         const fullCards = simplifyCards(deck)
-        decklistAdvance.set(deck)
+        decklistAdvance.set(fullCards)
         localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
 
         goto('/create/deck')
