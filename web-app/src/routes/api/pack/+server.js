@@ -14,7 +14,15 @@ import { groupBy, rng } from '$lib/utils.js';
 // 10th card - 100% Holo
 
 // Helper function to randomlly pull item from array
-const getRandomItem = array => array[Math.floor(Math.random() * array.length)];
+// const getRandomItem = array => array[Math.floor(Math.random() * array.length)];
+
+// Randomly pull and remove item from array
+const getRandomItem = array => {
+    const i = Math.floor(Math.random() * array.length);
+    const randomElement = array.splice(i, 1)[0];
+
+    return randomElement
+}
 
 
 export async function GET({ url, params }) {
@@ -64,5 +72,19 @@ export async function GET({ url, params }) {
 
     // return json(pulledCards.map(({ name, rare, imageURL }) => ({ name, rare, imageURL })))
     // return json(pulledCards.map(({ name, rare, imageURL }) => (name)))
+
+    //// SEND DATA ////
+    const format = url.searchParams.get('format')
+    console.log(format)
+
+    // Simplified Format
+    if (format == 'simplified')
+        return json(pulledCards.map(({ name, rare, imageURL }) => (name)))
+
+    // Full Format
+    if (format == 'full')
+        return json(pulledCards)
+
+    // Default if none was specified
     return json(pulledCards)
 }
