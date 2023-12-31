@@ -10,6 +10,7 @@
     <a href="/decks" data-sveltekit-reload>Decks</a>
     <a href="/decks/me" data-sveltekit-reload>Your Decks</a>
     <a href="/create/deck">＋ Create Deck!</a>
+    <a href="/pack">Open Packs</a>
 </nav>
 
 <nav class="mobile-only">
