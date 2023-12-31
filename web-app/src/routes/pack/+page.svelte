@@ -2,6 +2,7 @@
 <script>
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
+    import PackCard from '$components/Cards/PackCard.svelte'
     import DeckStatsBar from "$components/Deck/DeckStatsBar.svelte"
     import BtnToggle from '$components/BtnToggle.svelte'
     import Icon from '$components/UI/Icon.svelte'
@@ -16,12 +17,14 @@
     // Constants
     const packCost = 8.50 //USD
     const salesTax = 0.05 // 5% is the average sales tax in the US
+    const cardsPerPack = 10
 
     // Vars
     let showPack = true
     let fadePack = false
     let cardsFlipped = 0
     let deck = []
+    let flippedList = Array(cardsPerPack).fill(false) // Initialize the array with false values
 
     // Reactive values
     $: pulledCards = []
@@ -77,15 +80,6 @@
         showPack = false
     }
 
-    const flipCard = (event) => {
-        // console.log(event.target.parentElement.parentElement)
-        // rotate the card via CSS property
-        event.target.parentElement.parentElement.style.setProperty('--rotateY', '180deg')
-        cardsFlipped++
-    }
-
-    let flip = false;
-
     const showHelpPopup = () => {
         openModal(PopupPackOdds)
     }
@@ -95,6 +89,7 @@
         pulledCards = []
         cardsFlipped = 0
         fadePack = false
+        flippedList = Array(cardsPerPack).fill(false)
 
         deck = simplifyCards(deck)
     }
@@ -143,11 +138,22 @@
 
         goto('/create/deck')
     }
+
+    const flipCard = (index) => {
+        // check if card is already flipped
+        if (flippedList[index]) {
+            return
+        }
+
+        // Flip the card
+        flippedList[index] = true
+        cardsFlipped++
+	}
     
 </script>
 
 <!-- METADATA -->
-<Meta title='Pack Opening' />
+<Meta title='Pack Opening' description="Open Grotto Beasts! packs to your heart's content! For free!! (cards not included)" />
 
 <!-- HTML -->
 <div class="pack-sim-container">
@@ -221,32 +227,13 @@
         
         <!-- Pulled Cards -->
         <div class="pulled-cards-container">
-            {#each pulledCards as card}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div
-                    class="flip-card"
-                    on:click={flipCard}
-                    in:fade={{ duration: 500 }}
-                    use:svelteTilt={{
-                        reverse: true,
-                        glare: false,
-                        "max-glare": 0.5 
-                    }}
-                >
-                    <div class="flip-card-inner" class:flip={flip}>
-                        <div class="flip-card-front card-image">
-                            <img src="images/cards/back.webp" alt="card">
-                        </div>
-                        <div class="flip-card-back card-image" class:card-image-holo={card.holo}>
-                            <img src={card.imageURL.small} alt={card.name}>
-                        </div>
-                    </div>
-                </div>
+            {#each pulledCards as card, index}
+                <PackCard {card} bind:flipped={flippedList[index]} on:click={() => flipCard(index)} />
             {/each}
         </div>
 
         <!-- Open Another -->
-        {#if cardsFlipped === 10}
+        {#if cardsFlipped >= 10}
             <button
                 class="btn-try-another"
                 on:click={reset}
@@ -295,53 +282,6 @@
     .card-pack img.fade {
         opacity: 0.0;
         transition: all 300ms;
-    }
-
-    .card-image {
-        border-radius: 8px;
-    }
-    .card-image img {
-        max-height: 275px;
-        border-radius: 8px;
-        position: relative;
-    }
-    .card-image-holo::after {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        content: "✨";
-        font-size: 3rem;
-    }
-    /* .card-image:hover {
-        transform: scale(1) !important;
-    } */
-
-    .flip-card {
-        height: 275px;
-        width: 200px;
-        perspective: 1500px;
-    }
-
-    .flip-card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.8s;
-        transform-style: preserve-3d;
-        transform: rotateY(var(--rotateY));
-    }
-
-    .flip-card-front, .flip-card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
-
-    .flip-card-back {
-        transform: rotateY(180deg);
     }
 
     .btn-try-another {
@@ -408,15 +348,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-        }
-
-        .flip-card {
-            height: 200px;
-            width: 142px;
-        }
-
-        .card-image img {
-            max-height: 200px;
         }
     }
 </style>
