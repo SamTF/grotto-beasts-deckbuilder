@@ -23,7 +23,19 @@ export async function load({ url, params}) {
         filter: `author = "${user.id}"`
     });
     let decks = results.items
+
+    // check if user is a VIP
+    const vipUsers = import.meta.env.VITE_VIPS.split(',').map(str => str.trim());
+
+    if (vipUsers.includes(username)) {
+        console.log("USER IS A SUPPORTER!!")
+        user.supporter = true
+    }
+
+    // fetch random user adjectives
+    const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
+    const adjs = await res.json()
     
     // Return
-    return { user: user, username: params.user, decks: decks }
+    return { user: user, username: params.user, decks: decks, adjs: adjs }
 }

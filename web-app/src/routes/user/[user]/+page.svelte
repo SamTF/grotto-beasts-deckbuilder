@@ -21,6 +21,9 @@
     // Date when the user's account was created
     let joinDate = new Date(data.user.created).toLocaleDateString()
 
+    // Seasonal Events
+    const christmas = true
+
     onMount(() => {
         // set the user's bio description
         bio = data.user.bio
@@ -30,13 +33,11 @@
         data.decks.forEach(element => {
             combinedCards = combinedCards.concat(element.cards_json.deck)
         });
-        console.log(combinedCards)
         
         // Calculate unique cards
         let combinedCardIds = combinedCards.map(x => x.id)
         let uniqueCards = [...new Set(combinedCardIds)]
         totalUniqueCards = uniqueCards.length
-        console.log(uniqueCards)
 
         // Calculate the total number of cards used by type across all of the user's decks
         decksInfo.challengerNum = countCardType(combinedCards, CardTypes.CHALLENGER)
@@ -44,15 +45,6 @@
         decksInfo.grottoNum = countCardType(combinedCards, CardTypes.GROTTO)
         decksInfo.wishNum = countCardType(combinedCards, CardTypes.WISH)
     })
-
-    // Three random adjectives, why not?
-    const getAdjectives = async () => {
-        const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
-        const adjs = await res.json()
-        console.log(adjs)
-
-        return adjs
-    }
 
     // whether this deck was created by the current authenticated user
     const isUsersPage = $currentUser ? data.user.id == $currentUser.id : false
@@ -94,17 +86,26 @@
                 alt="User avatar"
                 class="discord-avatar mobile-only"
             >
+
+            <!-- Seasonal Hat overlay -->
+            {#if christmas}
+                <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
+            {/if}
+
+            <!-- Show Hat overlay if the user is a Supporter -->
+            {#if data.user.supporter === true && christmas !== true}
+                <img src="/images/hats/meowdy.svg" alt="cowboy hat" class="cowboy-hat">
+            {/if}
+
         </div>
         
         <div class="info-container">
             <h1>{data.user.username}</h1>
             <p class="deck-author">Grotto Builder since {joinDate}</p>
             <ul class="deck-tags">
-                {#await getAdjectives() then tags}
-                    {#each tags as tag}
-                        <li>{tag}</li>
-                    {/each}
-                {/await}
+                {#each data.adjs as tag}
+                    <li>{tag}</li>
+                {/each}
             </ul>
 
             <!-- Profile Links -->
@@ -135,11 +136,23 @@
         </div>
 
         <div class="header-btns">
-            <img
-                src={data.user.avatarURL != "" ? data.user.avatarURL : `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${data.username}&backgroundColor=25609a,2bddf8,ade985,2a481e,fac648,de3852`}
-                alt="User avatar"
-                class="discord-avatar desktop-only"
-            >
+            <div class="avatar-container desktop-only">
+                <img
+                    src={data.user.avatarURL != "" ? data.user.avatarURL : `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${data.username}&backgroundColor=25609a,2bddf8,ade985,2a481e,fac648,de3852`}
+                    alt="User avatar"
+                    class="discord-avatar"
+                >
+
+                <!-- Seasonal Hat overlay -->
+                {#if christmas}
+                    <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
+                {/if}
+
+                <!-- Show Hat overlay if the user is a Supporter -->
+                {#if data.user.supporter === true && christmas !== true}
+                    <img src="/images/hats/meowdy.svg" alt="cowboy hat" class="cowboy-hat">
+                {/if}
+            </div>
 
             {#if isUsersPage}
                 {#if editingPage}
@@ -267,5 +280,20 @@
             width: 100%;
             justify-content: center;
         }
+    }
+
+    .avatar-container {
+        position: relative;
+    }
+
+    .cowboy-hat {
+        width: 100px;
+        
+        position: absolute;
+        top: -24px;
+        left: 0;
+        right: 0; 
+        margin-left: auto; 
+        margin-right: auto; 
     }
 </style>
