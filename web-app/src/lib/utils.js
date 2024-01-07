@@ -26,3 +26,11 @@ export const groupBy = (data, key) => {
 export const rng = () => {
     return Math.floor(Math.random() * 100)
 }
+
+// Randomly pull and remove item from array
+export const getRandomItem = array => {
+    const i = Math.floor(Math.random() * array.length);
+    const randomElement = array.splice(i, 1)[0];
+
+    return randomElement
+}
