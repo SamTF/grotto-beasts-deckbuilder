@@ -1,5 +1,7 @@
 import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit"
+import { cardTags } from "$lib/cardTags"
+import { getRandomItem } from "$lib/utils"
 
 export async function load({ url, params}) {
     const username = params.user
@@ -32,9 +34,15 @@ export async function load({ url, params}) {
         user.supporter = true
     }
 
-    // fetch random user adjectives
-    const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
-    const adjs = await res.json()
+    // fetch random user adjectives - NOTE !! This API is currently down, so will use random tags until it's working again
+    // const res = await fetch ('https://random-word-form.repl.co/random/adjective?count=3')
+    // const adjs = await res.json()
+    let adjs = []
+    for (let i = 0; i < 3; i++) {
+        const tag = getRandomItem(cardTags)
+        adjs.push(tag)
+    }
+
     
     // Return
     return { user: user, username: params.user, decks: decks, adjs: adjs }
