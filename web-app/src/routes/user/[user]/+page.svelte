@@ -22,7 +22,7 @@
     let joinDate = new Date(data.user.created).toLocaleDateString()
 
     // Seasonal Events
-    const christmas = true
+    const christmas = import.meta.env.VITE_EVENT_CHRISTMAS || false
 
     onMount(() => {
         // set the user's bio description
@@ -88,7 +88,7 @@
             >
 
             <!-- Seasonal Hat overlay -->
-            {#if christmas}
+            {#if christmas == true}
                 <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
             {/if}
 
@@ -144,7 +144,7 @@
                 >
 
                 <!-- Seasonal Hat overlay -->
-                {#if christmas}
+                {#if christmas == true}
                     <img src="/images/hats/christmas.webp" alt="santa hat" class="cowboy-hat">
                 {/if}
 
