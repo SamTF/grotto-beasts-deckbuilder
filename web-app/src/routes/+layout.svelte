@@ -36,7 +36,6 @@
 
 <Header />
 
-<div class="snow-overlay"></div>
 <slot></slot>
 
 <Footer />
@@ -50,17 +49,3 @@
     />
 </Modals>
 <Toaster />
-
-<style>
-    .snow-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100dvw;
-        height: 100dvh;
-        z-index: 999;
-        background-image: url("https://i.giphy.com/ggK4TpfK2cfuZcokhj.webp");
-        background-repeat: repeat-x;
-        pointer-events: none;
-    }
-</style>
