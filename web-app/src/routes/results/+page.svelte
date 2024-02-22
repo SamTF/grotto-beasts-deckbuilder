@@ -71,7 +71,7 @@
                 <ul>
                     <li><b>Most unanimously beloved Beasts:</b> <b><i>Dustbunny</i></b> and <b><i>Meowdy</i></b> (36 votes each)</li>
                     <li><b>Least popular Beasts:</b> <i>Droplganger, Lobboss, Scorptus</i> (1, 2, 4 votes respectively)</li>
-                    <li><b>Closest vote:</b> <i>Jestapod VS Jukeboxer, Thamacrow VS Thingamachicken, Jup3 VS Jup4</i> (each one by a single vote)</li>
+                    <li><b>Closest vote:</b> <i>Jestapod VS Jukeboxer, Thamacrow VS Thingamachicken, Jup3 VS Jup4</i> (each won by a single vote)</li>
                     <li><b>TIE!:</b> <i>Peep-Peep</i> and <i>Plunky</i> tied with 17 votes each!!</li>
                     <li><b>Best Jup:</b> Jup the 1st got the most votes out of all Jups</li>
                     <li><b>Least skipped categories:</b> <i>Byeah Beast, Meowdy, Weeniemutt</i> (everyone voted!)</li>
