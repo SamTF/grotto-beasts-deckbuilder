@@ -57,10 +57,11 @@
         <div class="panel">
             <h1>Introduction</h1>
             <div class="body-text">
-                <p>On the 18 of February, I made a poll for the community to vote on their favourite <b>Beasts</b> from the <b><i>Grotto Beasts!</i></b> world.</p>
-                <p>It was an elimination vote where Beasts were grouped into pairs, and people voted for their favourite of the two. As such, we will find out what the <b>Top 50 Most Iconic</b> Beasts are.</p>
+                <p>On the 18 of February, I made a poll for the community to vote on their <b>favourite Beasts</b> from the <b><i>Grotto Beasts!</i></b> world.</p>
+                <p>It was an elimination vote where Beasts were grouped into pairs, and people voted for their favourite of the two. As such, we will find out what the <b>Top 50 Most Iconic Beasts</b> are.</p>
                 <p>38 people responded (myself included). After 4 days, <i><b>the results are in!</b></i></p>
-                <p>I have summarised some lil fun facts in the following box. Keep scrolling down to see the full results!</p>
+                <p>I have summarised some lil fun facts in the following box. Keep scrolling down to see the full results.</p>
+                <p><i>And stay tuned for Round 2!!</i></p>
             </div>
         </div>
 
@@ -71,9 +72,9 @@
                 <ul>
                     <li><b>Most unanimously beloved Beasts:</b> <b><i>Dustbunny</i></b> and <b><i>Meowdy</i></b> (36 votes each)</li>
                     <li><b>Least popular Beasts:</b> <i>Droplganger, Lobboss, Scorptus</i> (1, 2, 4 votes respectively)</li>
-                    <li><b>Closest vote:</b> <i>Jestapod VS Jukeboxer, Thamacrow VS Thingamachicken, Jup3 VS Jup4</i> (each won by a single vote)</li>
+                    <li><b>Closest votes:</b> <i><b>Jestapod</b> VS Jukeboxer, <b>Thamacrow</b> VS Thingamachicken, Jup3 VS <b>Jup4</b></i> (each won by a single vote)</li>
                     <li><b>TIE!:</b> <i>Peep-Peep</i> and <i>Plunky</i> tied with 17 votes each!!</li>
-                    <li><b>Best Jup:</b> Jup the 1st got the most votes out of all Jups</li>
+                    <li><b>Best Jup:</b> <i>Jup the 1st</i> got the most votes out of all Jups</li>
                     <li><b>Least skipped categories:</b> <i>Byeah Beast, Meowdy, Weeniemutt</i> (everyone voted!)</li>
                     <li><b>Most skipped:</b> <i>Chromanova, Googlow, Plunky vs Peep-Peep, Seasprinter, Spectocular, Toadstool, and Trickstircuit</i> (4 people skipped)</li>
                 </ul>
