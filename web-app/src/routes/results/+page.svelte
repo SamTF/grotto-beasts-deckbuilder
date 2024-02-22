@@ -33,12 +33,17 @@
                 </ul>
 
                 <!-- Hightlight Buttons -->
-                <!-- <div class="header-bottom-line">
-                    <button class="highlight-bubble" on:click={showHelpPopup}>
-                        <span>Show Chances</span>
+                <div class="header-bottom-line">
+                    <a
+                        href="https://docs.google.com/spreadsheets/d/16rcRuH_jmbTmNMDSUPXkaf3U-LcVkKy9Si3l1ShD2B0/edit?usp=sharing"
+                        target="_blank"
+                        class="highlight-bubble"
+                        title="Link to Google Sheets with raw survey data"
+                        >
+                        <span>Raw Data</span>
                         <img src="/images/emotes/meowdy.png" alt="original" height="16">
-                    </button>
-                </div> -->
+                    </a>
+                </div>
             </div>
         </div>
     </div>
