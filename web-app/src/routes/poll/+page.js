@@ -3,5 +3,5 @@
 import { json, error, redirect } from "@sveltejs/kit";
 
 export async function load({ params}) {
-    throw redirect(302, 'https://forms.gle/fNhiHXJLJ6iCo2LC9')
+    throw redirect(302, 'https://forms.gle/Xh9gNbaffsRsoU3M7')
 }
