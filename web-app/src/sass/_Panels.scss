@@ -1,0 +1,52 @@
+// General info panels present in multiple pages
+
+.panel {
+    // Header
+    h1 {
+        color: var(--colour-red);
+        text-align: center;
+    }
+
+    // Gretting sub heading
+    .greeting {
+        display: flex;
+        align-items: center;
+        font-size: 1.25rem;
+
+        // Span
+        span {
+            margin-right: 0.5rem;
+        }
+    }
+
+
+    // Body Text
+    .body-text {
+        p {
+            margin-bottom: 0.5rem;
+        }
+
+        // Bullet List
+        ul {
+            width: 50ch;
+            list-style-type: none;
+            padding-bottom: 2rem;
+
+            li {
+                text-indent: -2ch;
+
+                &::before {
+                    content: "✦";
+                    padding-right: 1ch;
+                }
+            }
+        }
+
+        // Mobile layout
+        @include mobile() {
+            ul {
+                width: 40ch;
+            }
+        }
+    }
+}
