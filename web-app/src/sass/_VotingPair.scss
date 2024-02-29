@@ -1,0 +1,40 @@
+// The voting pairs for the most iconic beasts survey
+
+.voting-pair {
+    // display
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    // Grid Item
+    .voting-pair-item {
+        // display
+        display: grid;
+        place-items: center;
+
+        // Beast name
+        h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        // Beast image
+        img {
+            max-height: 240px;
+            margin-bottom: 0.5rem;
+        }
+
+        // Beast who won the vote
+        &.winner img {
+            // outline: 2px solid gold;
+            outline: 2px solid $colour-accent;
+        }
+
+        @include mobile() {
+            // Smaller card images
+            img {
+                max-height: 180px;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
