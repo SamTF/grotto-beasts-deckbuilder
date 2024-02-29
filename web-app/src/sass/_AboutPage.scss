@@ -90,71 +90,74 @@
             content: "✦ ";
         }
     }
+}
 
-    // Route page buttons
-    .buttons-panel {
+// Route page buttons
+.buttons-panel {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 2rem;
+    justify-content: space-evenly;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-lg);
+
+    width: 50vw;
+
+    // Route button
+    .route-icon-btn {
         display: flex;
-        flex-wrap: wrap;
-        row-gap: 2rem;
-        justify-content: space-evenly;
-        margin-top: var(--space-md);
-        margin-bottom: var(--space-lg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-sm);
     
-        width: 50vw;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        min-width: 156px;
+    
+        background-color: var(--colour-dark);
+        color: var(--colour-accent);
+        outline: 4px solid $colour-accent;
 
-        // Route button
-        .route-icon-btn {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: var(--space-sm);
-        
-            padding: 1rem 2rem;
-            border-radius: 1rem;
-        
-            background-color: var(--colour-dark);
-            color: var(--colour-accent);
-            outline: 4px solid $colour-accent;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.25rem;
 
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.25rem;
+        transition: all 200ms ease;
 
-            transition: all 200ms ease;
-
-            // Image icon
-            img {
-                max-height: 100%;
-        
-            }
-
-            // Hover effect
-            &:hover {
-                background-color: $colour-challenger;
-                outline-offset: 1rem;
-                outline-style: dashed;
-            }
+        // Image icon
+        img {
+            max-height: 100%;
+    
         }
 
-        // Mobile layout
-        @include mobile {
-            width: 70dvw;
+        // Hover effect
+        // &:hover {
+        &:not(.disable):hover {
+            background-color: $colour-challenger;
+            outline-offset: 1rem;
+            outline-style: dashed;
+        }
+    }
 
-            .route-icon-btn {
-                height: 8rem;
-                width: 8rem;
-                font-size: 0.8rem;
-                text-align: center;
-                text-transform: uppercase;
+    // Mobile layout
+    @include mobile {
+        width: 70dvw;
 
-                span {
-                    // display: none;
-                }
+        .route-icon-btn {
+            height: 8rem;
+            width: 8rem;
+            min-width: 96px;
+            font-size: 0.8rem;
+            text-align: center;
+            text-transform: uppercase;
 
-                img {
-                    max-height: 80%;
-                }
+            span {
+                // display: none;
+            }
+
+            img {
+                max-height: 80%;
             }
         }
     }
