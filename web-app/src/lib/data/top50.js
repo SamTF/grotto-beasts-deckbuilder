@@ -4,11 +4,11 @@ const data = [
         "data": [
             {
                 "Option": "AiMbot-3940",
-                "VoteCount": 27
+                "Votes": 27
             },
             {
                 "Option": "2-Moon Jelly",
-                "VoteCount": 8
+                "Votes": 8
             }
         ]
     },
@@ -17,11 +17,11 @@ const data = [
         "data": [
             {
                 "Option": "Alieums",
-                "VoteCount": 30
+                "Votes": 30
             },
             {
                 "Option": "Anhybite",
-                "VoteCount": 5
+                "Votes": 5
             }
         ]
     },
@@ -30,11 +30,11 @@ const data = [
         "data": [
             {
                 "Option": "Baghost",
-                "VoteCount": 24
+                "Votes": 24
             },
             {
                 "Option": "Awoobis",
-                "VoteCount": 13
+                "Votes": 13
             }
         ]
     },
@@ -43,11 +43,11 @@ const data = [
         "data": [
             {
                 "Option": "Beelt",
-                "VoteCount": 26
+                "Votes": 26
             },
             {
                 "Option": "Baroot",
-                "VoteCount": 9
+                "Votes": 9
             }
         ]
     },
@@ -56,11 +56,11 @@ const data = [
         "data": [
             {
                 "Option": "Biogator",
-                "VoteCount": 23
+                "Votes": 23
             },
             {
                 "Option": "Birds of Fortune",
-                "VoteCount": 12
+                "Votes": 12
             }
         ]
     },
@@ -69,11 +69,11 @@ const data = [
         "data": [
             {
                 "Option": "Blademaus",
-                "VoteCount": 8
+                "Votes": 8
             },
             {
                 "Option": "Birthday Basher",
-                "VoteCount": 28
+                "Votes": 28
             }
         ]
     },
@@ -82,11 +82,11 @@ const data = [
         "data": [
             {
                 "Option": "Bottled Nightmare",
-                "VoteCount": 25
+                "Votes": 25
             },
             {
                 "Option": "Bobbin",
-                "VoteCount": 11
+                "Votes": 11
             }
         ]
     },
@@ -95,11 +95,11 @@ const data = [
         "data": [
             {
                 "Option": "Byeah Beast",
-                "VoteCount": 29
+                "Votes": 29
             },
             {
                 "Option": "Cauldrosaur",
-                "VoteCount": 9
+                "Votes": 9
             }
         ]
     },
@@ -108,11 +108,11 @@ const data = [
         "data": [
             {
                 "Option": "Centilead",
-                "VoteCount": 14
+                "Votes": 14
             },
             {
                 "Option": "Chromanova",
-                "VoteCount": 20
+                "Votes": 20
             }
         ]
     },
@@ -121,11 +121,11 @@ const data = [
         "data": [
             {
                 "Option": "Connival",
-                "VoteCount": 21
+                "Votes": 21
             },
             {
                 "Option": "Crabcha",
-                "VoteCount": 14
+                "Votes": 14
             }
         ]
     },
@@ -134,11 +134,11 @@ const data = [
         "data": [
             {
                 "Option": "Dragossom",
-                "VoteCount": 21
+                "Votes": 21
             },
             {
                 "Option": "Dig Dog",
-                "VoteCount": 15
+                "Votes": 15
             }
         ]
     },
@@ -147,11 +147,11 @@ const data = [
         "data": [
             {
                 "Option": "Dredgelord",
-                "VoteCount": 25
+                "Votes": 25
             },
             {
                 "Option": "Dream-Eater Bat",
-                "VoteCount": 11
+                "Votes": 11
             }
         ]
     },
@@ -160,11 +160,11 @@ const data = [
         "data": [
             {
                 "Option": "Dustbunny",
-                "VoteCount": 36
+                "Votes": 36
             },
             {
                 "Option": "Droplganger",
-                "VoteCount": 1
+                "Votes": 1
             }
         ]
     },
@@ -173,11 +173,11 @@ const data = [
         "data": [
             {
                 "Option": "EEE-Vamp",
-                "VoteCount": 25
+                "Votes": 25
             },
             {
                 "Option": "Exbeelosion",
-                "VoteCount": 11
+                "Votes": 11
             }
         ]
     },
@@ -186,11 +186,11 @@ const data = [
         "data": [
             {
                 "Option": "Festive Mimic",
-                "VoteCount": 20
+                "Votes": 20
             },
             {
                 "Option": "Excasaur",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -199,11 +199,11 @@ const data = [
         "data": [
             {
                 "Option": "Fleech",
-                "VoteCount": 5
+                "Votes": 5
             },
             {
                 "Option": "Fretzel",
-                "VoteCount": 32
+                "Votes": 32
             }
         ]
     },
@@ -212,11 +212,11 @@ const data = [
         "data": [
             {
                 "Option": "Friendtriloquist",
-                "VoteCount": 26
+                "Votes": 26
             },
             {
                 "Option": "Frostbite",
-                "VoteCount": 10
+                "Votes": 10
             }
         ]
     },
@@ -225,11 +225,11 @@ const data = [
         "data": [
             {
                 "Option": "Gachatron",
-                "VoteCount": 23
+                "Votes": 23
             },
             {
                 "Option": "Ghastlight",
-                "VoteCount": 13
+                "Votes": 13
             }
         ]
     },
@@ -238,11 +238,11 @@ const data = [
         "data": [
             {
                 "Option": "Googlow",
-                "VoteCount": 27
+                "Votes": 27
             },
             {
                 "Option": "Glow Angel",
-                "VoteCount": 7
+                "Votes": 7
             }
         ]
     },
@@ -251,11 +251,11 @@ const data = [
         "data": [
             {
                 "Option": "Gourmander",
-                "VoteCount": 11
+                "Votes": 11
             },
             {
                 "Option": "Harlefin",
-                "VoteCount": 24
+                "Votes": 24
             }
         ]
     },
@@ -264,11 +264,11 @@ const data = [
         "data": [
             {
                 "Option": "Highland Destrier",
-                "VoteCount": 9
+                "Votes": 9
             },
             {
                 "Option": "Highlyre",
-                "VoteCount": 27
+                "Votes": 27
             }
         ]
     },
@@ -277,11 +277,11 @@ const data = [
         "data": [
             {
                 "Option": "Hydraxolotl",
-                "VoteCount": 16
+                "Votes": 16
             },
             {
                 "Option": "Hypodaze",
-                "VoteCount": 21
+                "Votes": 21
             }
         ]
     },
@@ -290,11 +290,11 @@ const data = [
         "data": [
             {
                 "Option": "Jelly Monkey",
-                "VoteCount": 19
+                "Votes": 19
             },
             {
                 "Option": "Invasive Wavestrider",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -303,11 +303,11 @@ const data = [
         "data": [
             {
                 "Option": "Jestapod",
-                "VoteCount": 19
+                "Votes": 19
             },
             {
                 "Option": "Jukeboxer",
-                "VoteCount": 18
+                "Votes": 18
             }
         ]
     },
@@ -316,11 +316,11 @@ const data = [
         "data": [
             {
                 "Option": "Jup the 1st",
-                "VoteCount": 20
+                "Votes": 20
             },
             {
                 "Option": "Jup the 2nd",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -329,11 +329,11 @@ const data = [
         "data": [
             {
                 "Option": "Jup the 3rd",
-                "VoteCount": 17
+                "Votes": 17
             },
             {
                 "Option": "Jup the 4th",
-                "VoteCount": 18
+                "Votes": 18
             }
         ]
     },
@@ -342,11 +342,11 @@ const data = [
         "data": [
             {
                 "Option": "Kelpdrake Root",
-                "VoteCount": 12
+                "Votes": 12
             },
             {
                 "Option": "Lavabrys Shark",
-                "VoteCount": 23
+                "Votes": 23
             }
         ]
     },
@@ -355,11 +355,11 @@ const data = [
         "data": [
             {
                 "Option": "Leozard",
-                "VoteCount": 6
+                "Votes": 6
             },
             {
                 "Option": "Lizard Wizard",
-                "VoteCount": 30
+                "Votes": 30
             }
         ]
     },
@@ -368,11 +368,11 @@ const data = [
         "data": [
             {
                 "Option": "Meowdy",
-                "VoteCount": 36
+                "Votes": 36
             },
             {
                 "Option": "Lobboss",
-                "VoteCount": 2
+                "Votes": 2
             }
         ]
     },
@@ -381,11 +381,11 @@ const data = [
         "data": [
             {
                 "Option": "Minereel",
-                "VoteCount": 16
+                "Votes": 16
             },
             {
                 "Option": "Metranomatone",
-                "VoteCount": 19
+                "Votes": 19
             }
         ]
     },
@@ -394,11 +394,11 @@ const data = [
         "data": [
             {
                 "Option": "Moosaic",
-                "VoteCount": 31
+                "Votes": 31
             },
             {
                 "Option": "Mountidary",
-                "VoteCount": 5
+                "Votes": 5
             }
         ]
     },
@@ -407,11 +407,11 @@ const data = [
         "data": [
             {
                 "Option": "Mr. Anycard",
-                "VoteCount": 21
+                "Votes": 21
             },
             {
                 "Option": "Nebula Ray",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -420,11 +420,11 @@ const data = [
         "data": [
             {
                 "Option": "Nightmite",
-                "VoteCount": 20
+                "Votes": 20
             },
             {
                 "Option": "Nyxwing",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -433,11 +433,11 @@ const data = [
         "data": [
             {
                 "Option": "Optimal Illusion",
-                "VoteCount": 30
+                "Votes": 30
             },
             {
                 "Option": "Paintergeist",
-                "VoteCount": 6
+                "Votes": 6
             }
         ]
     },
@@ -446,11 +446,11 @@ const data = [
         "data": [
             {
                 "Option": "Plunky",
-                "VoteCount": 17
+                "Votes": 17
             },
             {
                 "Option": "Peep-Peep",
-                "VoteCount": 17
+                "Votes": 17
             }
         ]
     },
@@ -459,11 +459,11 @@ const data = [
         "data": [
             {
                 "Option": "Pourcelain",
-                "VoteCount": 15
+                "Votes": 15
             },
             {
                 "Option": "Po\u00f1ata",
-                "VoteCount": 20
+                "Votes": 20
             }
         ]
     },
@@ -472,11 +472,11 @@ const data = [
         "data": [
             {
                 "Option": "Protojammer",
-                "VoteCount": 22
+                "Votes": 22
             },
             {
                 "Option": "Pteroducktyl",
-                "VoteCount": 13
+                "Votes": 13
             }
         ]
     },
@@ -485,11 +485,11 @@ const data = [
         "data": [
             {
                 "Option": "Radroot",
-                "VoteCount": 14
+                "Votes": 14
             },
             {
                 "Option": "Puddle Puppy",
-                "VoteCount": 22
+                "Votes": 22
             }
         ]
     },
@@ -498,11 +498,11 @@ const data = [
         "data": [
             {
                 "Option": "Rich Rat",
-                "VoteCount": 14
+                "Votes": 14
             },
             {
                 "Option": "Razzleposs",
-                "VoteCount": 23
+                "Votes": 23
             }
         ]
     },
@@ -511,11 +511,11 @@ const data = [
         "data": [
             {
                 "Option": "Rummage Rat",
-                "VoteCount": 31
+                "Votes": 31
             },
             {
                 "Option": "Scorptus",
-                "VoteCount": 4
+                "Votes": 4
             }
         ]
     },
@@ -524,11 +524,11 @@ const data = [
         "data": [
             {
                 "Option": "Seasprinter",
-                "VoteCount": 18
+                "Votes": 18
             },
             {
                 "Option": "Serachime",
-                "VoteCount": 16
+                "Votes": 16
             }
         ]
     },
@@ -537,11 +537,11 @@ const data = [
         "data": [
             {
                 "Option": "Sheetopillar",
-                "VoteCount": 25
+                "Votes": 25
             },
             {
                 "Option": "Sir Greaves",
-                "VoteCount": 12
+                "Votes": 12
             }
         ]
     },
@@ -550,15 +550,15 @@ const data = [
         "data": [
             {
                 "Option": "Sludge",
-                "VoteCount": 13
+                "Votes": 13
             },
             {
                 "Option": "Small Enemy Spider",
-                "VoteCount": 9
+                "Votes": 9
             },
             // {
             //     "Option": "All of the above - because let's be real, they're both super iconic",
-            //     "VoteCount": 16
+            //     "Votes": 16
             // },
         ]
     },
@@ -567,11 +567,11 @@ const data = [
         "data": [
             {
                 "Option": "Snailsman",
-                "VoteCount": 23
+                "Votes": 23
             },
             {
                 "Option": "Snaptrap",
-                "VoteCount": 11
+                "Votes": 11
             }
         ]
     },
@@ -580,11 +580,11 @@ const data = [
         "data": [
             {
                 "Option": "Sneezie",
-                "VoteCount": 11
+                "Votes": 11
             },
             {
                 "Option": "Sneaky Rat",
-                "VoteCount": 24
+                "Votes": 24
             }
         ]
     },
@@ -593,11 +593,11 @@ const data = [
         "data": [
             {
                 "Option": "Spectocular",
-                "VoteCount": 27
+                "Votes": 27
             },
             {
                 "Option": "Stormplaty",
-                "VoteCount": 7
+                "Votes": 7
             }
         ]
     },
@@ -606,11 +606,11 @@ const data = [
         "data": [
             {
                 "Option": "Strong Rat",
-                "VoteCount": 31
+                "Votes": 31
             },
             {
                 "Option": "Stumpalump",
-                "VoteCount": 6
+                "Votes": 6
             }
         ]
     },
@@ -619,11 +619,11 @@ const data = [
         "data": [
             {
                 "Option": "Tadpal",
-                "VoteCount": 16
+                "Votes": 16
             },
             {
                 "Option": "Sweet Tooth",
-                "VoteCount": 19
+                "Votes": 19
             }
         ]
     },
@@ -632,11 +632,11 @@ const data = [
         "data": [
             {
                 "Option": "Thamacrow",
-                "VoteCount": 18
+                "Votes": 18
             },
             {
                 "Option": "Thingamachicken",
-                "VoteCount": 17
+                "Votes": 17
             }
         ]
     },
@@ -645,11 +645,11 @@ const data = [
         "data": [
             {
                 "Option": "Toadstool",
-                "VoteCount": 19
+                "Votes": 19
             },
             {
                 "Option": "Toyrex",
-                "VoteCount": 15
+                "Votes": 15
             }
         ]
     },
@@ -658,11 +658,11 @@ const data = [
         "data": [
             {
                 "Option": "Trickstircuit",
-                "VoteCount": 23
+                "Votes": 23
             },
             {
                 "Option": "Veggiroo",
-                "VoteCount": 11
+                "Votes": 11
             }
         ]
     },
@@ -671,11 +671,11 @@ const data = [
         "data": [
             {
                 "Option": "Zapbit",
-                "VoteCount": 16
+                "Votes": 16
             },
             {
                 "Option": "Weeniemutt",
-                "VoteCount": 22
+                "Votes": 22
             }
         ]
     }
