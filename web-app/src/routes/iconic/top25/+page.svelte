@@ -6,6 +6,7 @@
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
     import VotingPair from '$components/Poll/VotingPair.svelte'
+    import Break from '$components/Break.svelte'
 </script>
 
 <!-- METADATA -->
@@ -82,6 +83,8 @@
             <h2 class="greeting"><span>Scroll down to view the results!</span><img src="/images/icons/point_down.svg" alt="point-down" height="28"></h2>
         </div>
 
+        <!-- Divider -->
+        <Break />
 
         <!-- RESULTS -->
         <!-- Each Voting Category -->

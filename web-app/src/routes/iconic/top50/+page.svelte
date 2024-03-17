@@ -7,6 +7,7 @@
 
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
+    import Break from '$components/Break.svelte'
     import VotingPair from '$components/Poll/VotingPair.svelte'
 </script>
 
@@ -81,6 +82,9 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Divider -->
+        <Break />
 
         <!-- RESULTS -->
         <!-- Each Voting Category -->
