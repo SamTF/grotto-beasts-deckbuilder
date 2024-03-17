@@ -6,8 +6,6 @@
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
 	import Break from '$components/Break.svelte'
-
-    console.log(data)
 </script>
 
 <!-- METADATA -->
