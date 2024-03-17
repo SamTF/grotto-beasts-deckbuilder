@@ -38,3 +38,41 @@
         }
     }
 }
+
+.top-ten {
+    @extend .voting-pair;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+
+    @include mobile() {
+        gap: 1rem;
+    }
+
+    // Grid Item
+    .top-ten-item {
+        @extend .voting-pair-item;
+
+        // The ranking of the Beast
+        .rank {
+            // position
+            position: absolute;
+            top: 65%;
+            left: 32%;
+
+            // display
+            display: grid;
+            place-items: center;
+
+            // the actual icon
+            span {
+                @include icon-number($colour-accent, 4rem);
+                // z-index: 10;
+            }
+        }
+    }
+}

@@ -122,6 +122,16 @@ a {
     }
 }
 
+.card-image-small {
+    @extend .card-image;
+
+    position: relative;
+    
+    img {
+        border-radius: 8px;
+    }
+}
+
 button {
     background: none;
     border: none;
