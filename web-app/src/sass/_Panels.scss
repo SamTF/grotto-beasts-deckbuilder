@@ -1,6 +1,28 @@
 // General info panels present in multiple pages
 
+// Panel for each topic section (generic panel section)
 .panel {
+    // Panel itself
+    // display
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    // size
+    width: 36rem;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    
+    // design
+    background-color: var(--colour-mid-light);
+    border-radius: 1rem;
+
+    // Mobile layout
+    @include mobile {
+        width: 90vw;
+    }
+
     // Header
     h1 {
         color: var(--colour-red);
@@ -48,5 +70,16 @@
                 width: 40ch;
             }
         }
+    }
+}
+
+.panel-wide {
+    @extend .panel;
+
+    width: 66dvw;
+
+    // Mobile layout
+    @include mobile {
+        width: 90vw;
     }
 }
