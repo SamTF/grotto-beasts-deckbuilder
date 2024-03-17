@@ -61,9 +61,9 @@
                 <span>Top 25</span>
             </a>
 
-            <a href="iconic/top10" class="route-icon-btn disabled" aria-disabled="true">
-                <!-- <img src="/images/icons/pack.svg" alt="Card Pack" class="icon"> -->
-                <Icon name='?' solid={false} strokeWidth='2' />
+            <a href="iconic/top10" class="route-icon-btn">
+                <img src="/images/icons/pack.svg" alt="Card Pack" class="icon">
+                <!-- <Icon name='?' solid={false} strokeWidth='2' /> -->
                 <span>Top 10</span>
             </a>
 
