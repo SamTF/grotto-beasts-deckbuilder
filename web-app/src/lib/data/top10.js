@@ -20,11 +20,6 @@ const data = [
         "Percentage": "50.0%"
     },
     {
-        "Beast": "Moosaic",
-        "Votes": 32,
-        "Percentage": "48.5%"
-    },
-    {
         "Beast": "Sheetopillar",
         "Votes": 33,
         "Percentage": "50.0%"
@@ -33,6 +28,11 @@ const data = [
         "Beast": "Small Enemy Spider",
         "Votes": 33,
         "Percentage": "50.0%"
+    },
+    {
+        "Beast": "Moosaic",
+        "Votes": 32,
+        "Percentage": "48.5%"
     },
     {
         "Beast": "Dustbunny",
