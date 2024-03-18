@@ -135,7 +135,7 @@
                             </a>
                         </div>
                         <h3>{beast.Votes} votes</h3>
-                        <h3>({beast.percentage})</h3>
+                        <h3>({beast.percentage}%)</h3>
 
                     </div>
                 {/each}
