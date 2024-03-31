@@ -273,14 +273,14 @@ const data = [
         ]
     },
     {
-        "title": "Hydraxolotl vs Hypodaze",
+        "title": "Hydraxolotl vs Hypnodaze",
         "data": [
             {
                 "Option": "Hydraxolotl",
                 "Votes": 16
             },
             {
-                "Option": "Hypodaze",
+                "Option": "Hypnodaze",
                 "Votes": 21
             }
         ]

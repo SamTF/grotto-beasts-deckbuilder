@@ -130,10 +130,10 @@ const data = [
         ]
     },
     {
-        "title": "Hypodaze vs Highlyre",
+        "title": "Hypnodaze vs Highlyre",
         "data": [
             {
-                "Option": "Hypodaze",
+                "Option": "Hypnodaze",
                 "Votes": 25
             },
             {

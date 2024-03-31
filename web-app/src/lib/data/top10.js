@@ -40,7 +40,7 @@ const data = [
         "Percentage": "45.5%"
     },
     {
-        "Beast": "Hypodaze",
+        "Beast": "Hypnodaze",
         "Votes": 29,
         "Percentage": "43.9%"
     },
