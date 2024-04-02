@@ -80,12 +80,3 @@
         </div>
     </div>
 </div>
-
-<!-- CSS -->
-<style>
-    .disabled {
-        opacity: 0.5;
-        cursor: no-drop;
-        pointer-events: none;
-    }
-</style>

@@ -196,3 +196,10 @@ button {
     background-repeat: repeat-x;
     pointer-events: none;
 }
+
+// Generic no-interaction element
+.disabled {
+    opacity: 0.5;
+    cursor: no-drop;
+    pointer-events: none;
+}
