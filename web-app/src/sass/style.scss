@@ -203,3 +203,9 @@ button {
     cursor: no-drop;
     pointer-events: none;
 }
+
+// Generic fade out
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
