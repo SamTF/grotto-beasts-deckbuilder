@@ -34,3 +34,8 @@ export const getRandomItem = array => {
 
     return randomElement
 }
+
+// Wait X MS before executing rest of code
+export const delay = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
