@@ -6,6 +6,10 @@
     import { delay } from "$lib/utils"
     import { fade } from "svelte/transition"
     import toast from 'svelte-french-toast'
+
+    // drag and drop
+    import {flip} from "svelte/animate"
+    import {dndzone} from "svelte-dnd-action"
     
     // Props
     export let data
@@ -178,6 +182,21 @@
     let selectedCards = []
     let playedCards = []
     let discards = 0
+
+    // SVELTE-DND-ACTION
+    let items = [
+        {id: 1, name: "item1"},
+        {id: 2, name: "item2"},
+        {id: 3, name: "item3"},
+        {id: 4, name: "item4"}
+    ];
+
+    const flipDurationMs = 300;
+
+    function handler(e) {
+        items = e.detail.items;
+        console.log(items)
+    }
 </script>
 
 <!-- HTML -->
@@ -189,9 +208,15 @@
         <!-- TEAM -->
         <div class="player-team-container">
             <!-- Played Cards -->
-            <div class="player-team">
-                {#each [1,2,3,4,5] as card}
-                    <div class="card-image-small">
+            <div
+                class="player-team"
+                use:dndzone="{{items, flipDurationMs, dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'} }}"
+                on:consider="{handler}"
+                on:finalize="{handler}"
+                
+            >
+                {#each items as item(item.id)}
+                    <div class="card-image-small" animate:flip={{duration:flipDurationMs}}>
                         <img src="/images/cards/back.webp" alt="deck of cards">
                     </div>
                 {/each}
