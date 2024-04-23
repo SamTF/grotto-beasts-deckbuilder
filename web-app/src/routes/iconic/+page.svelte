@@ -6,6 +6,7 @@
     // Imports
     import Meta from '$components/Meta/Meta.svelte'
     import Icon from '$components/UI/Icon.svelte'
+    import Break from '$components/Break.svelte'
 </script>
 
 <!-- METADATA -->
@@ -50,6 +51,11 @@
             <h2 class="greeting"><span>Click the buttons below to view the results!</span><img src="/images/icons/point_down.svg" alt="point-down" height="28"></h2>
         </div>
 
+        <Break/>
+
+        <!-- BEASTS -->
+        <h1>BEASTS</h1>
+
         <!-- Buttons Panel -->
         <div class="buttons-panel">
             <a href="/iconic/top50" class="route-icon-btn">
@@ -66,16 +72,34 @@
                 <!-- <Icon name='?' solid={false} strokeWidth='2' /> -->
                 <span>Top 10</span>
             </a>
-
         </div>
+
+        <Break/>
+
+        <!-- Challengers -->
+        <h1>CHALLENGERS</h1>
+
+        <div class="buttons-panel">
+             <a href="iconic/challengers" class="route-icon-btn">
+                <!-- <img src="/images/icons/pack.svg" alt="Card Pack" class="icon"> -->
+                <Icon name='trophy' solid={true} />
+                <span>Top 10</span>
+            </a>
+        </div>
+
+        <Break/>
 
         <!-- Methodoly -->
         <div class="panel">
             <h1>Methodology</h1>
             <div class="body-text">
-                <p>The voting was based on elimination rounds. All Beasts were arranged into pairs in order of their Card Number, and people picked one of the two per pair. The Beast within a pair with the least votes was eliminated, and the winning Beast proceeded to the next round.</p>
+                <p>The voting was based on elimination rounds for the first 2 rounds. All Beasts were arranged into pairs in order of their Card Number, and people picked one of the two per pair. The Beast within a pair with the least votes was eliminated, and the winning Beast proceeded to the next round.</p>
                 <p>In the rare cases were a tie was observed, both Beasts moved on to the next round and were arranged into different pairs.</p>
-                <p>Voting was done via a Google Form shared around the Grotto Beasts Discord community.</p>
+                <br>
+                <p>For the Top 10 voting rounds, people directly chose their 10 favourite options and those with the most votes were crowned the winners.</p>
+                <p>When a tie was observed for 10th place, we just waited it out until more people voted and the ties were broken.</p>
+                <br>
+                <p>Voting was done via a Google Form shared around the Grotto Beasts Discord community. Thank you very much to everyone who participated!!</p>
             </div>
         </div>
     </div>
