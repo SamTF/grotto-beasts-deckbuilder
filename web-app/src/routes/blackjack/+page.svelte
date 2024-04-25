@@ -170,11 +170,90 @@
         workingDeck = workingDeck
     }
 
+    const playCards = async() => {
+        // check that the current play is valid
+        if (playedCards.length + selectedCards.length > maxPlayedCards) {
+            toast.error("You can only play a maximum of 5 cards per round!")
+            return
+        }
+        else if (selectedCards.length < 1) {
+            toast.error("You must play at least 1 card, silly :)")
+            return
+        }
+
+        // get info of selected cards
+        let cards = hand.filter((card, i) => selectedCards.includes(i))
+        cards = cards.map(card => ({...card, id: `${card.id}_${handsPlayed}_${discards}_${Math.random() * 100}`}))
+        console.log(cards)
+
+        // add them to the play area
+        playedCards = [...playedCards, ...cards]
+        console.log(playedCards)
+
+        // Instead of removing the card, make it invisible
+        const playingCards = document.querySelectorAll('.playing-card'); 
+        for (const i of selectedCards) {
+            const cardToRemove = playingCards[i]
+            // cardToRemove.style.visibility = 'hidden';
+            cardToRemove.classList.add('fade-out')
+        }
+
+        // Wait 1 second
+        await delay(500)
+
+        // remove the selected cards from hand by index
+        for (const i of selectedCards.reverse()) {
+            console.log(i)
+            hand.splice(i, 1);
+        }
+        // remove the fade out class
+        for (const card of playingCards) {
+            card.classList.remove('fade-out')
+        }
+
+        // update reactive vars
+        selectedCards = []
+        hand = hand
+        handsPlayed++
+    }
+
+    // Score Cards!
+    const scoreCards = () => {
+        let totalScore = 0
+        let totalMult = 0
+
+        playedCards.forEach((card) => {
+            if (card.type == "Beast") {
+                // card base stats
+                let chips = card.cost
+                let mult = card.power
+
+                // multiply chips
+                let multedChips = totalMult > 0 ? totalMult * chips : chips
+
+                // increment score and mult
+                totalScore += multedChips
+                totalMult += mult
+
+                console.log(`${card.name} -> +${chips} X${totalMult-mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
+                toast.success(
+                    `${card.name} -> +${chips} X${totalMult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`,
+                    {
+                        icon: '🐱',
+                        duration: 6000
+                    }
+                )
+            }
+        })
+    }
+
     // CONSTANTS
     const deck = populateDeck(data.fullCards)
     const maxCardsInHand = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
+    const maxHands = 3
+    const maxPlayedCards = 5
 
     // Variables
     let workingDeck = [...deck]
@@ -182,44 +261,61 @@
     let selectedCards = []
     let playedCards = []
     let discards = 0
+    let handsPlayed = 0
 
     // SVELTE-DND-ACTION
-    let items = [
-        {id: 1, name: "item1"},
-        {id: 2, name: "item2"},
-        {id: 3, name: "item3"},
-        {id: 4, name: "item4"}
-    ];
+    // let playedCards = []
+    // let items = [
+    //     {id: 1, name: "item1"},
+    //     {id: 2, name: "item2"},
+    //     {id: 3, name: "item3"},
+    //     {id: 4, name: "item4"}
+    // ];
 
     const flipDurationMs = 300;
 
     function handler(e) {
-        items = e.detail.items;
-        console.log(items)
+        playedCards = e.detail.items;
+        console.log(playedCards)
     }
+
+    // test
+    $: console.log(hand)
+    $: console.log(selectedCards)
 </script>
 
 <!-- HTML -->
 <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/>
 
 <div class="page-container center">
-    <div class="play-area" oncontextmenu="return false" on:contextmenu={() => selectedCards = []}>
+<div class="game-wrapper">
 
+    <!-- UI Sidebar -->
+    <div class="ui-sidebar">
+        <h1>SIDEBAR</h1>
+
+    </div>
+
+    <!-- Where the gaming takes place -->
+    <div class="play-area" oncontextmenu="return false" on:contextmenu={() => selectedCards = []}>
         <!-- TEAM -->
         <div class="player-team-container">
             <!-- Played Cards -->
+            <div class="player-team">
             <div
-                class="player-team"
-                use:dndzone="{{items, flipDurationMs, dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'} }}"
+                class="player-team-grid"
+                use:dndzone="{{items: playedCards, flipDurationMs, dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'} }}"
                 on:consider="{handler}"
                 on:finalize="{handler}"
                 
             >
-                {#each items as item(item.id)}
+                {#each playedCards as item(item.id)}
                     <div class="card-image-small" animate:flip={{duration:flipDurationMs}}>
-                        <img src="/images/cards/back.webp" alt="deck of cards">
+                        <!-- <img src="/images/cards/back.webp" alt="deck of cards"> -->
+                        <img src={item.imageURL.small} alt="deck of cards">
                     </div>
                 {/each}
+            </div>
             </div>
         </div>
         
@@ -252,7 +348,21 @@
                 <!-- The Play & Discard buttons -->
                 <div class="hand-btns-container">
                     <div class="hand-btns">
-                        <button class="play-btn">Play</button>
+                        <!-- Add Cards to play area -->
+                        <button
+                            class="play-btn"
+                            on:click={playCards}
+                            class:disabled={selectedCards < 1 || playedCards.length >= maxPlayedCards}
+                        >Play</button>
+
+                        <!-- Submit your play! -->
+                        <button
+                            class="play-btn"
+                            on:click={scoreCards}
+                            class:disabled={playedCards.length < 1}
+                        >Score!</button>
+
+                        <!-- Discard X cards and draw X cards from the deck -->
                         <button
                             class="play-btn"
                             on:click={discardSelection}
@@ -277,12 +387,18 @@
         
     </div>
 </div>
+</div>
 
 <span class="fade-out"></span>
 
 
 <!-- CSS -->
 <style>
+    .game-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 6fr;
+    }
+
     .play-area {
         width: 100%;
         display: grid;
@@ -294,8 +410,8 @@
         grid-template-columns: 8fr 1fr;
         align-content: end;
 
-        outline: 4px solid green;
-        outline-style: dashed;
+        /* outline: 4px solid green;
+        outline-style: dashed; */
         width: 95%;
         /* height: 50rem; */
     }
@@ -374,6 +490,7 @@
         height: 18rem;
         background-color: rgba(255, 255, 255, 0.375);
         border-radius: 1rem;
+        padding: 0 2rem;
     }
 
     .card-image-small {
@@ -407,19 +524,37 @@
     }
 
     .player-team-container {
-        outline: 4px solid yellow;
-        outline-style: dashed;
+        /* outline: 4px solid yellow;
+        outline-style: dashed; */
 
         height: 24rem;
         width: 95%;
 
         display: grid;
+        grid-template-columns: 8fr 1fr;
         place-items: center;
     }
 
     .player-team {
+        display: grid;
+        place-items: center;
+        
+        width: 60rem;
+        height: 16rem;
+        background-color: rgba(255, 255, 255, 0.375);
+        border-radius: 1rem;
+    }
+
+    .player-team-grid {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
+    }
+
+    .ui-sidebar {
+        height: 100%;
+        width: 100%;
+
+        background-color: blueviolet;
     }
 </style>
