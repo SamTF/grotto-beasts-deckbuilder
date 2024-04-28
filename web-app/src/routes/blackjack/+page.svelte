@@ -27,9 +27,16 @@
 
             // append cards to deck
             for (let i = 0; i < c.quantity; i++) {
-                deck.push(c)
+                // Create a new simplified card Object with a UUID
+                const { number, name, type, imageURL, cost, power } = c
+                const newCard = { number, name, type, imageURL, cost, power, id: Math.round(Math.random() * 1000) }
+                
+                // add card to deck
+                deck.push(newCard)
             }
         })
+
+        console.log(deck)
 
         // return the populated deck
         return deck
@@ -44,6 +51,7 @@
             // let card = deck[deck.length * Math.random() | 0]
             const i = Math.floor( Math.random() * (deck.length - 1));
             let card = deck[i]
+            card.id = `${card.id}${Math.round(Math.random() * 100)}`
 
             // add card to hand
             hand.push(card)
@@ -54,6 +62,9 @@
 
         // save the remaining cards in the deck to the "working deck"
         workingDeck = deck
+
+        console.log("HAAAAND")
+        console.log(hand)
 
         // return cards in hand
         return hand
@@ -78,6 +89,8 @@
         selectedCards = [...selectedCards]
         console.log(selectedCards)
         console.log(selectedCards.length)
+
+        hand=hand
     }
 
     // Remove selected cards from hand
@@ -87,8 +100,14 @@
             toast.error("You've already used all your discards! x(")
             return
         }
+        // const numOfCards = maxCardsInHand - hand.length
         const numOfCards = selectedCards.length
-        const cards = document.querySelectorAll('.playing-card');     
+        const cards = document.querySelectorAll('.playing-card');  
+
+        // notification
+        toast.success(`Discarding and re-drawing ${numOfCards} cards...`, {
+            duration: 5000
+        })
 
         // Instead of removing the card, make it invisible
         for (const i of selectedCards) {
@@ -118,6 +137,12 @@
 
         // Wait 1 second
         await delay(500)
+        toast.success(`${maxDiscards - discards} discards remain`, {
+            duration: 5000
+        })
+
+        console.log("CARDS TO DRAW: ")
+        console.log(maxCardsInHand - hand.length)
 
         // Draw new cards to replace discarded ones
         for (let i = 0; i < numOfCards; i++) {
@@ -219,10 +244,17 @@
 
     // Score Cards!
     const scoreCards = () => {
+        // Check if player has any hands left
+        if (handsPlayed >= maxHands) {
+            toast.error("Sorry buckeroo, you ran out of hands to play!")
+            return
+        }
+
         let totalScore = 0
         let totalMult = 0
 
         playedCards.forEach((card) => {
+            // SCORING BEASTS
             if (card.type == "Beast") {
                 // card base stats
                 let chips = card.cost
@@ -236,15 +268,105 @@
                 totalMult += mult
 
                 console.log(`${card.name} -> +${chips} X${totalMult-mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
-                toast.success(
-                    `${card.name} -> +${chips} X${totalMult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`,
-                    {
-                        icon: '🐱',
-                        duration: 6000
-                    }
-                )
+            }
+
+            // SCORING WISHES
+            else if (card.type == "Wish") {
+                // increment score
+                let chips = card.cost
+                totalScore += chips
+
+                console.log(`${card.name} -> +${chips}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
+            }
+
+            // SCORING GROTTOS
+            else if (card.type == "Grotto") {
+                // increment mult
+                let mult = card.cost
+                totalMult += mult
+
+                console.log(`${card.name} -> X${mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
             }
         })
+
+        toast.success(
+            `Total Score: ${totalScore}\nTotal Mult: ${totalMult}`,
+            {
+                icon: '🐱',
+                duration: 6000
+            }
+        )
+
+        // Increment hands played
+        handsPlayed++
+    }
+
+    // Score Preview
+    const scorePreview = (card) => {
+        let chips = 0
+        let mult = 0
+
+        switch (card.type) {
+            case 'Beast':
+                chips = card.cost
+                mult = card.power
+                return `${chips} x${mult}`
+            
+            case 'Wish':
+                chips = card.cost
+                return `+${chips}`
+            
+            case 'Grotto':
+                mult = card.cost
+                return `x${mult}`
+        
+            default:
+                break;
+        }
+    }
+
+    // Score Preview Reactive
+    const scorePreviewReactive = cards => {
+        console.log("SCORE PREVIEW REACTIVE!!")
+        let totalMult = 0
+
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            let cardScorePreview = ''
+            
+            
+            switch (card.type) {
+                case 'Wish': {
+                    let chips = card.cost
+                    cardScorePreview = `+${chips}`
+                    break
+                }
+                case 'Grotto': {
+                    let mult = card.cost
+                    totalMult += mult
+                    cardScorePreview = `x${mult}`
+                    break
+                }
+                case 'Beast': {
+                    let chips = card.cost
+                    let mult = card.power
+
+                    // multiply chips
+                    let multedChips = totalMult > 0 ? totalMult * chips : chips
+                    cardScorePreview = totalMult > 0 ? `+${chips} x${totalMult}` : `+${chips}`
+                    // cardScorePreview = `+${multedChips} +X${mult}`
+                    totalMult += mult
+                    break
+                }
+
+                default:
+                    break;
+            }
+
+            console.log(totalMult)
+            card.scorePreview = cardScorePreview
+            console.log(card.scorePreview)
+        }
     }
 
     // CONSTANTS
@@ -260,23 +382,49 @@
     let hand = startingHand(deck)
     let selectedCards = []
     let playedCards = []
+    let actualPlayedCards = []
     let discards = 0
     let handsPlayed = 0
 
-    // SVELTE-DND-ACTION
-    // let playedCards = []
-    // let items = [
-    //     {id: 1, name: "item1"},
-    //     {id: 2, name: "item2"},
-    //     {id: 3, name: "item3"},
-    //     {id: 4, name: "item4"}
-    // ];
+    // Reactive Variables
 
+    // SVELTE-DND-ACTION
     const flipDurationMs = 300;
 
-    function handler(e) {
+    // DND Reactive Vars
+    $: teamDropDisabled = playedCards.length >= maxPlayedCards ? true : false
+    $: handDropDisabled = hand.length >= maxCardsInHand ? true : false
+    $: handDragDisabled = selectedCards.length >= 1
+
+    function dndPlayerTeamDrag(e) {
+        console.log(e.detail.info)
+        console.log("---------actual played cards--------")
+        console.log(actualPlayedCards)
+
+        if (!actualPlayedCards.some(card => card.id === e.detail.info.id)) {
+            if (e.detail.info.trigger == "draggedEntered" && playedCards.length >= maxPlayedCards) {
+                toast.error("Hold your horses, partner! Your Team is already maxxed out!", {icon: '🐱'})
+            }
+        }
+
+        // update list of played cards
         playedCards = e.detail.items;
         console.log(playedCards)
+    }
+
+    function dndPlayerTeamDrop(e) {
+        // ACTUALLY update the list of played cards for real
+        playedCards = e.detail.items;
+        actualPlayedCards = playedCards
+
+        scorePreviewReactive(playedCards)
+    }
+
+    // DND Player Hand
+    function dndPlayerHand(e) {
+        const banana = e.detail.items
+        hand = banana
+        console.log(banana)
     }
 
     // test
@@ -285,14 +433,56 @@
 </script>
 
 <!-- HTML -->
-<DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/>
+<!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/> -->
 
 <div class="page-container center">
 <div class="game-wrapper">
 
     <!-- UI Sidebar -->
     <div class="ui-sidebar">
-        <h1>SIDEBAR</h1>
+        <!-- Challenger Info Box -->
+        <div class="game-opponent-challenger">
+            <div class="challenger-name"><p>Mr Greenz</p></div>
+
+            <div class="challenger-avatar-container">
+                <div class="challenger-pic" style={`background-image: url("images/cards/6. Mr. Greenz.webp");`}></div>
+            </div>
+
+            <div class="challenger-goal">
+                <span class="goal-text">Goal:</span>
+                <div class="goal-value-container">
+                    <span class="goal-value">21</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Round Score -->
+        <div class="round-score-container">
+
+        </div>
+
+        <!-- Hands & Discards -->
+        <div class="hands-discards-containers">
+            <div class="ui-hands-container">
+                <h2>Hands</h2>
+
+                <div class="ui-hands-value">
+                    {#each [...Array(maxHands).keys()] as x, i}
+                        <span class:faded={i < handsPlayed}>⚪</span>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="ui-discards-container">
+                <h2>Discards</h2>
+
+                <div class="ui-discards-value">
+                    {#each [...Array(maxDiscards).keys()] as x, i}
+                        <span class:faded={i < discards}>⚪</span>
+                    {/each}
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -304,15 +494,23 @@
             <div class="player-team">
             <div
                 class="player-team-grid"
-                use:dndzone="{{items: playedCards, flipDurationMs, dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'} }}"
-                on:consider="{handler}"
-                on:finalize="{handler}"
+                use:dndzone="{{
+                    items: playedCards, 
+                    flipDurationMs, 
+                    // dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'},
+                    dropFromOthersDisabled: teamDropDisabled
+                }}"
+                on:consider="{dndPlayerTeamDrag}"
+                on:finalize="{dndPlayerTeamDrop}"
                 
             >
                 {#each playedCards as item(item.id)}
                     <div class="card-image-small" animate:flip={{duration:flipDurationMs}}>
                         <!-- <img src="/images/cards/back.webp" alt="deck of cards"> -->
                         <img src={item.imageURL.small} alt="deck of cards">
+                        <div class="score">
+                            <span>{item.scorePreview}</span>
+                        </div>
                     </div>
                 {/each}
             </div>
@@ -324,16 +522,30 @@
             <!-- The Player's Hand AND Buttons-->
             <div class="player-hand-and-btns">
                 <!-- {#key hand} -->
-                    <div class="hand-container starting-hand">
-                        {#each hand as card, i}
-                        <div class="card-image-small playing-card" in:fade>
-                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <div
+                        class="hand-container starting-hand"
+                        use:dndzone="{{items: hand, flipDurationMs, dropFromOthersDisabled: handDropDisabled, dragDisabled: handDragDisabled}}"
+                        on:consider="{dndPlayerHand}"
+                        on:finalize="{dndPlayerHand}"
+                    >
+                        <!-- {#each items as card, i (card.id)} -->
+                        {#each hand as card, i (`${card.id}_${Math.random() * 100}`)}
+                        <!-- <div class="card-image-small playing-card" in:fade animate:flip={{duration:flipDurationMs}}>
+                            
                             <img
-                            src={`/images/cards/360/${card.number}. ${card.name}.webp`}
+                            src={`/images/cards/back.webp`}
                             alt={card.name}
                             title={i}
-                            on:click={() => selectCard(i)}
-                            class:selected = {selectedCards.includes(i)}
+                            >
+                        </div> -->
+                        <div class="card-image-small playing-card" animate:flip={{duration:flipDurationMs}}>
+                            <!-- svelte-ignore a11y-click-events-have-key-events -->
+                            <img
+                                src={card.imageURL.small}
+                                alt={card.name}
+                                title={i}
+                                on:click={() => selectCard(i)}
+                                class:selected = {selectedCards.includes(i)}
                             >
                         </div>
                         {/each}
@@ -349,11 +561,11 @@
                 <div class="hand-btns-container">
                     <div class="hand-btns">
                         <!-- Add Cards to play area -->
-                        <button
+                        <!-- <button
                             class="play-btn"
                             on:click={playCards}
                             class:disabled={selectedCards < 1 || playedCards.length >= maxPlayedCards}
-                        >Play</button>
+                        >Play</button> -->
 
                         <!-- Submit your play! -->
                         <button
@@ -548,13 +760,193 @@
     .player-team-grid {
         display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: center;
         gap: 0.5rem;
+
+        width: 100%;
+        height: 100%;
+        border-radius: 1rem;
     }
 
+    
+    .score {
+        /* position */
+        position: absolute;
+        bottom: -2.25rem;
+        left: 0;
+        z-index: -1;
+        
+        /* display */
+        display: grid;
+        place-items: center;
+        
+        /* size */
+        width: 100%;
+        height: 3rem;
+        
+        /* font */
+        font-size: 2rem;
+        font-weight: 700;
+        
+        /* design */
+        border-radius: 0 0 8px 8px;
+        background-color: var(--colour-accent);
+    }
+    
+    .card-image-small {
+        z-index: 10;
+    }
+    
+    /* SIDEBAR */
     .ui-sidebar {
-        height: 100%;
+        /* display: grid; */
+        /* place-items: center; */
+        /* justify-items: center; */
+        /* grid-template-rows: 1fr 1fr 1fr; */
+        /* grid-auto-flow: row; */
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        height: 100dvh;
         width: 100%;
 
-        background-color: blueviolet;
+        background-color: #a34d9d;
+    }
+
+    .game-opponent-challenger {
+        /* display: grid; */
+        /* place-items: center; */
+        display: flex;
+        flex-direction: column;
+        gap:0;
+
+        margin-top: 1rem;
+        width: 90%;
+        height: 18rem;
+
+        color: white;
+        font-size: 2rem;
+        font-weight: 900;
+    }
+
+    .challenger-name {
+        display: grid;
+        place-items: center;
+        
+        width: 100%;
+        height: 3rem;
+
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .challenger-avatar-container {
+        display: grid;
+        place-items: center;
+
+        width: 100%;
+        height: 60%;
+
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .challenger-pic {
+        height: 10rem;
+        width: 10rem;
+        border-radius: 50%;
+
+        background-size: 150%;
+        background-position: center center;
+    }
+
+    .challenger-goal {
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        
+        width: 100%;
+        height: 4rem;
+
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .challenger-goal span {
+        display: grid;
+        place-items: center;
+    }
+
+    .challenger-goal .goal-text {
+        font-weight: normal;
+    }
+
+    .challenger-goal .goal-value-container {
+        display: grid;
+        place-items: center;
+    }
+    .challenger-goal .goal-value {
+        width: 80%;
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    .round-score-container {
+        height: 10rem;
+        width: 90%;
+        
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .hands-discards-containers {
+        display: grid;
+        grid-auto-flow: row;
+        justify-items: center;
+        gap: 1rem;
+
+        width: 90%;
+    }
+
+    .ui-hands-container, .ui-discards-container {
+        display: grid;
+        grid-auto-flow: row;
+        justify-items: center;
+
+        width: 100%;
+        height: 6rem;
+        padding: 0.5rem 0;
+        
+        color: white;
+        background-color: #2470af;
+        border-radius: 1rem;
+    }
+
+    .ui-discards-container {
+        background-color: #cb3a63;
+    }
+
+    .ui-hands-value, .ui-discards-value {
+        display: grid;
+        place-items: center;
+        grid-auto-flow: column;
+
+        width: 90%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        
+        font-size: 2rem;
+
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .faded {
+        opacity: 0.33;
     }
 </style>
