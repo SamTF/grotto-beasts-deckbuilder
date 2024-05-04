@@ -3,6 +3,8 @@
     // Imports
     import DeckHeader from "$components/Deck/DeckHeader.svelte"
     import { CardTypes, countCardType } from "$lib/cardUtils"
+    import Popup from '$components/UI/Popups/Popup.svelte'
+    import { openModal, closeModal } from 'svelte-modals'
     import { delay } from "$lib/utils"
     import { fade } from "svelte/transition"
     import toast from 'svelte-french-toast'
@@ -91,6 +93,30 @@
         console.log(selectedCards.length)
 
         hand=hand
+    }
+
+    const deselectCards = () => {
+        if (selectedCards.length > 0) {
+            selectedCards = []
+        }
+    }
+
+    const moveToHand = (i) => {
+        if ( i>= playedCards.length) return
+
+        // get card object
+        const card = playedCards[i]
+
+        // remove card from Team
+        playedCards.splice(i, 1)
+        playedCards = playedCards 
+
+        // add card to Hand
+        hand.push(card)
+        hand = hand
+
+        // update score preview
+        scorePreviewReactive(playedCards)
     }
 
     // Remove selected cards from hand
@@ -305,17 +331,30 @@
             await delay(500)
         }
 
+        // Wait
+        await delay(500)
+
         // Check if the score was enough to win
-        challengerHpLost++
+        if (totalScore >= challengerGoal && totalScore <= maxGoal) {
+            challengerHpLost++
+
+            toast.success("You defeated the challenger!")
+
+            openModal(Popup, { title: 'Victory!', message: 'You defeated the Challenger!', icon: 'sparkles' })
+        }
+        // Loss
+        else {
+            toast.error("You lost:(")
+        }
 
         // toast feedback
-        toast.success(
-            `Total Score: ${totalScore}\nTotal Mult: ${totalMult}`,
-            {
-                icon: '🐱',
-                duration: 6000
-            }
-        )
+        // toast.success(
+        //     `Total Score: ${totalScore}\nTotal Mult: ${totalMult}`,
+        //     {
+        //         icon: '🐱',
+        //         duration: 6000
+        //     }
+        // )
 
         // Sidebar UI feedback
         handScore = totalScore
@@ -399,6 +438,8 @@
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
+    const challengerGoal = 16
+    const maxGoal = 21
     const challengerMaxHp = 3
 
     // Variables
@@ -479,7 +520,7 @@
             <div class="challenger-goal">
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
-                    <span class="goal-value">21</span>
+                    <span class="goal-value">16</span>
                 </div>
             </div>
         </div>
@@ -542,7 +583,7 @@
     </div>
 
     <!-- Where the gaming takes place -->
-    <div class="play-area" oncontextmenu="return false" on:contextmenu={() => selectedCards = []}>
+    <div class="play-area" oncontextmenu="return false">
         <!-- TEAM -->
         <div class="player-team-container">
             <!-- Played Cards -->
@@ -560,7 +601,11 @@
                 
             >
                 {#each playedCards as item, i (item.id)}
-                    <div class="card-image-small" animate:flip={{duration:flipDurationMs}}>
+                    <div
+                        class="card-image-small"
+                        animate:flip={{duration:flipDurationMs}}
+                        on:contextmenu={() => moveToHand(i)}
+                    >
                         <!-- Card image -->
                         {#key cardsScored}
                         <img
@@ -590,7 +635,7 @@
         </div>
         
         <!-- The Players Hand & Their Deck -->
-        <div class="hand-and-deck">
+        <div class="hand-and-deck" on:contextmenu={deselectCards}>
             <!-- The Player's Hand AND Buttons-->
             <div class="player-hand-and-btns">
                 <!-- {#key hand} -->
