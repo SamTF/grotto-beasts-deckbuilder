@@ -243,17 +243,23 @@
     }
 
     // Score Cards!
-    const scoreCards = () => {
+    const scoreCards = async() => {
         // Check if player has any hands left
         if (handsPlayed >= maxHands) {
             toast.error("Sorry buckeroo, you ran out of hands to play!")
             return
         }
 
+        // init vars
         let totalScore = 0
         let totalMult = 0
+        scoreHistory = []
+        cardsScored = 0
 
-        playedCards.forEach((card) => {
+        // Calculate the score, one card at a time
+        for (let i = 0; i < playedCards.length; i++) {
+            const card = playedCards[i];
+
             // SCORING BEASTS
             if (card.type == "Beast") {
                 // card base stats
@@ -287,8 +293,19 @@
 
                 console.log(`${card.name} -> X${mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
             }
-        })
 
+            // Updating Sidebar UI
+            handScore = totalScore
+            if (scoreHistory.length >= 3) {scoreHistory.pop()}
+            scoreHistory.unshift(playedCards[i].scorePreview)
+            cardsScored++
+            console.log(scoreHistory)
+
+            // Wait
+            await delay(1000)
+        }
+
+        // toast feedback
         toast.success(
             `Total Score: ${totalScore}\nTotal Mult: ${totalMult}`,
             {
@@ -296,6 +313,9 @@
                 duration: 6000
             }
         )
+
+        // Sidebar UI feedback
+        handScore = totalScore
 
         // Increment hands played
         handsPlayed++
@@ -385,6 +405,9 @@
     let actualPlayedCards = []
     let discards = 0
     let handsPlayed = 0
+    let handScore = 0
+    let scoreHistory = []
+    let cardsScored = 0
 
     // Reactive Variables
 
@@ -458,7 +481,31 @@
 
         <!-- Round Score -->
         <div class="round-score-container">
+            <div class="round-score">
+                {#if handScore > 0}
+                    <div class="round-score-total">
+                        <h1>{handScore}</h1>
+                    </div>
 
+                    <div class="round-score-history">
+                        {#key cardsScored}
+                        {#each scoreHistory as score}
+                            <p>{score}</p>
+                        {/each}
+                        {/key}
+
+                        <!-- {#if cardsScored >= 1}
+                            <p>{scoreHistory[0]}</p>
+                        {/if}
+                        {#if cardsScored >= 2}
+                            <p>{scoreHistory[1]}</p>
+                        {/if}
+                        {#if cardsScored >= 3}
+                            <p>{scoreHistory[2]}</p>
+                        {/if} -->
+                    </div> 
+                {/if}
+            </div>
         </div>
 
         <!-- Hands & Discards -->
@@ -578,7 +625,7 @@
                         <button
                             class="play-btn"
                             on:click={discardSelection}
-                            class:disabled={discards >= maxDiscards}
+                            class:disabled={discards >= maxDiscards || selectedCards < 1}
                         >Discard</button>
                     </div>
                 </div>
@@ -811,7 +858,7 @@
         align-items: center;
         gap: 1rem;
 
-        height: 100dvh;
+        height: 92.5dvh;
         width: 100%;
 
         background-color: #a34d9d;
@@ -897,11 +944,65 @@
     }
 
     .round-score-container {
+        display: grid;
+        place-items: center;
+
         height: 10rem;
         width: 90%;
         
+        color: white;
         border-radius: 1rem;
         background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .round-score {
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-rows: 2fr 3fr;
+
+        justify-items: center;
+        align-items: start;
+
+        width: 100%;
+        height: 100%;
+    }
+
+    .round-score-total {
+        display: grid;
+        place-items: center;
+
+        width: 100%;
+        height: 100%;
+
+        background: #00000052;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .round-score h1 {
+        font-size: 4rem;
+        color: var(--colour-accent);
+        line-height: 3rem;
+    }
+
+    .round-score-history {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
+        width: 100%;
+
+        font-size: 1.25rem;
+    }
+
+    .round-score-history p:first-child {
+        font-weight: 700;
+        opacity: 1;
+    }
+
+    .round-score-history p {
+        opacity: 0.75;
     }
 
     .hands-discards-containers {
