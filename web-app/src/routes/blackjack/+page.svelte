@@ -302,8 +302,11 @@
             console.log(scoreHistory)
 
             // Wait
-            await delay(1000)
+            await delay(500)
         }
+
+        // Check if the score was enough to win
+        challengerHpLost++
 
         // toast feedback
         toast.success(
@@ -396,6 +399,7 @@
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
+    const challengerMaxHp = 3
 
     // Variables
     let workingDeck = [...deck]
@@ -408,6 +412,7 @@
     let handScore = 0
     let scoreHistory = []
     let cardsScored = 0
+    let challengerHpLost = 0
 
     // Reactive Variables
 
@@ -479,6 +484,19 @@
             </div>
         </div>
 
+        <!-- Challenger Tenacity -->
+        <div class="hands-discards-containers">
+            <div class="ui-tenacity-container">
+                <h2>Tenacity</h2>
+
+                <div class="ui-hands-value">
+                    {#each [...Array(challengerMaxHp).keys()] as x, i}
+                        <span class:faded={i < challengerHpLost}>⚪</span>
+                    {/each}
+                </div>
+            </div>
+        </div>
+
         <!-- Round Score -->
         <div class="round-score-container">
             <div class="round-score">
@@ -493,16 +511,6 @@
                             <p>{score}</p>
                         {/each}
                         {/key}
-
-                        <!-- {#if cardsScored >= 1}
-                            <p>{scoreHistory[0]}</p>
-                        {/if}
-                        {#if cardsScored >= 2}
-                            <p>{scoreHistory[1]}</p>
-                        {/if}
-                        {#if cardsScored >= 3}
-                            <p>{scoreHistory[2]}</p>
-                        {/if} -->
                     </div> 
                 {/if}
             </div>
@@ -551,13 +559,30 @@
                 on:finalize="{dndPlayerTeamDrop}"
                 
             >
-                {#each playedCards as item(item.id)}
+                {#each playedCards as item, i (item.id)}
                     <div class="card-image-small" animate:flip={{duration:flipDurationMs}}>
-                        <!-- <img src="/images/cards/back.webp" alt="deck of cards"> -->
-                        <img src={item.imageURL.small} alt="deck of cards">
-                        <div class="score">
+                        <!-- Card image -->
+                        {#key cardsScored}
+                        <img
+                            src={item.imageURL.small}
+                            alt={item.name}
+                            class:selected={i+1 <= cardsScored}
+                            title={i}
+                        >
+
+                        <!-- Score preview -->
+                        <!-- A: Always Shown -->
+                        <div class="score" class:selected-offset={i+1 <= cardsScored}>
                             <span>{item.scorePreview}</span>
                         </div>
+
+                        <!-- B: Shows only when scored -->
+                        <!-- {#if i+1 <= cardsScored}
+                            <div class="score" class:selected-offset={i+1 <= cardsScored}>
+                                <span>{item.scorePreview}</span>
+                            </div>
+                        {/if} -->
+                        {/key}
                     </div>
                 {/each}
             </div>
@@ -577,14 +602,6 @@
                     >
                         <!-- {#each items as card, i (card.id)} -->
                         {#each hand as card, i (`${card.id}_${Math.random() * 100}`)}
-                        <!-- <div class="card-image-small playing-card" in:fade animate:flip={{duration:flipDurationMs}}>
-                            
-                            <img
-                            src={`/images/cards/back.webp`}
-                            alt={card.name}
-                            title={i}
-                            >
-                        </div> -->
                         <div class="card-image-small playing-card" animate:flip={{duration:flipDurationMs}}>
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <img
@@ -753,21 +770,26 @@
     }
 
     .card-image-small {
-        transition: transform 0.2s ease-in-out;
+        transition: transform 0.2s;
         opacity: 1;
         flex: 0 0 auto;
     }
 
     .card-image-small img {
         max-height: 200px;
-        /* transition: all 200ms; */
+        /* transition: transform 0.2s; */
+        /* transition: all 500ms; */
     }
 
     .selected {
-        transition: all 200ms;
         outline: 2px solid gold;
-        transform: translateY(-5rem);
+        transform: translate(0, -3rem);
+        -moz-transform: translate(0, -3rem);
         z-index: 10;
+    }
+    .selected-offset {
+        transform: translate(0, -3rem);
+        -moz-transform: translate(0, -3rem);
     }
 
     .cards-in-hand {
@@ -839,6 +861,8 @@
         /* design */
         border-radius: 0 0 8px 8px;
         background-color: var(--colour-accent);
+        box-shadow: inset 8px 8px 17px #d1ab48,
+            inset -8px -8px 17px #ffe762;
     }
     
     .card-image-small {
@@ -928,6 +952,7 @@
 
     .challenger-goal .goal-text {
         font-weight: normal;
+        justify-self: end;
     }
 
     .challenger-goal .goal-value-container {
@@ -1014,7 +1039,7 @@
         width: 90%;
     }
 
-    .ui-hands-container, .ui-discards-container {
+    .ui-hands-container, .ui-discards-container, .ui-tenacity-container {
         display: grid;
         grid-auto-flow: row;
         justify-items: center;
@@ -1027,9 +1052,12 @@
         background-color: #2470af;
         border-radius: 1rem;
     }
-
     .ui-discards-container {
         background-color: #cb3a63;
+    }
+    .ui-tenacity-container {
+        background-color: var(--colour-accent);
+        color: #a34d9d;
     }
 
     .ui-hands-value, .ui-discards-value {
