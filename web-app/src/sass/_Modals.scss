@@ -1,23 +1,32 @@
 // Background of the modal
 .backdrop {
+    // position
     position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
+
+    // colour
     background: rgba(0,0,0,0.50);
     background: transparentize($color: $colour-dark, $amount: 0.5);
     background: $blue-blue-green-gradient;
     opacity: 0.5;
+
+    // z-index
+    z-index: 100;
 }
 
 // The container for the popup window
 .modal {
+    // position
     position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
     left: 0;
+
+    // display
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,6 +37,9 @@
 
     /* allow click-through to backdrop */
     pointer-events: none;
+
+    // z-index
+    z-index: 100;
 
     // the actual modal window
     .modal-contents {
