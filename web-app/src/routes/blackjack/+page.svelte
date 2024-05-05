@@ -319,9 +319,23 @@
         if (totalScore >= challengerGoal && totalScore <= maxGoal) {
             challengerHpLost++
 
-            toast.success(`You defeated ${challenger.name}!`)
+            // Check if Challenger has any remaining Tenacity
+            if (challengerHpLost >= challengerMaxHp) {
+                toast.success(`You defeated ${challenger.name}!`)
+                openModal(Popup, { title: 'Victory!', message: `You defeated ${challenger.name}!`, icon: 'sparkles' })
+                return
+            }
+            // otherwise, play one more hand
+            else {
+                const winsLeft = challengerMaxHp - challengerHpLost
+                toast.success(`You won this hand! Only ${winsLeft} to go.`)
+            }
 
-            openModal(Popup, { title: 'Victory!', message: `You defeated ${challenger.name}!`, icon: 'sparkles' })
+
+        }
+        // Busted
+        else if (totalScore > maxGoal) {
+            toast.error(`Busted! You can't go over ${maxGoal} points`)
         }
         // Loss
         else {
@@ -342,6 +356,39 @@
 
         // Increment hands played
         handsPlayed++
+
+        //// RESET PLAYING FIELD AND RE-DRAW CARDS
+
+        // Wait
+        await delay(2000)
+
+        // Draw new cards to replace discarded ones
+        const numOfCards = playedCards.length
+        for (let i = 0; i < numOfCards; i++) {
+            drawCard()
+            await delay(100)
+        }
+
+        // Remove score history
+        console.log(scoreHistory.length)
+        for (let i = 0; i < scoreHistory.length; i++) {
+            scoreHistory[i] = ''
+            console.log(scoreHistory)
+            await delay(200)
+        }
+
+        // Wait
+        await delay(200)
+
+        // reset vars
+        cardsScored = 0
+        handScore = 0
+        playedCards = []
+
+
+
+        // Reactive vars
+        hand = hand
     }
 
     // Score Preview
@@ -412,14 +459,14 @@
     // CONSTANTS
     const deck = populateDeck(data.fullCards)
     const challenger = data.fullCards[0]
+    const challengerGoal = challenger.goal
+    const challengerMaxHp = challenger.power
     const maxCardsInHand = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
-    const challengerGoal = challenger.goal
     const maxGoal = 21
-    const challengerMaxHp = challenger.power
 
     // Variables
     let workingDeck = [...deck]
