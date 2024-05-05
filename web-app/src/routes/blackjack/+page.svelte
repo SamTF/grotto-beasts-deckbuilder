@@ -433,14 +433,15 @@
 
     // CONSTANTS
     const deck = populateDeck(data.fullCards)
+    const challenger = data.fullCards[0]
     const maxCardsInHand = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
-    const challengerGoal = 16
+    const challengerGoal = challenger.goal
     const maxGoal = 21
-    const challengerMaxHp = 3
+    const challengerMaxHp = challenger.power
 
     // Variables
     let workingDeck = [...deck]
@@ -511,16 +512,18 @@
     <div class="ui-sidebar">
         <!-- Challenger Info Box -->
         <div class="game-opponent-challenger">
-            <div class="challenger-name"><p>Mr Greenz</p></div>
+            <div class="challenger-name" class:challenger-name-sm={challenger.name.length > 15}>
+                <p>{challenger.name}</p>
+            </div>
 
             <div class="challenger-avatar-container">
-                <div class="challenger-pic" style={`background-image: url("images/cards/6. Mr. Greenz.webp");`}></div>
+                <div class="challenger-pic" style={`background-image: url("${challenger.imageURL.small}");`}></div>
             </div>
 
             <div class="challenger-goal">
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
-                    <span class="goal-value">16</span>
+                    <span class="goal-value">{challenger.goal}</span>
                 </div>
             </div>
         </div>
@@ -717,7 +720,7 @@
 <style>
     .game-wrapper {
         display: grid;
-        grid-template-columns: 1fr 6fr;
+        grid-template-columns: 1fr 5fr;
     }
 
     .play-area {
@@ -958,6 +961,9 @@
 
         background-color: rgba(0, 0, 0, 0.5);
         border-radius: 1rem 1rem 0 0;
+    }
+    .challenger-name-sm {
+        font-size: 1.5rem;
     }
 
     .challenger-avatar-container {
