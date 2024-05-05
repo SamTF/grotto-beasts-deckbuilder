@@ -342,15 +342,6 @@
             toast.error(`Your score wasn't enough to beat ${challenger.name} :(`)
         }
 
-        // toast feedback
-        // toast.success(
-        //     `Total Score: ${totalScore}\nTotal Mult: ${totalMult}`,
-        //     {
-        //         icon: '🐱',
-        //         duration: 6000
-        //     }
-        // )
-
         // Sidebar UI feedback
         handScore = totalScore
 
@@ -361,6 +352,17 @@
 
         // Wait
         await delay(2000)
+
+        // Discard played cards
+        // Instead of removing the card, make it invisible
+        const cards = document.querySelectorAll('.team-card')
+        for (const card of cards) {
+            card.classList.add('fade-out')
+            await delay(100)
+        }
+
+        // Wait
+        await delay(200)
 
         // Draw new cards to replace discarded ones
         const numOfCards = playedCards.length
@@ -374,18 +376,16 @@
         for (let i = 0; i < scoreHistory.length; i++) {
             scoreHistory[i] = ''
             console.log(scoreHistory)
-            await delay(200)
+            await delay(100)
         }
 
         // Wait
         await delay(200)
 
         // reset vars
+        playedCards = []
         cardsScored = 0
         handScore = 0
-        playedCards = []
-
-
 
         // Reactive vars
         hand = hand
@@ -620,7 +620,7 @@
             >
                 {#each playedCards as item, i (item.id)}
                     <div
-                        class="card-image-small"
+                        class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
                         on:contextmenu={() => moveToHand(i)}
                     >
