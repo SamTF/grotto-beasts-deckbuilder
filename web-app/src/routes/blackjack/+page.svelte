@@ -65,9 +65,6 @@
         // save the remaining cards in the deck to the "working deck"
         workingDeck = deck
 
-        console.log("HAAAAND")
-        console.log(hand)
-
         // return cards in hand
         return hand
     }
@@ -89,9 +86,6 @@
 
         selectedCards.sort()
         selectedCards = [...selectedCards]
-        console.log(selectedCards)
-        console.log(selectedCards.length)
-
         hand=hand
     }
 
@@ -147,7 +141,6 @@
 
         // remove the selected cards from hand by index
         for (const i of selectedCards.reverse()) {
-            console.log(i)
             hand.splice(i, 1);
         }
         
@@ -166,9 +159,6 @@
         toast.success(`${maxDiscards - discards} discards remain`, {
             duration: 5000
         })
-
-        console.log("CARDS TO DRAW: ")
-        console.log(maxCardsInHand - hand.length)
 
         // Draw new cards to replace discarded ones
         for (let i = 0; i < numOfCards; i++) {
@@ -235,11 +225,9 @@
         // get info of selected cards
         let cards = hand.filter((card, i) => selectedCards.includes(i))
         cards = cards.map(card => ({...card, id: `${card.id}_${handsPlayed}_${discards}_${Math.random() * 100}`}))
-        console.log(cards)
 
         // add them to the play area
         playedCards = [...playedCards, ...cards]
-        console.log(playedCards)
 
         // Instead of removing the card, make it invisible
         const playingCards = document.querySelectorAll('.playing-card'); 
@@ -298,8 +286,6 @@
                 // increment score and mult
                 totalScore += multedChips
                 totalMult += mult
-
-                console.log(`${card.name} -> +${chips} X${totalMult-mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
             }
 
             // SCORING WISHES
@@ -307,8 +293,6 @@
                 // increment score
                 let chips = card.cost
                 totalScore += chips
-
-                console.log(`${card.name} -> +${chips}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
             }
 
             // SCORING GROTTOS
@@ -316,8 +300,6 @@
                 // increment mult
                 let mult = card.cost
                 totalMult += mult
-
-                console.log(`${card.name} -> X${mult}\nTotal Score: ${totalScore}\nTotal Mult: ${totalMult}`)
             }
 
             // Updating Sidebar UI
@@ -325,7 +307,6 @@
             if (scoreHistory.length >= 3) {scoreHistory.pop()}
             scoreHistory.unshift(playedCards[i].scorePreview)
             cardsScored++
-            console.log(scoreHistory)
 
             // Wait
             await delay(500)
@@ -338,13 +319,13 @@
         if (totalScore >= challengerGoal && totalScore <= maxGoal) {
             challengerHpLost++
 
-            toast.success("You defeated the challenger!")
+            toast.success(`You defeated ${challenger.name}!`)
 
-            openModal(Popup, { title: 'Victory!', message: 'You defeated the Challenger!', icon: 'sparkles' })
+            openModal(Popup, { title: 'Victory!', message: `You defeated ${challenger.name}!`, icon: 'sparkles' })
         }
         // Loss
         else {
-            toast.error("You lost:(")
+            toast.error(`Your score wasn't enough to beat ${challenger.name} :(`)
         }
 
         // toast feedback
@@ -389,7 +370,6 @@
 
     // Score Preview Reactive
     const scorePreviewReactive = cards => {
-        console.log("SCORE PREVIEW REACTIVE!!")
         let totalMult = 0
 
         for (let i = 0; i < cards.length; i++) {
@@ -425,9 +405,7 @@
                     break;
             }
 
-            console.log(totalMult)
             card.scorePreview = cardScorePreview
-            console.log(card.scorePreview)
         }
     }
 
@@ -467,10 +445,6 @@
     $: handDragDisabled = selectedCards.length >= 1
 
     function dndPlayerTeamDrag(e) {
-        console.log(e.detail.info)
-        console.log("---------actual played cards--------")
-        console.log(actualPlayedCards)
-
         if (!actualPlayedCards.some(card => card.id === e.detail.info.id)) {
             if (e.detail.info.trigger == "draggedEntered" && playedCards.length >= maxPlayedCards) {
                 toast.error("Hold your horses, partner! Your Team is already maxxed out!", {icon: '🐱'})
@@ -479,7 +453,6 @@
 
         // update list of played cards
         playedCards = e.detail.items;
-        console.log(playedCards)
     }
 
     function dndPlayerTeamDrop(e) {
@@ -494,12 +467,7 @@
     function dndPlayerHand(e) {
         const banana = e.detail.items
         hand = banana
-        console.log(banana)
     }
-
-    // test
-    $: console.log(hand)
-    $: console.log(selectedCards)
 </script>
 
 <!-- HTML -->
