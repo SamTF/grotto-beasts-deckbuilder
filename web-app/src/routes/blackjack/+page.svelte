@@ -9,6 +9,7 @@
     import { fade } from "svelte/transition"
     import toast from 'svelte-french-toast'
     import { onMount } from "svelte"
+    import svelteTilt from 'vanilla-tilt-svelte'
 
     // drag and drop
     import {flip} from "svelte/animate"
@@ -554,7 +555,11 @@
 
             <div class="challenger-avatar-container">
                 <a href={`/card/${challenger.number}`} target="_blank">
-                    <div class="challenger-pic" style={`background-image: url("${challenger.imageURL?.small}");`}></div>
+                    <div
+                        class="challenger-pic"
+                        style={`background-image: url("${challenger.imageURL?.small || 'https://imageplaceholder.net/1'}");`}
+                        use:svelteTilt={{ reverse: true, glare: true, "max-glare": 0.5 }}
+                    ></div>
                 </a>
             </div>
 
@@ -686,9 +691,12 @@
                         on:consider="{dndPlayerHand}"
                         on:finalize="{dndPlayerHand}"
                     >
-                        <!-- {#each items as card, i (card.id)} -->
-                        {#each hand as card, i (`${card.id}_${Math.random() * 100}`)}
-                        <div class="card-image-small playing-card" animate:flip={{duration:flipDurationMs}}>
+                        {#each hand as card, i (card.id)}
+                        <!-- {#each hand as card, i (`${card.id}_${Math.random() * 100}`)} -->
+                        <div
+                            class="card-image-small playing-card"
+                            animate:flip={{duration:flipDurationMs}}
+                        >
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <img
                                 src={card.imageURL.small}
@@ -696,6 +704,7 @@
                                 title={i}
                                 on:click={() => selectCard(i)}
                                 class:selected = {selectedCards.includes(i)}
+                                use:svelteTilt={{ reverse: true, max: 25, glare: false, scale: 1 }}
                             >
                         </div>
                         {/each}
@@ -752,13 +761,15 @@
 </div>
 
 <span class="fade-out"></span>
-
+<span class="spin"></span>
 
 <!-- CSS -->
 <style>
     .game-wrapper {
         display: grid;
         grid-template-columns: 1fr 5fr;
+        position: relative;
+        perspective: 1000px;
     }
 
     .play-area {
@@ -860,6 +871,10 @@
         opacity: 1;
         flex: 0 0 auto;
     }
+    .card-image-small:hover {
+        transform: scale(1);
+        z-index: 11;
+    }
 
     .card-image-small img {
         max-height: 200px;
@@ -869,13 +884,13 @@
 
     .selected {
         outline: 2px solid gold;
-        transform: translate(0, -3rem);
-        -moz-transform: translate(0, -3rem);
+        transform: translate(0, -3rem) !important;
+        -moz-transform: translate(0, -3rem) !important;
         z-index: 10;
     }
     .selected-offset {
-        transform: translate(0, -3rem);
-        -moz-transform: translate(0, -3rem);
+        transform: translate(0, -3rem) !important;
+        -moz-transform: translate(0, -3rem) !important;
     }
 
     .cards-in-hand {
@@ -970,6 +985,11 @@
 
         height: 92.5dvh;
         width: 100%;
+        margin-left: 2rem;
+        
+        /* height: 100dvh; */
+        /* width: 250px; */
+        /* position: fixed; */
 
         background-color: #a34d9d;
     }
@@ -1037,11 +1057,15 @@
         background-size: 150%;
         background-position: center 33%;
 
+        outline: 2px solid white;
+        filter: drop-shadow(10px 10px 30px black);
+
         transition: all 200ms ease;
     }
     .challenger-pic:hover {
         border-radius: 25%;
-        outline: 2px solid var(--colour-accent);
+        outline: 4px solid var(--colour-accent);
+        filter: drop-shadow(10px 10px 30px black);
     }
 
     .challenger-goal {
@@ -1187,5 +1211,19 @@
 
     .faded {
         opacity: 0.33;
+    }
+
+    /* Spin animation */
+    .spin {
+        animation: 600ms 2 alternate spin;
+    }
+    @keyframes spin {
+        from {
+            transform: rotate3d(0);
+        }
+
+        to {
+            transform: rotate3d(0,1,0,180deg)
+        }
     }
 </style>
