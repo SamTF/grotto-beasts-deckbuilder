@@ -489,6 +489,11 @@
     let cardsScored = 0
     let challengerHpLost = 0
 
+    // Reactive vars
+    $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
+    $: grottoNum = countCardType(workingDeck, CardTypes.GROTTO)
+    $: wishNum = countCardType(workingDeck, CardTypes.WISH)
+
     // Set this stuff ONCE on page load
     onMount(() => {
         // deck and starting hand
@@ -691,8 +696,8 @@
                         on:consider="{dndPlayerHand}"
                         on:finalize="{dndPlayerHand}"
                     >
-                        {#each hand as card, i (card.id)}
-                        <!-- {#each hand as card, i (`${card.id}_${Math.random() * 100}`)} -->
+                        <!-- {#each hand as card, i (card.id)} -->
+                        {#each hand as card, i (`${card.id}_${Math.random() * 100}`)}
                         <div
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
@@ -719,13 +724,6 @@
                 <!-- The Play & Discard buttons -->
                 <div class="hand-btns-container">
                     <div class="hand-btns">
-                        <!-- Add Cards to play area -->
-                        <!-- <button
-                            class="play-btn"
-                            on:click={playCards}
-                            class:disabled={selectedCards < 1 || playedCards.length >= maxPlayedCards}
-                        >Play</button> -->
-
                         <!-- Submit your play! -->
                         <button
                             class="play-btn"
@@ -745,12 +743,30 @@
             
             <!-- The Player's Deck -->
             <div class="blackjack-deck-container">
+                <!-- Deck Image -->
                 <div class="card-image-small">
                     <img src="/images/cards/back.webp" alt="deck of cards">
+                    <!-- Hover tooltip -->
+                    <div class="tooltip-view-deck">
+                        <div>
+                            <p>View</p>
+                            <p>Deck</p>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Cards remaning counter -->
                 <div class="cards-in-hand">
                     <span>{workingDeck.length} / 40</span>
+                </div>
+
+                <!-- Deck info tooltip -->
+                <div class="tooltip-deck-preview-container">
+                    <div class="tooltip-deck-preview">
+                        <span data-card-type="beast">{beastNum}</span>
+                        <span data-card-type="grotto">{grottoNum}</span>
+                        <span data-card-type="wish">{wishNum}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -859,11 +875,20 @@
     .blackjack-deck-container {
         display: grid;
         place-items: center;
+        position: relative;
 
         height: 18rem;
         background-color: rgba(255, 255, 255, 0.375);
         border-radius: 1rem;
         padding: 0 2rem;
+    }
+    .blackjack-deck-container:hover .tooltip-view-deck {
+        opacity: 1;
+    }
+    .blackjack-deck-container:hover .tooltip-deck-preview-container {
+        top: -4rem;
+        font-weight: 700;
+        opacity: 1;
     }
 
     .card-image-small {
@@ -991,7 +1016,8 @@
         /* width: 250px; */
         /* position: fixed; */
 
-        background-color: #a34d9d;
+        /* background-color: #a34d9d; */
+        filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
     }
 
     .round-counter-container {
@@ -1208,6 +1234,57 @@
         border-radius: 1rem;
         background-color: rgba(0, 0, 0, 0.5);
     }
+
+    .tooltip-view-deck {
+        position: absolute;
+        top:0;
+        right:0;
+        
+        display: grid;
+        place-items: center;
+
+        height: 100%;
+        width: 100%;
+
+        color: white;
+        font-size: 2rem;
+        font-weight: 900;
+
+        border-radius: 1rem;
+        background: rgba(0, 0, 0, 0.5);
+
+        opacity: 0;
+        transition: all 200ms ease;
+    }
+
+    .tooltip-deck-preview-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        display: grid;
+        place-items: center;
+
+        width: 100%;
+        height: 3rem;
+
+        background-color: rgba(255, 255, 255, 0.375);
+        border-radius: 1rem;
+
+        z-index: 11;
+        opacity: 0;
+        
+        transition: all 200ms ease;
+    }
+
+    .tooltip-deck-preview {
+        display: flex;
+        justify-content: space-evenly;
+
+        width: 100%;
+    }
+    
+    /* Fade out animation */
 
     .faded {
         opacity: 0.33;
