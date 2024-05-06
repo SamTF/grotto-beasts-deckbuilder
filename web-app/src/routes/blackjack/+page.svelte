@@ -8,6 +8,7 @@
     import { delay } from "$lib/utils"
     import { fade } from "svelte/transition"
     import toast from 'svelte-french-toast'
+    import { onMount } from "svelte"
 
     // drag and drop
     import {flip} from "svelte/animate"
@@ -51,7 +52,7 @@
 
         for (let i = 0; i < 8; i++) {
             // let card = deck[deck.length * Math.random() | 0]
-            const i = Math.floor( Math.random() * (deck.length - 1));
+            const i = Math.floor( Math.random() * (deck.length - 1))
             let card = deck[i]
             card.id = `${card.id}${Math.round(Math.random() * 100)}`
 
@@ -67,6 +68,12 @@
 
         // return cards in hand
         return hand
+    }
+
+    // Choose a random challenger
+    const getChallenger = () => {
+        const i = Math.floor( Math.random() * (data.challengers.length - 1))
+        return data.challengers[i]
     }
 
     // Selects or Deselects a clicked card
@@ -457,10 +464,10 @@
     }
 
     // CONSTANTS
-    const deck = populateDeck(data.fullCards)
-    const challenger = data.fullCards[0]
-    const challengerGoal = challenger.goal
-    const challengerMaxHp = challenger.power
+    let deck = []
+    let challenger = {}
+    let challengerGoal = 0
+    let challengerMaxHp = 0
     const maxCardsInHand = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
@@ -469,8 +476,8 @@
     const maxGoal = 21
 
     // Variables
-    let workingDeck = [...deck]
-    let hand = startingHand(deck)
+    let workingDeck = []
+    let hand = []
     let selectedCards = []
     let playedCards = []
     let actualPlayedCards = []
@@ -481,7 +488,18 @@
     let cardsScored = 0
     let challengerHpLost = 0
 
-    // Reactive Variables
+    // Set this stuff ONCE on page load
+    onMount(() => {
+        // deck and starting hand
+        deck = populateDeck(data.fullCards)
+        workingDeck = [...deck]
+        hand = startingHand(deck)
+
+        // challenger
+        challenger = getChallenger()
+        challengerGoal = challenger.goal
+        challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
+    })
 
     // SVELTE-DND-ACTION
     const flipDurationMs = 300;
@@ -512,8 +530,7 @@
 
     // DND Player Hand
     function dndPlayerHand(e) {
-        const banana = e.detail.items
-        hand = banana
+        hand = e.detail.items
     }
 </script>
 
@@ -525,20 +542,26 @@
 
     <!-- UI Sidebar -->
     <div class="ui-sidebar">
+        <!-- Round Counter -->
+        <div class="round-counter-container">
+            <span>✦✦✦ Round I ✦✦✦</span>
+        </div>
         <!-- Challenger Info Box -->
         <div class="game-opponent-challenger">
-            <div class="challenger-name" class:challenger-name-sm={challenger.name.length > 15}>
-                <p>{challenger.name}</p>
+            <div class="challenger-name" class:challenger-name-sm={challenger.name?.length > 15}>
+                <p>{challenger.name || ''}</p>
             </div>
 
             <div class="challenger-avatar-container">
-                <div class="challenger-pic" style={`background-image: url("${challenger.imageURL.small}");`}></div>
+                <a href={`/card/${challenger.number}`} target="_blank">
+                    <div class="challenger-pic" style={`background-image: url("${challenger.imageURL?.small}");`}></div>
+                </a>
             </div>
 
             <div class="challenger-goal">
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
-                    <span class="goal-value">{challenger.goal}</span>
+                    <span class="goal-value">{challenger?.goal || ''}</span>
                 </div>
             </div>
         </div>
@@ -943,12 +966,27 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
 
         height: 92.5dvh;
         width: 100%;
 
         background-color: #a34d9d;
+    }
+
+    .round-counter-container {
+        display: grid;
+        place-items: center;
+        
+        width: 90%;
+        height: 2rem;
+
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 0 0 1rem 1rem;
     }
 
     .game-opponent-challenger {
@@ -958,7 +996,7 @@
         flex-direction: column;
         gap:0;
 
-        margin-top: 1rem;
+        /* margin-top: 1rem; */
         width: 90%;
         height: 18rem;
 
@@ -997,7 +1035,13 @@
         border-radius: 50%;
 
         background-size: 150%;
-        background-position: center center;
+        background-position: center 33%;
+
+        transition: all 200ms ease;
+    }
+    .challenger-pic:hover {
+        border-radius: 25%;
+        outline: 2px solid var(--colour-accent);
     }
 
     .challenger-goal {
