@@ -55,5 +55,5 @@ export async function GET({ url, params, setHeaders }) {
         "cache-control": "max-age=600",
     })
 
-    return json({ original: result.items, patched: result_v2.items })
+    return json({ original: structuredClone(result.items), patched: structuredClone(result_v2).items })
 }
