@@ -2,6 +2,7 @@
 <script>
     // Imports
     import DeckHeader from "$components/Deck/DeckHeader.svelte"
+    import Checkbox from '$components/UI/Checkbox.svelte'
     import { CardTypes, countCardType } from "$lib/cardUtils"
     import Popup from '$components/UI/Popups/Popup.svelte'
     import { openModal, closeModal } from 'svelte-modals'
@@ -207,6 +208,7 @@
         
         // draw random card and add it to hand
         let card = workingDeck[workingDeck.length * Math.random() | 0]
+        card.id = `${card.id}${Math.round(Math.random() * 100)}`
         hand = [...hand, card]
 
         // remove that card from deck
@@ -366,6 +368,7 @@
         const cards = document.querySelectorAll('.team-card')
         for (const card of cards) {
             card.classList.add('fade-out')
+            cardsScored--
             await delay(100)
         }
 
@@ -488,6 +491,7 @@
     let scoreHistory = []
     let cardsScored = 0
     let challengerHpLost = 0
+    let showScorePreview = false
 
     // Reactive vars
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
@@ -631,6 +635,12 @@
             </div>
         </div>
 
+        <!-- Settings -->
+        <div class="settings">
+            <span>Training Wheels</span>
+            <Checkbox bind:checked={showScorePreview} />
+        </div>
+
     </div>
 
     <!-- Where the gaming takes place -->
@@ -651,7 +661,8 @@
                 on:finalize="{dndPlayerTeamDrop}"
                 
             >
-                {#each playedCards as item, i (item.id)}
+                <!-- {#each playedCards as item, i (item.id)} -->
+                {#each playedCards as item, i (`${item.id}_${Math.random() * 100}`)}
                     <div
                         class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
@@ -668,16 +679,18 @@
 
                         <!-- Score preview -->
                         <!-- A: Always Shown -->
-                        <!-- <div class="score" class:selected-offset={i+1 <= cardsScored}>
-                            <span>{item.scorePreview}</span>
-                        </div> -->
+                        {#if showScorePreview || i+1 <= cardsScored}
+                            <div class="score" class:selected-offset={i+1 <= cardsScored}>
+                                <span>{item.scorePreview}</span>
+                            </div>    
+                        {/if}
 
                         <!-- B: Shows only when scored -->
-                        {#if i+1 <= cardsScored}
+                        <!-- {#if i+1 <= cardsScored}
                             <div class="score" class:selected-offset={i+1 <= cardsScored}>
                                 <span>{item.scorePreview}</span>
                             </div>
-                        {/if}
+                        {/if} -->
                         {/key}
                     </div>
                 {/each}
@@ -1283,9 +1296,24 @@
 
         width: 100%;
     }
+
+    .settings {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: space-evenly;
+
+        width: 90%;
+        height: 3rem;
+        font-size: 1.25rem;
+
+        background-color: rgba(255, 255, 255, 0.375);
+        border-radius: 1rem;
+    }
     
     /* Fade out animation */
-
     .faded {
         opacity: 0.33;
     }
