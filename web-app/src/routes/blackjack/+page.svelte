@@ -668,16 +668,16 @@
 
                         <!-- Score preview -->
                         <!-- A: Always Shown -->
-                        <div class="score" class:selected-offset={i+1 <= cardsScored}>
+                        <!-- <div class="score" class:selected-offset={i+1 <= cardsScored}>
                             <span>{item.scorePreview}</span>
-                        </div>
+                        </div> -->
 
                         <!-- B: Shows only when scored -->
-                        <!-- {#if i+1 <= cardsScored}
+                        {#if i+1 <= cardsScored}
                             <div class="score" class:selected-offset={i+1 <= cardsScored}>
                                 <span>{item.scorePreview}</span>
                             </div>
-                        {/if} -->
+                        {/if}
                         {/key}
                     </div>
                 {/each}
@@ -1008,7 +1008,7 @@
         align-items: center;
         gap: 0.5rem;
 
-        height: 92.5dvh;
+        /* height: 92.5dvh; */
         width: 100%;
         margin-left: 2rem;
         
@@ -1027,7 +1027,7 @@
         width: 90%;
         height: 2rem;
 
-        color: white;
+        color: var(--colour-accent);
         font-size: 1.25rem;
         font-weight: 700;
 
@@ -1076,8 +1076,8 @@
     }
 
     .challenger-pic {
-        height: 10rem;
-        width: 10rem;
+        height: 8rem;
+        width: 8rem;
         border-radius: 50%;
 
         background-size: 150%;
@@ -1194,7 +1194,7 @@
         display: grid;
         grid-auto-flow: row;
         justify-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
 
         width: 90%;
     }
@@ -1205,8 +1205,8 @@
         justify-items: center;
 
         width: 100%;
-        height: 6rem;
-        padding: 0.5rem 0;
+        height: 5rem;
+        padding: 0.25rem 0;
         
         color: white;
         background-color: #2470af;
@@ -1226,10 +1226,10 @@
         grid-auto-flow: column;
 
         width: 90%;
-        height: 3rem;
-        margin-bottom: 1rem;
+        height: 2.5rem;
+        margin-bottom: 0.25rem;
         
-        font-size: 2rem;
+        font-size: 1.5rem;
 
         border-radius: 1rem;
         background-color: rgba(0, 0, 0, 0.5);
