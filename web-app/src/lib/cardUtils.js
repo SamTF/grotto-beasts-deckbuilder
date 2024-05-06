@@ -14,7 +14,7 @@ export const cardsByType = (deck, type) => {
 
 // Counts the total number of cards of a given type
 export const countCardType = (deck, type) => {
-    return deck.filter(x => x.type == type).reduce((total, item) => total + item.quantity, 0)
+    return deck.filter(x => x.type == type).reduce((total, item) => total + (item.quantity || 1), 0)
 }
 
 // Create a deck from the given cards and their respective quantity
