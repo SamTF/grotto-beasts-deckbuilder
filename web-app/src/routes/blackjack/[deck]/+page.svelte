@@ -863,7 +863,9 @@
             <div class="blackjack-deck-container">
                 <!-- Deck Image -->
                 <div class="card-image-small">
-                    <img src="/images/cards/back.webp" alt="deck of cards">
+                    <a href={`/decks/${data.deck.id}`} target="_blank">
+                        <img src="/images/cards/back.webp" alt="deck of cards">
+                    </a>
                     <!-- Hover tooltip -->
                     <div class="tooltip-view-deck">
                         <div>
@@ -1381,6 +1383,8 @@
 
         opacity: 0;
         transition: all 200ms ease;
+
+        pointer-events: none;
     }
 
     .tooltip-deck-preview-container {
