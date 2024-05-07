@@ -488,6 +488,48 @@
         })
     }
 
+    const helpHands = () => {
+        toast.success('How many hands of cards you can play this round.\nOnce it is depleted, you can no longer play anything!', {
+            duration: 8000,
+            icon: '🙌'
+        })
+    }
+
+    const helpDiscards = () => {
+        toast.success('How many times you can discard cards from your hand.\nYou can discard up to 5 cards per discard!', {
+            duration: 8000,
+            icon: '🗑️'
+        })
+    }
+
+    const helpTenacity = () => {
+        toast.success("How many times you need to beat the Challenger's goal in order to defeat them.\n\nYou can think of it as their HP!", {
+            duration: 8000,
+            icon: '❤️'
+        })
+    }
+
+    const helpScore = () => {
+        toast.success("This tracks how many points you've scored with the current hand.\nWill stay blank until you score something!", {
+            duration: 8000,
+            icon: '💯'
+        })
+    }
+
+    const helpGoal = () => {
+        toast.success("Your score aim. Score this value or higher in order to win.\nBut be careful, if you go over 21 points you will bust out!", {
+            duration: 8000,
+            icon: '🐱'
+        })
+    }
+
+    const helpChallenger = () => {
+        toast.success("This is the Challenger you're up against now!\nDefeat them for a shot at winning a Grottillion Dollars in the grand finale!", {
+            duration: 8000,
+            icon: '🐱'
+        })
+    }
+
     // CONSTANTS
     let deck = []
     let challenger = {}
@@ -572,8 +614,9 @@
 <!-- HTML -->
 <!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/> -->
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="page-container center">
-<div class="game-wrapper">
+<div class="game-wrapper desktop-only">
 
     <!-- UI Sidebar -->
     <div class="ui-sidebar" class:no-anim={reducedMotion}>
@@ -583,7 +626,11 @@
         </div>
         <!-- Challenger Info Box -->
         <div class="game-opponent-challenger anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
-            <div class="challenger-name hover-outline" class:challenger-name-sm={challenger.name?.length > 15}>
+            <div
+                class="challenger-name hover-outline"
+                class:challenger-name-sm={challenger.name?.length > 15}
+                on:click={helpChallenger}
+            >
                 <p>{challenger.name || ''}</p>
             </div>
 
@@ -597,7 +644,7 @@
                 </a>
             </div>
 
-            <div class="challenger-goal hover-outline">
+            <div class="challenger-goal hover-outline" on:click={helpGoal}>
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
                     <span
@@ -613,6 +660,7 @@
             <div
                 class="ui-tenacity-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+                on:click={helpTenacity}
             >
                 <h2>Tenacity</h2>
 
@@ -628,6 +676,7 @@
         <div
             class="round-score-container hover-outline tilt"
             use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+            on:click={helpScore}
         >
             <div class="round-score anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
                 {#if isScoringCards}
@@ -651,6 +700,7 @@
             <div
                 class="ui-hands-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+                on:click={helpHands}
             >
                 <h2>Hands</h2>
 
@@ -664,6 +714,7 @@
             <div
                 class="ui-discards-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+                on:click={helpDiscards}
             >
                 <h2>Discards</h2>
 
@@ -742,13 +793,6 @@
                                 <span>{item.scorePreview}</span>
                             </div>    
                         {/if}
-
-                        <!-- B: Shows only when scored -->
-                        <!-- {#if i+1 <= cardsScored}
-                            <div class="score" class:selected-offset={i+1 <= cardsScored}>
-                                <span>{item.scorePreview}</span>
-                            </div>
-                        {/if} -->
                         {/key}
                     </div>
                 {/each}
@@ -1391,6 +1435,7 @@
     /* Hover outline */
     .hover-outline:hover {
         outline: 2px solid white;
+        cursor: pointer;
     }
     
     /* Fade out animation */
