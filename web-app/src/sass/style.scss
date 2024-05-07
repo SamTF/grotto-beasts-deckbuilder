@@ -56,15 +56,23 @@ a {
     color: inherit;
 }
 
+// Pure center horizontally and vertically
 .center {
     display: grid;
     place-items: center;
 }
 
+// Center items on a row
+.center-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+// Main container for page contant
 .page-body {
     // display
     display: grid;
-    // place-items: center;
 
     // size
     width: 66vw;
