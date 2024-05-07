@@ -3,11 +3,14 @@ import { json, error, redirect } from "@sveltejs/kit"
 
 export async function load({ url, fetch, params, setHeaders}) {
     console.log(url.origin)
+    console.log(params)
+
+    const deckID = params.deck || 'donfcktbwm5488s'
 
     // Load Deck data if a deck exists with the given ID
     let deck = null
     try {
-        const result = await pb.collection("decks").getOne('donfcktbwm5488s', {
+        const result = await pb.collection("decks").getOne(deckID, {
             expand: 'challenger, author'
         })
 

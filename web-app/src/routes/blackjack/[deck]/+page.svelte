@@ -277,6 +277,7 @@
         // init vars
         let totalScore = 0
         let totalMult = 0
+        isScoringCards = true
         scoreHistory = []
         cardsScored = 0
 
@@ -312,11 +313,16 @@
                 totalMult += mult
             }
 
+            
             // Updating Sidebar UI
             handScore = totalScore
             if (scoreHistory.length >= 3) {scoreHistory.pop()}
-            scoreHistory.unshift(playedCards[i].scorePreview)
+            scoreHistory.unshift(card.scorePreview)
             cardsScored++
+            
+            console.log(card.scorePreview)
+            console.log(scoreHistory)
+            console.log(cardsScored)
 
             // Wait
             await delay(500)
@@ -361,15 +367,15 @@
         //// RESET PLAYING FIELD AND RE-DRAW CARDS
 
         // Wait
-        await delay(2000)
+        await delay(1000)
 
         // Discard played cards
         // Instead of removing the card, make it invisible
         const cards = document.querySelectorAll('.team-card')
         for (const card of cards) {
             card.classList.add('fade-out')
-            cardsScored--
-            await delay(100)
+            // cardsScored--
+            await delay(200)
         }
 
         // Wait
@@ -383,7 +389,6 @@
         }
 
         // Remove score history
-        console.log(scoreHistory.length)
         for (let i = 0; i < scoreHistory.length; i++) {
             scoreHistory[i] = ''
             console.log(scoreHistory)
@@ -397,6 +402,7 @@
         playedCards = []
         cardsScored = 0
         handScore = 0
+        isScoringCards = false
 
         // Reactive vars
         hand = hand
@@ -467,6 +473,14 @@
         }
     }
 
+    // Help Tooltips
+    const helpTrainingMode = () => {
+        toast.success('Enables a real-time preview of each card\'s score', {
+            duration: 5000,
+            icon: '🐱'
+        })
+    }
+
     // CONSTANTS
     let deck = []
     let challenger = {}
@@ -490,8 +504,9 @@
     let handScore = 0
     let scoreHistory = []
     let cardsScored = 0
+    let isScoringCards = false
     let challengerHpLost = 0
-    let showScorePreview = false
+    let showScorePreview = true
 
     // Reactive vars
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
@@ -596,7 +611,7 @@
         <!-- Round Score -->
         <div class="round-score-container">
             <div class="round-score">
-                {#if handScore > 0}
+                {#if isScoringCards}
                     <div class="round-score-total">
                         <h1>{handScore}</h1>
                     </div>
@@ -636,8 +651,13 @@
         </div>
 
         <!-- Settings -->
-        <div class="settings">
-            <span>Training Wheels</span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="settings" on:click={helpTrainingMode}>
+            <span class="center-row" style="gap: 0.5rem">
+                <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
+                <span>Training Wheels</span>
+            </span>
+
             <Checkbox bind:checked={showScorePreview} />
         </div>
 
@@ -673,8 +693,9 @@
                         <img
                             src={item.imageURL.small}
                             alt={item.name}
+                            class='anim-wiggle'
                             class:selected={i+1 <= cardsScored}
-                            title={i}
+                            title={item.name}
                         >
 
                         <!-- Score preview -->
@@ -719,7 +740,9 @@
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={i}
+                                title={card.name}
+                                class='anim-wiggle'
+                                style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
                                 class:selected = {selectedCards.includes(i)}
                                 use:svelteTilt={{ reverse: true, max: 25, glare: false, scale: 1 }}
@@ -791,6 +814,7 @@
 
 <span class="fade-out"></span>
 <span class="spin"></span>
+<span class="anim-wiggle"></span>
 
 <!-- CSS -->
 <style>
@@ -1311,6 +1335,12 @@
 
         background-color: rgba(255, 255, 255, 0.375);
         border-radius: 1rem;
+
+        transition: all 200ms ease;
+    }
+    .settings:hover {
+        background-color: rgba(255, 255, 255, 0.75);
+        cursor: pointer;
     }
     
     /* Fade out animation */
@@ -1329,6 +1359,18 @@
 
         to {
             transform: rotate3d(0,1,0,180deg)
+        }
+    }
+
+    /* Wiggle animation */
+    .anim-wiggle {
+        animation: 2.5s infinite alternate linear wiggle;
+    }
+    @keyframes wiggle {
+        from {
+            transform: rotate(-2deg);
+        } to {
+            transform: rotate(2deg);
         }
     }
 </style>
