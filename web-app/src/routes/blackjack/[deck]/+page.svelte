@@ -481,6 +481,13 @@
         })
     }
 
+    const helpDancingMode = () => {
+        toast.success('Disables the smooth wiggling animation and 3D tilt effect :(', {
+            duration: 5000,
+            icon: '🐱'
+        })
+    }
+
     // CONSTANTS
     let deck = []
     let challenger = {}
@@ -506,7 +513,10 @@
     let cardsScored = 0
     let isScoringCards = false
     let challengerHpLost = 0
+
+    // User preferences
     let showScorePreview = true
+    let reducedMotion = false
 
     // Reactive vars
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
@@ -566,7 +576,7 @@
 <div class="game-wrapper">
 
     <!-- UI Sidebar -->
-    <div class="ui-sidebar">
+    <div class="ui-sidebar" class:no-anim={reducedMotion}>
         <!-- Round Counter -->
         <div class="round-counter-container hover-outline">
             <span>✦✦✦ Round I ✦✦✦</span>
@@ -580,7 +590,7 @@
             <div class="challenger-avatar-container">
                 <a href={`/card/${challenger.number}`} target="_blank">
                     <div
-                        class="challenger-pic"
+                        class="challenger-pic tilt"
                         style={`background-image: url("${challenger.imageURL?.small || 'https://imageplaceholder.net/1'}");`}
                         use:svelteTilt={{ reverse: true, glare: true, "max-glare": 0.5 }}
                     ></div>
@@ -591,7 +601,7 @@
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
                     <span
-                        class="goal-value"
+                        class="goal-value tilt"
                         use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
                     >{challenger?.goal || ''}</span>
                 </div>
@@ -601,7 +611,7 @@
         <!-- Challenger Tenacity -->
         <div class="hands-discards-containers anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
             <div
-                class="ui-tenacity-container hover-outline"
+                class="ui-tenacity-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
             >
                 <h2>Tenacity</h2>
@@ -616,7 +626,7 @@
 
         <!-- Round Score -->
         <div
-            class="round-score-container hover-outline"
+            class="round-score-container hover-outline tilt"
             use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
         >
             <div class="round-score anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
@@ -639,7 +649,7 @@
         <!-- Hands & Discards -->
         <div class="hands-discards-containers anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
             <div
-                class="ui-hands-container hover-outline"
+                class="ui-hands-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
             >
                 <h2>Hands</h2>
@@ -652,7 +662,7 @@
             </div>
 
             <div
-                class="ui-discards-container hover-outline"
+                class="ui-discards-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
             >
                 <h2>Discards</h2>
@@ -667,7 +677,7 @@
 
         <!-- Settings -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="settings hover-outline">
+        <div class="settings-item hover-outline">
             <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
                 <span>Training Wheels</span>
@@ -675,11 +685,22 @@
 
             <Checkbox bind:checked={showScorePreview} />
         </div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="settings-item hover-outline">
+            <span class="center-row" style="gap: 0.5rem" on:click={helpDancingMode}>
+                <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
+                <span>No Dancing</span>
+            </span>
+
+            <Checkbox bind:checked={reducedMotion} />
+        </div>
 
     </div>
 
+
+    <!-- PLAY AREA -->
     <!-- Where the gaming takes place -->
-    <div class="play-area" oncontextmenu="return false">
+    <div class="play-area" class:no-anim={reducedMotion} oncontextmenu="return false">
         <!-- TEAM -->
         <div class="player-team-container">
             <!-- Played Cards -->
@@ -702,20 +723,21 @@
                         class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
                         on:contextmenu={() => moveToHand(i)}
+                        use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
                         <img
                             src={item.imageURL.small}
                             alt={item.name}
-                            class='anim-wiggle'
+                            class='no-anim-wiggle'
                             class:selected={i+1 <= cardsScored}
                             title={item.name}
                         >
 
                         <!-- Score preview -->
                         <!-- A: Always Shown -->
-                        {#if showScorePreview || i+1 <= cardsScored}
+                        {#if (showScorePreview || i+1 <= cardsScored) && item.scorePreview}
                             <div class="score" class:selected-offset={i+1 <= cardsScored}>
                                 <span>{item.scorePreview}</span>
                             </div>    
@@ -750,17 +772,18 @@
                         <div
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
+                            use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
                         >
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
                                 title={card.name}
-                                class='anim-wiggle'
+                                class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
                                 class:selected = {selectedCards.includes(i)}
-                                use:svelteTilt={{ reverse: true, max: 25, glare: false, scale: 1 }}
+                                
                             >
                         </div>
                         {/each}
@@ -1343,7 +1366,7 @@
         width: 100%;
     }
 
-    .settings {
+    .settings-item {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -1360,7 +1383,7 @@
 
         transition: all 200ms ease;
     }
-    .settings:hover {
+    .settings-item:hover {
         background-color: rgba(255, 255, 255, 0.75);
         cursor: pointer;
     }
@@ -1414,7 +1437,12 @@
     }
 
     /* Disable animations */
+    .ui-sidebar.no-anim .anim-wiggle-sm,
+    .ui-sidebar.no-anim .tilt,
+    .play-area.no-anim .card-image-small,
+    .play-area.no-anim .anim-wiggle,
     .no-anim {
         animation: none !important;
+        transform: none !important;
     }
 </style>
