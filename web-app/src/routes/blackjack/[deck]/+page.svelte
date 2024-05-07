@@ -568,12 +568,12 @@
     <!-- UI Sidebar -->
     <div class="ui-sidebar">
         <!-- Round Counter -->
-        <div class="round-counter-container">
+        <div class="round-counter-container hover-outline">
             <span>✦✦✦ Round I ✦✦✦</span>
         </div>
         <!-- Challenger Info Box -->
-        <div class="game-opponent-challenger">
-            <div class="challenger-name" class:challenger-name-sm={challenger.name?.length > 15}>
+        <div class="game-opponent-challenger anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
+            <div class="challenger-name hover-outline" class:challenger-name-sm={challenger.name?.length > 15}>
                 <p>{challenger.name || ''}</p>
             </div>
 
@@ -587,17 +587,23 @@
                 </a>
             </div>
 
-            <div class="challenger-goal">
+            <div class="challenger-goal hover-outline">
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
-                    <span class="goal-value" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>{challenger?.goal || ''}</span>
+                    <span
+                        class="goal-value"
+                        use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
+                    >{challenger?.goal || ''}</span>
                 </div>
             </div>
         </div>
 
         <!-- Challenger Tenacity -->
-        <div class="hands-discards-containers">
-            <div class="ui-tenacity-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
+        <div class="hands-discards-containers anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
+            <div
+                class="ui-tenacity-container hover-outline"
+                use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+            >
                 <h2>Tenacity</h2>
 
                 <div class="ui-hands-value">
@@ -609,8 +615,11 @@
         </div>
 
         <!-- Round Score -->
-        <div class="round-score-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
-            <div class="round-score">
+        <div
+            class="round-score-container hover-outline"
+            use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+        >
+            <div class="round-score anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
                 {#if isScoringCards}
                     <div class="round-score-total">
                         <h1>{handScore}</h1>
@@ -628,8 +637,11 @@
         </div>
 
         <!-- Hands & Discards -->
-        <div class="hands-discards-containers">
-            <div class="ui-hands-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
+        <div class="hands-discards-containers anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
+            <div
+                class="ui-hands-container hover-outline"
+                use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+            >
                 <h2>Hands</h2>
 
                 <div class="ui-hands-value">
@@ -639,7 +651,10 @@
                 </div>
             </div>
 
-            <div class="ui-discards-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
+            <div
+                class="ui-discards-container hover-outline"
+                use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
+            >
                 <h2>Discards</h2>
 
                 <div class="ui-discards-value">
@@ -652,8 +667,8 @@
 
         <!-- Settings -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="settings" on:click={helpTrainingMode}>
-            <span class="center-row" style="gap: 0.5rem">
+        <div class="settings hover-outline">
+            <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
                 <span>Training Wheels</span>
             </span>
@@ -815,6 +830,9 @@
 <span class="fade-out"></span>
 <span class="spin"></span>
 <span class="anim-wiggle"></span>
+<span class="anim-wiggle-sm"></span>
+<span class="no-anim"></span>
+<span class="hover-outline"></span>
 
 <!-- CSS -->
 <style>
@@ -1054,7 +1072,8 @@
         /* position: fixed; */
 
         /* background-color: #a34d9d; */
-        filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+        /* filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5)); */
+        filter: drop-shadow(0 10px 5px rgba(0, 0, 0, 0.5));
     }
 
     .round-counter-container {
@@ -1345,6 +1364,11 @@
         background-color: rgba(255, 255, 255, 0.75);
         cursor: pointer;
     }
+
+    /* Hover outline */
+    .hover-outline:hover {
+        outline: 2px solid white;
+    }
     
     /* Fade out animation */
     .faded {
@@ -1375,5 +1399,22 @@
         } to {
             transform: rotate(2deg);
         }
+    }
+
+    /* Wiggle animation subtler */
+    .anim-wiggle-sm {
+        animation: 3s infinite alternate linear wiggle-sm;
+    }
+    @keyframes wiggle-sm {
+        from {
+            transform: rotate(-1deg);
+        } to {
+            transform: rotate(1deg);
+        }
+    }
+
+    /* Disable animations */
+    .no-anim {
+        animation: none !important;
     }
 </style>
