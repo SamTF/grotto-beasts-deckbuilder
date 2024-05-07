@@ -590,14 +590,14 @@
             <div class="challenger-goal">
                 <span class="goal-text">Goal:</span>
                 <div class="goal-value-container">
-                    <span class="goal-value">{challenger?.goal || ''}</span>
+                    <span class="goal-value" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>{challenger?.goal || ''}</span>
                 </div>
             </div>
         </div>
 
         <!-- Challenger Tenacity -->
         <div class="hands-discards-containers">
-            <div class="ui-tenacity-container">
+            <div class="ui-tenacity-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
                 <h2>Tenacity</h2>
 
                 <div class="ui-hands-value">
@@ -609,7 +609,7 @@
         </div>
 
         <!-- Round Score -->
-        <div class="round-score-container">
+        <div class="round-score-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
             <div class="round-score">
                 {#if isScoringCards}
                     <div class="round-score-total">
@@ -629,7 +629,7 @@
 
         <!-- Hands & Discards -->
         <div class="hands-discards-containers">
-            <div class="ui-hands-container">
+            <div class="ui-hands-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
                 <h2>Hands</h2>
 
                 <div class="ui-hands-value">
@@ -639,7 +639,7 @@
                 </div>
             </div>
 
-            <div class="ui-discards-container">
+            <div class="ui-discards-container" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}>
                 <h2>Discards</h2>
 
                 <div class="ui-discards-value">
@@ -1255,6 +1255,9 @@
     .ui-tenacity-container {
         background-color: var(--colour-accent);
         color: #a34d9d;
+    }
+    .ui-hands-container:hover {
+        transform: scale(2);
     }
 
     .ui-hands-value, .ui-discards-value {
