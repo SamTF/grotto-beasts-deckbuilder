@@ -6,6 +6,7 @@
     import Checkbox from '$components/UI/Checkbox.svelte'
     import { CardTypes, countCardType } from "$lib/cardUtils"
     import Popup from '$components/UI/Popups/Popup.svelte'
+    import PopupBlackjackVictory from "$components/UI/Popups/PopupBlackjackVictory.svelte"
     import { openModal, closeModal } from 'svelte-modals'
     import { delay } from "$lib/utils"
     import { fade } from "svelte/transition"
@@ -253,7 +254,6 @@
 
         // remove the selected cards from hand by index
         for (const i of selectedCards.reverse()) {
-            console.log(i)
             hand.splice(i, 1);
         }
         // remove the fade out class
@@ -320,10 +320,6 @@
             if (scoreHistory.length >= 3) {scoreHistory.pop()}
             scoreHistory.unshift(card.scorePreview)
             cardsScored++
-            
-            console.log(card.scorePreview)
-            console.log(scoreHistory)
-            console.log(cardsScored)
 
             // Wait
             await delay(500)
@@ -339,7 +335,19 @@
             // Check if Challenger has any remaining Tenacity
             if (challengerHpLost >= challengerMaxHp) {
                 toast.success(`You defeated ${challenger.name}!`)
-                openModal(Popup, { title: 'Victory!', message: `You defeated ${challenger.name}!`, icon: 'sparkles' })
+                
+                await delay(1000)
+
+                // openModal(Popup, { title: 'Victory!', message: `You defeated ${challenger.name}!`, icon: 'sparkles' })
+                openModal(PopupBlackjackVictory, {
+                    challenger: challenger.name, round: roundCounter, icon: 'sparkles',
+                    onConfirm: () => {
+                        console.log('modal closed!!')
+                        closeModal()
+                        nextRound()
+                    }
+                })
+                
                 return
             }
             // otherwise, play one more hand
@@ -370,12 +378,20 @@
         // Wait
         await delay(1000)
 
+        // Reset scored cards and score history
+        await resetPlayTeam()
+
+        // Reactive vars
+        hand = hand
+    }
+
+    // Reset playing field after scoring
+    const resetPlayTeam = async() => {
         // Discard played cards
         // Instead of removing the card, make it invisible
         const cards = document.querySelectorAll('.team-card')
         for (const card of cards) {
             card.classList.add('fade-out')
-            // cardsScored--
             await delay(200)
         }
 
@@ -392,7 +408,6 @@
         // Remove score history
         for (let i = 0; i < scoreHistory.length; i++) {
             scoreHistory[i] = ''
-            console.log(scoreHistory)
             await delay(100)
         }
 
@@ -407,30 +422,6 @@
 
         // Reactive vars
         hand = hand
-    }
-
-    // Score Preview
-    const scorePreview = (card) => {
-        let chips = 0
-        let mult = 0
-
-        switch (card.type) {
-            case 'Beast':
-                chips = card.cost
-                mult = card.power
-                return `${chips} x${mult}`
-            
-            case 'Wish':
-                chips = card.cost
-                return `+${chips}`
-            
-            case 'Grotto':
-                mult = card.cost
-                return `x${mult}`
-        
-            default:
-                break;
-        }
     }
 
     // Score Preview Reactive
@@ -472,6 +463,24 @@
 
             card.scorePreview = cardScorePreview
         }
+    }
+
+    // Next Round
+    const nextRound = async() => {
+        // 0. increment round counter
+        roundCounter++
+
+        // 1. Reset scored cards and score history
+        await resetPlayTeam()
+
+        // 2. pick a new challenger
+        challenger = getChallenger()
+        challengerGoal = challenger.goal
+        challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
+
+        // 3. re-shuffle the deck
+        workingDeck = [...deck]
+        hand = startingHand(deck)
     }
 
     // Help Tooltips
@@ -556,6 +565,7 @@
     let cardsScored = 0
     let isScoringCards = false
     let challengerHpLost = 0
+    let roundCounter = 1
 
     // User preferences
     let showScorePreview = true
@@ -626,7 +636,7 @@
     <div class="ui-sidebar" class:no-anim={reducedMotion}>
         <!-- Round Counter -->
         <div class="round-counter-container hover-outline">
-            <span>✦✦✦ Round I ✦✦✦</span>
+            <span>✦✦✦ Round {roundCounter} ✦✦✦</span>
         </div>
         <!-- Challenger Info Box -->
         <div class="game-opponent-challenger anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
