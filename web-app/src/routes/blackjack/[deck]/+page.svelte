@@ -2,6 +2,7 @@
 <script>
     // Imports
     import DeckHeader from "$components/Deck/DeckHeader.svelte"
+    import Meta from '$components/Meta/Meta.svelte'
     import Checkbox from '$components/UI/Checkbox.svelte'
     import { CardTypes, countCardType } from "$lib/cardUtils"
     import Popup from '$components/UI/Popups/Popup.svelte'
@@ -611,6 +612,9 @@
     }
 </script>
 
+<!-- METADATA -->
+<Meta title={"Mr Greenz Blackjack Challenge!"} description={`Try your best to get a Lucky 21 using deck built by ${data.deck.expand.author.username}`} thumbnail={'/images/cards/6. Mr. Greenz.webp'} />
+
 <!-- HTML -->
 <!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/> -->
 
@@ -762,7 +766,8 @@
                     items: playedCards, 
                     flipDurationMs, 
                     // dropTargetStyle: {outline: 'rgba(0, 0, 0, 0) solid 2px'},
-                    dropFromOthersDisabled: teamDropDisabled
+                    dropFromOthersDisabled: teamDropDisabled,
+                    morphDisabled: true
                 }}"
                 on:consider="{dndPlayerTeamDrag}"
                 on:finalize="{dndPlayerTeamDrop}"
@@ -807,7 +812,7 @@
                 <!-- {#key hand} -->
                     <div
                         class="hand-container starting-hand"
-                        use:dndzone="{{items: hand, flipDurationMs, dropFromOthersDisabled: handDropDisabled, dragDisabled: handDragDisabled}}"
+                        use:dndzone="{{items: hand, flipDurationMs, dropFromOthersDisabled: handDropDisabled, dragDisabled: handDragDisabled, morphDisabled: true}}"
                         on:consider="{dndPlayerHand}"
                         on:finalize="{dndPlayerHand}"
                     >
@@ -916,6 +921,9 @@
         width: 100%;
         display: grid;
         place-items: center;
+
+        align-items: start;
+        justify-items: center;
     }
     
     .hand-and-deck {
@@ -1062,7 +1070,7 @@
         width: 95%;
 
         display: grid;
-        grid-template-columns: 8fr 1fr;
+        grid-template-columns: 5fr 1fr;
         place-items: center;
     }
 
@@ -1070,7 +1078,8 @@
         display: grid;
         place-items: center;
         
-        width: 60rem;
+        /* width: 60rem; */
+        width: 80%;
         height: 16rem;
         background-color: rgba(255, 255, 255, 0.375);
         border-radius: 1rem;
