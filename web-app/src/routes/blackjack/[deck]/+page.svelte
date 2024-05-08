@@ -931,17 +931,10 @@
         grid-template-columns: 8fr 1fr;
         align-content: end;
 
-        /* outline: 4px solid green;
-        outline-style: dashed; */
         width: 95%;
-        /* height: 50rem; */
     }
 
     .player-hand-and-btns {
-        /* display: grid;
-        place-items: center;
-        gap: 0.5rem; */
-        /* background-color: white; */
         display: grid;
         place-items: center;
     }
@@ -953,7 +946,6 @@
         justify-content: center !important;
         align-content: center;
 
-        /* height: 15rem; */
         background-color: rgba(255, 255, 255, 0.375);
         width: 90%;
         border-radius: 1rem;
@@ -964,16 +956,12 @@
     .hand-btns-container {
         display: grid;
         place-items: center;
-
-        /* background-color: blueviolet; */
     }
 
     .hand-btns {
-        /* background-color: aqua; */
         display: flex;
         justify-content: space-evenly;
         flex-direction: row;
-        /* gap: 2rem; */
 
         width: 50rem;
     }
@@ -1035,8 +1023,6 @@
 
     .card-image-small img {
         max-height: 200px;
-        /* transition: transform 0.2s; */
-        /* transition: all 500ms; */
     }
 
     .selected {
@@ -1063,9 +1049,6 @@
     }
 
     .player-team-container {
-        /* outline: 4px solid yellow;
-        outline-style: dashed; */
-
         height: 24rem;
         width: 95%;
 
@@ -1130,27 +1113,14 @@
     
     /* SIDEBAR */
     .ui-sidebar {
-        /* display: grid; */
-        /* place-items: center; */
-        /* justify-items: center; */
-        /* grid-template-rows: 1fr 1fr 1fr; */
-        /* grid-auto-flow: row; */
-
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
 
-        /* height: 92.5dvh; */
         width: 100%;
         margin-left: 2rem;
-        
-        /* height: 100dvh; */
-        /* width: 250px; */
-        /* position: fixed; */
 
-        /* background-color: #a34d9d; */
-        /* filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5)); */
         filter: drop-shadow(0 10px 5px rgba(0, 0, 0, 0.5));
     }
 
@@ -1170,13 +1140,10 @@
     }
 
     .game-opponent-challenger {
-        /* display: grid; */
-        /* place-items: center; */
         display: flex;
         flex-direction: column;
         gap:0;
 
-        /* margin-top: 1rem; */
         width: 90%;
         height: 18rem;
 
