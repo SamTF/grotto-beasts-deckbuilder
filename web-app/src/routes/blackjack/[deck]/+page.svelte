@@ -983,8 +983,7 @@
     .play-area {
         width: 100%;
         display: grid;
-        place-items: center;
-
+        grid-template-rows: 5fr 6fr;
         align-items: start;
         justify-items: center;
     }
