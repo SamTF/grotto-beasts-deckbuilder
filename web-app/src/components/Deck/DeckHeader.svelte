@@ -22,6 +22,9 @@
     // whether the user bookmarked this deck
     $: deckIsBookmarked = $currentUser ? $currentUser.bookmarks.includes(deck.id) : ''
 
+    // whether the user is opted into betas
+    $: betaParticipation = $currentUser ? $currentUser.preferences.beta : false
+
     const remixDeck = () => {
         decklistAdvance.set(fullCards)
         localStorage.setItem("decklist", JSON.stringify($decklistAdvance))
@@ -196,6 +199,16 @@
             
             <!-- Normal deck buttons -->
             {:else}
+                <!-- Only show if user opted-in to the beta -->
+                {#if betaParticipation}
+                    <!-- BETA: Blackjack mini-game!! -->
+                    <a href={`/blackjack/${deck.id}`} class="btn btn-beta" title="BETA: Play the Mr Greenz Blackjack Challenge using this deck!">
+                        <Icon name='sparkles' class='header-btn-icon' strokeWidth='0' solid={true}/>
+                        <span>Blackjack</span>
+                    </a>
+                {/if}
+                
+
                 <!-- Export as TXT -->
                 <button class="btn" title="Save decklist as Text file to import it somewhere else" on:click={exportDeck}>
                     <Icon name='export-file' class='header-btn-icon' strokeWidth='0' solid={true}/>
