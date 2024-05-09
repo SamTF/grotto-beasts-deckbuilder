@@ -74,10 +74,44 @@
         return hand
     }
 
-    // Choose a random challenger
-    const getChallenger = () => {
-        const i = Math.floor( Math.random() * (data.challengers.length - 1))
-        return data.challengers[i]
+    // Choose a random challenger based on the current round
+    const getChallenger = (round = 0) => {
+        // init vars
+        let challengersFiltered = [...data.challengers]
+        let [min, max] = [0, 21]
+
+        // Filter Challengers by their Goal value depending on the current round
+        switch (round) {
+            case 1:
+                [min, max] = [12, 13]
+                break
+            
+            case 2:
+                [min, max] = [14, 15]
+                break
+            
+            case 3:
+                [min, max] = [16, 16]
+                break
+
+            case 4:
+                [min, max] = [17, 18]
+                break
+
+            case 5:
+                [min, max] = [21, 21]
+                break
+        
+            default:
+                break;
+        }
+
+        // Filter array
+        challengersFiltered = data.challengers.filter(x => x.goal >= min && x.goal <= max)
+
+        // 
+        const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
+        return challengersFiltered[i]
     }
 
     // Selects or Deselects a clicked card
@@ -100,14 +134,16 @@
         hand=hand
     }
 
+    // Dselects all cards if any are selected
     const deselectCards = () => {
         if (selectedCards.length > 0) {
             selectedCards = []
         }
     }
 
+    // Returns a card from the Team to the hand
     const moveToHand = (i) => {
-        if ( i>= playedCards.length) return
+        if ( i >= playedCards.length ) return
 
         // get card object
         const card = playedCards[i]
@@ -474,7 +510,7 @@
         await resetPlayTeam()
 
         // 2. pick a new challenger
-        challenger = getChallenger()
+        challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
@@ -540,6 +576,19 @@
         })
     }
 
+    const helpRound = () => {
+        toast.success(`On every round you will face off against a random Challenger chosen from an increasingly difficult pool of Challengers.\n
+        Round 1 - Goal: 12-13 ${ roundCounter == 1 ? '<-- you are here' : ''}
+        Round 2 - Goal: 14-15 ${ roundCounter == 2 ? '<-- you are here' : ''}
+        Round 3 - Goal: 16 ${ roundCounter == 3 ? '<-- you are here' : ''}
+        Round 4 - Goal: 17-18 ${ roundCounter == 4 ? '<-- you are here' : ''}
+        Round 5 - MR GREENZ!!! ${ roundCounter == 5 ? '<-- you are here' : ''}
+        `, {
+            duration: 12000,
+            icon: '🐱'
+        })
+    }
+
     // CONSTANTS
     let deck = []
     let challenger = {}
@@ -584,7 +633,7 @@
         hand = startingHand(deck)
 
         // challenger
-        challenger = getChallenger()
+        challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
     })
@@ -635,7 +684,7 @@
     <!-- UI Sidebar -->
     <div class="ui-sidebar" class:no-anim={reducedMotion}>
         <!-- Round Counter -->
-        <div class="round-counter-container hover-outline">
+        <div class="round-counter-container hover-outline" on:click={helpRound}>
             <span>✦✦✦ Round {roundCounter} ✦✦✦</span>
         </div>
         <!-- Challenger Info Box -->
@@ -758,6 +807,10 @@
             </span>
 
             <Checkbox bind:checked={reducedMotion} />
+        </div>
+
+        <div class="settings-item hover-outline" on:click={nextRound}>
+            <span>Next Round</span>
         </div>
 
     </div>
