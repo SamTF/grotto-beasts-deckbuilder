@@ -10,14 +10,20 @@
     // vars
     let showBestiary = false
     let integrations = { bestiary: false, discord: false }
+    let preferences = { beta: false }
 
     $: changesDetected = $currentUser ? !compareObjects(integrations, $currentUser.integrations) : false
+    $: changesDetected2 = $currentUser ? !compareObjects(preferences, $currentUser.preferences) : false
 
     // Read user preferences on mount
     onMount(() => {
         if ($currentUser.integrations != null) {
             // must do a deep copy of the object, not a reference
             integrations = JSON.parse(JSON.stringify($currentUser.integrations));
+        }
+        if ($currentUser.preferences != null) {
+            // must do a deep copy of the object, not a reference
+            preferences = JSON.parse(JSON.stringify($currentUser.preferences));
         }
     })
 
@@ -56,7 +62,8 @@
         // currently only saves integration changes
         try {
             const update = await pb.collection('users').update($currentUser.id, {
-                integrations: integrations
+                integrations: integrations,
+                preferences: preferences
             })
 
             toast.success("Account changes saved successfully!")
@@ -121,22 +128,6 @@
         
     </div>
 
-    <!-- Integration Options Toggle Buttons -->
-    <!-- <div class="account-panel">
-        <div class="account-panel-header">
-            <h1>Integrations A</h1>
-        </div>
-
-        <div class="account-panel-body">
-            <p>This allows you to link to other accounts/websites on your profile page!</p>
-        </div>
-
-        <div class="account-panel-btns">
-            <button class="btn btn-toggle active">Unlink Grotto Bestiary account</button>
-            <button class="btn">Link Discord profile</button>
-        </div>
-    </div> -->
-
     <!-- Integration Options - Checkboxes -->
     <div class="account-panel">
         <div class="account-panel-header">
@@ -160,8 +151,26 @@
         </div>
     </div>
 
+    <!-- User Preferences -->
+    <div class="account-panel">
+        <div class="account-panel-header">
+            <h1>Preferences</h1>
+        </div>
+
+        <div class="account-panel-body">
+            <p>This lets you customise your Grotto Builders experience!</p>
+        </div>
+
+        <div class="account-panel-btns">
+            <div class="checkbox-field">
+                <span>Participate in betas</span>
+                <Checkbox bind:checked={preferences.beta} />
+            </div>
+        </div>
+    </div>
+
     <!-- Display Save / Cancel buttons if changes were made -->
-    {#if changesDetected}
+    {#if changesDetected || changesDetected2}
         <div class="account-panel">
             <div class="account-panel-header">
                 <h2>Changes detected!</h2>
