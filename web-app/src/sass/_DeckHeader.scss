@@ -221,6 +221,19 @@ $green-orange-gradient: linear-gradient(0deg, rgba(250,198,72,1) 0%, rgba(197,22
                 }
             }
         }
+
+        // BETA Feature Header Button
+        .btn-beta {
+            width: 6rem;
+            background-color: #ffffff75;
+            color: $colour-blue-dark;
+
+            filter: hue-rotate(90deg);
+
+            .header-btn-icon {
+                color: $colour-blue-dark;
+            }
+        }
     }
 }
 
