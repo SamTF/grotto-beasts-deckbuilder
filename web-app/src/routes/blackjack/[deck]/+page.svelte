@@ -1014,6 +1014,26 @@
         
     </div>
 </div>
+
+<!-- MOBILE -->
+<div class="mobile-only" style="height: 100dvh;">
+    <div class="center" style="height: 100%; grid-template-rows:1fr 3fr;">
+        <div class="center" style="gap: 1rem">
+            <h1 style="margin-bottom: 1rem;">Hello mobile andys</h1>
+            <h2>Unfortunately this game is currently not playable on mobile devices.</h2>
+            <h2>Stay tuned for updates!</h2>
+            <p>In the mean time, enjoy these funny gifs:</p>
+        </div>
+
+        <div class="center" style="height: 70%;">
+            <img src="/images/construction/cellphone_030.gif" alt="cellphone">
+            <img src="/images/construction/under_constructionA.gif" alt="under construction sign">
+            <img src="/images/construction/head_construction.gif" alt="literally me">
+            <img src="/images/construction/026.gif" alt="grotto beast">
+            <img src="/images/construction/casinobanner.gif" alt="casino">
+        </div>
+    </div>
+</div>
 </div>
 
 <span class="fade-out"></span>
