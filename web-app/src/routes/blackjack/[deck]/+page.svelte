@@ -378,7 +378,6 @@
                 openModal(PopupBlackjackVictory, {
                     challenger: challenger.name, round: roundCounter, icon: 'sparkles',
                     onConfirm: () => {
-                        console.log('modal closed!!')
                         closeModal()
                         nextRound()
                     }
@@ -422,7 +421,7 @@
     }
 
     // Reset playing field after scoring
-    const resetPlayTeam = async() => {
+    const resetPlayTeam = async(drawNewHand = true) => {
         // Discard played cards
         // Instead of removing the card, make it invisible
         const cards = document.querySelectorAll('.team-card')
@@ -434,11 +433,13 @@
         // Wait
         await delay(200)
 
-        // Draw new cards to replace discarded ones
-        const numOfCards = playedCards.length
-        for (let i = 0; i < numOfCards; i++) {
-            drawCard()
-            await delay(100)
+        // Draw new cards to replace discarded ones IF CHOSEN
+        if (drawNewHand) {
+            const numOfCards = playedCards.length
+            for (let i = 0; i < numOfCards; i++) {
+                drawCard()
+                await delay(100)
+            }
         }
 
         // Remove score history
@@ -507,16 +508,26 @@
         roundCounter++
 
         // 1. Reset scored cards and score history
-        await resetPlayTeam()
+        await resetPlayTeam(false)
 
-        // 2. pick a new challenger
+        // 2. Discard hand
+        const cards = document.querySelectorAll('.playing-card');  
+        for (const card of cards) {
+            card.classList.add('fade-out')
+            await delay(100)
+        }
+
+        await delay(400)
+
+        // 3. Shuffle the deck and deal new hand
+        workingDeck = [...deck]
+        hand = startingHand(deck)
+
+        // 4. pick a new challenger
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
-
-        // 3. re-shuffle the deck
-        workingDeck = [...deck]
-        hand = startingHand(deck)
+        challengerHpLost = 0
     }
 
     // Help Tooltips
@@ -615,6 +626,7 @@
     let isScoringCards = false
     let challengerHpLost = 0
     let roundCounter = 1
+    let loaded = false
 
     // User preferences
     let showScorePreview = true
@@ -626,7 +638,7 @@
     $: wishNum = countCardType(workingDeck, CardTypes.WISH)
 
     // Set this stuff ONCE on page load
-    onMount(() => {
+    onMount(async() => {
         // deck and starting hand
         deck = populateDeck(data.fullCards)
         workingDeck = [...deck]
@@ -636,6 +648,9 @@
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
+
+        await delay(500)
+        loaded = true
     })
 
     // SVELTE-DND-ACTION
