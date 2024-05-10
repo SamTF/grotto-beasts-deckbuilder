@@ -20,3 +20,17 @@
     outline: 4px solid white;
     border-radius: 100%;
 }
+
+// Fullscreen Gif Overlay
+@mixin overlay($url, $repeat: repeat-x) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    z-index: 999;
+    // background-image: url("https://i.giphy.com/ggK4TpfK2cfuZcokhj.webp");
+    background-image: url($url);
+    background-repeat: $repeat;
+    pointer-events: none;
+}

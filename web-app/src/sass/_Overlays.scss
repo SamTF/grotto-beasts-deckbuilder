@@ -1,0 +1,10 @@
+// Fullscreen Gif Overlays
+
+.snow-overlay {
+    // @include overlay("https://i.imgur.com/RpAq5Pc.gif", repeat)
+    @include overlay("https://i.giphy.com/ggK4TpfK2cfuZcokhj.webp", repeat-x)
+}
+
+.confetti-overlay {
+    @include overlay("https://i.imgur.com/RpAq5Pc.gif", repeat)
+}
