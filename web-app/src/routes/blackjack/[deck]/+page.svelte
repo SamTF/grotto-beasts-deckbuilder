@@ -683,7 +683,7 @@
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
-        await delay(500)
+        // await delay(500)
         loaded = true
     })
 
@@ -918,7 +918,8 @@
         </div>
         
         <!-- The Players Hand & Their Deck -->
-        <div class="hand-and-deck" on:contextmenu={deselectCards}>
+        {#if loaded}
+        <div class="hand-and-deck anim-slide-in" on:contextmenu={deselectCards}>
             <!-- The Player's Hand AND Buttons-->
             <div class="player-hand-and-btns">
                 <!-- {#key hand} -->
@@ -1007,7 +1008,9 @@
                 </div>
             </div>
         </div>
-
+        {:else}
+            <div style="width: 95%; min-width: 95%; height: 100%;"></div>
+        {/if}
         
     </div>
 </div>
@@ -1019,6 +1022,7 @@
 <span class="anim-wiggle-sm"></span>
 <span class="no-anim"></span>
 <span class="hover-outline"></span>
+<span class="anim-slide-in"></span>
 
 <!-- CSS -->
 <style>
@@ -1027,6 +1031,7 @@
         grid-template-columns: 1fr 5fr;
         position: relative;
         perspective: 1000px;
+        width: 100%;
     }
 
     .play-area {
@@ -1569,6 +1574,20 @@
             transform: rotate(-1deg);
         } to {
             transform: rotate(1deg);
+        }
+    }
+
+    /* Slide in animation */
+    .anim-slide-in {
+        animation: 0.5s 1 ease-out slide-in;
+    }
+    @keyframes slide-in {
+        from {
+            transform: translateY(30rem);
+            opacity: 0;
+        } to {
+            transform: translateY(0);
+            opacity: 1;
         }
     }
 
