@@ -19,11 +19,6 @@
 {#if isOpen}
     <div class="modal" role="dialog" transition:fade|global>
         <div class="modal-contents">
-            <!-- Close button -->
-            <button class="modal-close" on:click={closeModal}>
-                <Icon name='close' solid={true} class='modal-close-icon' strokeWidth='0' />
-            </button>
-
             <!-- Popup Icon -->
             <div class="icon-container">
                 <Icon name={icon} solid={true} strokeWidth=0 class='popup-icon' />
@@ -55,5 +50,7 @@
                 </div>
             {/if}
         </div>
+
+        <div class="confetti-overlay"></div>
     </div>
 {/if}
