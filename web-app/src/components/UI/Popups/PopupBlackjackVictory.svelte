@@ -34,7 +34,8 @@
                 <h2>YOU WIN!</h2>
                 <p>You defeated all Challengers, and even Mr Greenz himself!</p>
                 <br>
-                <p>You have won the game for now. But if you'd like you can keep playing the beta Endless Mode with ever increasing stakes.</p>
+                <p>You have won the game for now.</p>
+                <p>If you'd like, you can keep playing the beta Endless Mode with ever increasing stakes.</p>
 
                 <!-- Buttons -->
                 <div class="modal-btns">
