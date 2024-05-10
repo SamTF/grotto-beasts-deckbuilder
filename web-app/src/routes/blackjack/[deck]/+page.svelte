@@ -109,9 +109,42 @@
         // Filter array
         challengersFiltered = data.challengers.filter(x => x.goal >= min && x.goal <= max)
 
-        // 
+        // Get random challenger
         const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
-        return challengersFiltered[i]
+        const challenger = challengersFiltered[i]
+
+        // Edit properties for Endless Mode
+        if (round > 5) {
+            switch (round) {
+                case 6:
+                    challenger.power = 2
+                    challenger.goal = 20
+                    break
+                
+                case 7:
+                    challenger.power = 3
+                    challenger.goal = 20
+                    break
+                
+                case 8:
+                    challenger.power = 2
+                    challenger.goal = 21
+                    break
+                
+                case 9:
+                    challenger.power = 3
+                    challenger.goal = 21
+                    break
+                
+                default:
+                    challenger.power = 3
+                    challenger.goal = 21
+                    break
+            }
+        }
+
+        // Return challenger
+        return challenger
     }
 
     // Selects or Deselects a clicked card
@@ -594,6 +627,7 @@
         Round 3 - Goal: 16 ${ roundCounter == 3 ? '<-- you are here' : ''}
         Round 4 - Goal: 17-18 ${ roundCounter == 4 ? '<-- you are here' : ''}
         Round 5 - MR GREENZ!!! ${ roundCounter == 5 ? '<-- you are here' : ''}
+        Round 6+ - ??? ${ roundCounter >= 6 ? '<-- you are here' : ''}
         `, {
             duration: 12000,
             icon: '🐱'
