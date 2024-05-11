@@ -854,7 +854,13 @@
         </div>
 
         <!-- Settings -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="settings-item hover-outline" on:click={() => {window.open('help', '_blank').focus()}}>
+            <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
+                <img src="/images/emotes/Q.png" alt="meowdy" height="24">
+                <span>How To Play</span>
+            </span>
+        </div>
+
         <div class="settings-item hover-outline">
             <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
@@ -863,7 +869,7 @@
 
             <Checkbox bind:checked={showScorePreview} />
         </div>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
+
         <div class="settings-item hover-outline">
             <span class="center-row" style="gap: 0.5rem" on:click={helpDancingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
@@ -872,11 +878,6 @@
 
             <Checkbox bind:checked={reducedMotion} />
         </div>
-
-        <div class="settings-item hover-outline" on:click={nextRound}>
-            <span>Next Round</span>
-        </div>
-
     </div>
 
 
