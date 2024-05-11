@@ -7,6 +7,7 @@
     import { CardTypes, countCardType } from "$lib/cardUtils"
     import Popup from '$components/UI/Popups/Popup.svelte'
     import PopupBlackjackVictory from "$components/UI/Popups/PopupBlackjackVictory.svelte"
+    import PopupBlackjackLoss from "$components/UI/Popups/PopupBlackjackLoss.svelte"
     import { openModal, closeModal } from 'svelte-modals'
     import { delay } from "$lib/utils"
     import { fade } from "svelte/transition"
@@ -344,6 +345,9 @@
             return
         }
 
+        // Increment hands played
+        handsPlayed++
+
         // init vars
         let totalScore = 0
         let totalMult = 0
@@ -423,23 +427,32 @@
                 const winsLeft = challengerMaxHp - challengerHpLost
                 toast.success(`You won this hand! Only ${winsLeft} to go.`)
             }
-
-
-        }
-        // Busted
-        else if (totalScore > maxGoal) {
-            toast.error(`Busted! You can't go over ${maxGoal} points`)
         }
         // Loss
         else {
-            toast.error(`Your score wasn't enough to beat ${challenger.name} :(`)
+            // Check if busted out or not enough score
+            if (totalScore > maxGoal) {
+                toast.error(`Busted! You can't go over ${maxGoal} points`)
+            } else {
+                toast.error(`Your score wasn't enough to beat ${challenger.name} :(`)
+            }
+
+            console.log(`Hands played: ${handsPlayed}`)
+
+            // Check if Game Over
+            if (handsPlayed >= maxHands) {
+                openModal(PopupBlackjackLoss, {
+                    challenger: challenger.name, round: roundCounter, icon: 'sad',
+                    onConfirm: () => {
+                        console.log("Try again!!")
+                        window.location.reload()
+                    }
+                })
+            }
         }
 
         // Sidebar UI feedback
         handScore = totalScore
-
-        // Increment hands played
-        handsPlayed++
 
         //// RESET PLAYING FIELD AND RE-DRAW CARDS
 
@@ -540,8 +553,10 @@
         // 0. increment round counter
         roundCounter++
 
-        // 1. Reset scored cards and score history
+        // 1. Reset scored cards, hands played, and discards used
         await resetPlayTeam(false)
+        handsPlayed = 0
+        discards = 0
 
         // 2. Discard hand
         const cards = document.querySelectorAll('.playing-card');  
