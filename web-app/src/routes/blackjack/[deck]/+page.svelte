@@ -854,14 +854,14 @@
         </div>
 
         <!-- Settings -->
-        <div class="settings-item hover-outline" on:click={() => {window.open('help', '_blank').focus()}}>
+        <div class="settings-item hover-outline anim-wiggle-sm" on:click={() => {window.open('help', '_blank').focus()}}>
             <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
                 <img src="/images/emotes/Q.png" alt="meowdy" height="24">
                 <span>How To Play</span>
             </span>
         </div>
 
-        <div class="settings-item hover-outline">
+        <div class="settings-item hover-outline anim-wiggle-sm">
             <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
                 <span>Training Wheels</span>
@@ -870,7 +870,7 @@
             <Checkbox bind:checked={showScorePreview} />
         </div>
 
-        <div class="settings-item hover-outline">
+        <div class="settings-item hover-outline anim-wiggle-sm">
             <span class="center-row" style="gap: 0.5rem" on:click={helpDancingMode}>
                 <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
                 <span>No Dancing</span>
