@@ -240,8 +240,16 @@
             <p><b>NOTE:</b> You cannot drag hand cards if any cards are selected for discarding. De-select all cards before attempting to drag them from your hand into the Team.</p>
         </div>
 
-        <p style="margin: 1rem 0;">✦✦✦</p>
+        <video loop autoplay width="100%">
+            <source src="/images/blackjack/tutorial_playing_cards.mp4" type="video/mp4">
+            <track kind="captions">
+        </video>
 
+        <p style="margin: 1rem 0;">✦✦✦</p>
+    </div>
+
+    <!-- How to Discard -->
+    <div class="panel hover-outline">
         <div class="center">
             <h2 class="greeting">2. How To Discard</h2>
 
@@ -255,8 +263,16 @@
             <p><b>NOTE:</b> You can only select a maximum of 5 cards, because that is the discard maximum.</p>
         </div>
 
-        <p style="margin: 1rem 0;">✦✦✦</p>
+        <video loop autoplay width="100%">
+            <source src="/images/blackjack/tutorial_discarding.mp4" type="video/mp4">
+            <track kind="captions">
+        </video>
 
+        <p style="margin: 1rem 0;">✦✦✦</p>
+    </div>
+
+    <!-- How to Score -->
+    <div class="panel hover-outline">
         <div class="center">
             <h2 class="greeting">3. How To Score</h2>
 
@@ -270,6 +286,11 @@
                 </li>   
             </ul>
         </div>
+
+        <video loop autoplay width="100%">
+            <source src="/images/blackjack/tutorial_scoring.mp4" type="video/mp4">
+            <track kind="captions">
+        </video>
     </div>
 
     <!-- CONTROLS -->
@@ -386,5 +407,16 @@
     /* Hover outline */
     .hover-outline:hover {
         outline: 2px solid white;
+    }
+
+    .panel video {
+        border-radius: 1rem;
+        outline: none;
+        transition: all 300ms ease;
+    }
+    .panel video:hover {
+        transform: scale(1.5);
+        outline: 8px solid var(--colour-accent);
+        cursor: pointer;
     }
 </style>
