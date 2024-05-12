@@ -221,7 +221,7 @@
                     reset: true,
                     perspective: 1000
             }}>
-                <img src="images/pack_front.webp" alt="grotto beasts card pack" class:fade={fadePack}>
+                <img src="/images/pack_front.webp" alt="grotto beasts card pack" class:fade={fadePack}>
             </div>
         {/if}
         

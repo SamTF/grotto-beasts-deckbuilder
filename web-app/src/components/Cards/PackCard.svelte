@@ -16,7 +16,7 @@
 <div class="flip-card" in:fade={{ duration: 500 }} use:svelteTilt={{ reverse: true, glare: false, "max-glare": 0.5 }} on:click>
     <div class="flip-card-inner" class:flip={flipped}>
         <div class="flip-card-front card-image">
-            <img src="images/cards/back.webp" alt="card">
+            <img src="/images/cards/back.webp" alt="card">
         </div>
         <div class="flip-card-back card-image" class:card-image-holo={card.holo}>
             <img src={card.imageURL.small} alt={card.name}>
