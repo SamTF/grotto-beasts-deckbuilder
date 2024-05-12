@@ -53,6 +53,10 @@
             <img src="/images/icons/pack.svg" alt="Card Pack" class="icon">
             <span>Open Packs</span>
         </a>
+        <a href="/iconic" class="route-icon-btn">
+            <Icon name='trophy' solid={true} />
+            <span>Most Iconic</span>
+        </a>
     </div>
 
     
