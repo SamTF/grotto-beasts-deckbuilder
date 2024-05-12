@@ -736,7 +736,7 @@
 </script>
 
 <!-- METADATA -->
-<Meta title={"Mr Greenz Blackjack Challenge!"} description={`Try your best to get a Lucky 21 using deck built by ${data.deck.expand.author.username}`} thumbnail={'/images/cards/6. Mr. Greenz.webp'} />
+<Meta title={"Mr Greenz Blackjack Challenge!"} description={`Try your best to get a Lucky 21 using deck built by ${data.deck.expand.author.username}`} thumbnail="/images/blackjack/MrGreenz_480.webp" />
 
 <!-- HTML -->
 <!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/> -->
