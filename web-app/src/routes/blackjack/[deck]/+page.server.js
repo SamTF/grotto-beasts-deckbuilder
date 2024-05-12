@@ -1,7 +1,7 @@
 import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit"
 
-export async function load({ url, fetch, params, setHeaders}) {
+export async function load({ url, params, setHeaders}) {
     console.log(url.origin)
     console.log(params)
 
@@ -23,8 +23,8 @@ export async function load({ url, fetch, params, setHeaders}) {
 
     // --- EXPAND CARD INFO --------
     // get all cards from local API data
-    // const res = await fetch(`${url.origin}/api/cards/`)
-    const res = await fetch(`https://grotto.builders/api/cards/`)
+    const res = await fetch(`${url.origin}/api/cards/`)
+    // const res = await fetch(`https://grotto.builders/api/cards/`)
     let allCards = await res.json()
 
     // array of all card IDs in deck
