@@ -62,7 +62,6 @@
             // let card = deck[deck.length * Math.random() | 0]
             const i = Math.floor( Math.random() * (deck.length - 1))
             let card = deck[i]
-            // card.id = `${card.id}${Math.round(Math.random() * 100)}`
 
             // add card to hand
             hand.push(card)
@@ -283,7 +282,6 @@
         
         // draw random card and add it to hand
         let card = workingDeck[workingDeck.length * Math.random() | 0]
-        // card.id = `${card.id}${Math.round(Math.random() * 100)}`
         hand = [...hand, card]
 
         // remove that card from deck
@@ -953,7 +951,7 @@
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.id}
+                                title={card.name}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
