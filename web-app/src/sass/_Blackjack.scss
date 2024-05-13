@@ -1,0 +1,619 @@
+// Styles for the BLACKJACK game
+
+// Wrapper over the whole game
+.game-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    position: relative;
+    perspective: 1000px;
+    width: 100%;
+}
+
+// Gameplay area where user drags around cards, as opposed to sidebar ui
+.play-area {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 5fr 6fr;
+    align-items: start;
+    justify-items: center;
+
+    // Player's Hand cards and deck
+    .hand-and-deck {
+        display: grid;
+        grid-template-columns: 8fr 1fr;
+        align-content: end;
+
+        width: 95%;
+
+        // Card counter
+        .cards-in-hand {
+            margin-bottom: 0.5rem;
+    
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        // Player's hand and score/discard buttons
+        .player-hand-and-btns {
+            display: grid;
+            place-items: center;
+
+            // Cards in the player's hand
+            .hand-container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center !important;
+                align-content: center;
+        
+                background-color: rgba(255, 255, 255, 0.375);
+                width: 90%;
+                border-radius: 1rem;
+                padding: 8rem 0rem;
+                margin-bottom: 0.5rem !important;
+            }
+
+            // Score / Discard buttons container
+            .hand-btns-container {
+                display: grid;
+                place-items: center;
+
+                // The individual button container
+                .hand-btns {
+                    display: flex;
+                    justify-content: space-evenly;
+                    flex-direction: row;
+            
+                    width: 50rem;
+
+                    // The button itself
+                    button {
+                        /* size */
+                        width: 10rem;
+                        padding: 0.75rem 1.5rem;
+                
+                        /* design */
+                        background-color: $colour-accent;
+                        outline: 4px solid $colour-dark;
+                        border-radius: 8px;
+                
+                        /* font */
+                        font-family: $font-family;
+                        font-weight: bold;
+                        font-size: 2rem;
+                        color: white;
+                
+                        /* animations */
+                        cursor: pointer;
+                        transition: all 200ms;
+
+                        // Hover effect
+                        &:hover {
+                            transform: scale(1.25);
+                            // filter: invert();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Deck container
+        .blackjack-deck-container {
+            display: grid;
+            place-items: center;
+            position: relative;
+    
+            height: 18rem;
+            background-color: rgba(255, 255, 255, 0.375);
+            border-radius: 1rem;
+            padding: 0 2rem;
+
+            // Show tooltips on hover
+            &:hover .tooltip-view-deck {
+                opacity: 1;
+            }
+            &:hover .tooltip-deck-preview-container {
+                top: -4rem;
+                font-weight: 700;
+                opacity: 1;
+            }
+
+            // "View Deck" tooltip
+            .tooltip-view-deck {
+                position: absolute;
+                top:0;
+                right:0;
+                
+                display: grid;
+                place-items: center;
+        
+                height: 100%;
+                width: 100%;
+        
+                color: white;
+                font-size: 2rem;
+                font-weight: 900;
+        
+                border-radius: 1rem;
+                background: rgba(0, 0, 0, 0.5);
+        
+                opacity: 0;
+                transition: all 200ms ease;
+        
+                pointer-events: none;
+            }
+
+            // Cards remaning in deck tooltip
+            .tooltip-deck-preview-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+        
+                display: grid;
+                place-items: center;
+        
+                width: 100%;
+                height: 3rem;
+        
+                background-color: rgba(255, 255, 255, 0.375);
+                border-radius: 1rem;
+        
+                z-index: 11;
+                opacity: 0;
+                
+                transition: all 200ms ease;
+
+                // the tooltip itself
+                .tooltip-deck-preview {
+                    display: flex;
+                    justify-content: space-evenly;
+            
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    // Card images
+    .card-image-small {
+        z-index: 10;
+        transition: transform 0.2s;
+        opacity: 1;
+        flex: 0 0 auto;
+
+        // Image tag
+        img {
+            max-height: 200px !important;
+        }
+
+        // Selected card
+        .selected {
+            outline: 2px solid gold;
+            transform: translate(0, -3rem) !important;
+            -moz-transform: translate(0, -3rem) !important;
+            z-index: 10;
+        }
+        .selected-offset {
+            transform: translate(0, -3rem) !important;
+            -moz-transform: translate(0, -3rem) !important;
+        }
+
+        // Hover effect
+        &:hover {
+            transform: scale(1);
+            z-index: 11;
+        }
+    }
+
+    // Team - where cards get played into
+    .player-team-container {
+        height: 24rem;
+        width: 95%;
+
+        display: grid;
+        grid-template-columns: 5fr 1fr;
+        place-items: center;
+
+        .player-team {
+            display: grid;
+            place-items: center;
+            
+            width: 80%;
+            height: 16rem;
+            background-color: rgba(255, 255, 255, 0.375);
+            border-radius: 1rem;
+
+            // The grid where the cards go
+            .player-team-grid {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+        
+                width: 100%;
+                height: 100%;
+                border-radius: 1rem;
+
+                // The score of each card
+                .score {
+                    /* position */
+                    position: absolute;
+                    bottom: -2.25rem;
+                    left: 0;
+                    z-index: -1;
+                    
+                    /* display */
+                    display: grid;
+                    place-items: center;
+                    
+                    /* size */
+                    width: 100%;
+                    height: 3rem;
+                    
+                    /* font */
+                    font-size: 2rem;
+                    font-weight: 700;
+                    
+                    /* design */
+                    border-radius: 0 0 8px 8px;
+                    background-color: $colour-accent;
+                    box-shadow: inset 8px 8px 17px #d1ab48,
+                        inset -8px -8px 17px #ffe762;
+                }
+            }
+        }
+    }
+}
+
+// UI SIDEBAR
+.ui-sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    width: 100%;
+    margin-left: 2rem;
+
+    filter: drop-shadow(0 10px 5px rgba(0, 0, 0, 0.5));
+
+    // Round Counter
+    .round-counter-container {
+        display: grid;
+        place-items: center;
+        
+        width: 90%;
+        height: 2rem;
+
+        color: var(--colour-accent);
+        font-size: 1.25rem;
+        font-weight: 700;
+
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    // Challenger Container
+    .game-opponent-challenger {
+        display: flex;
+        flex-direction: column;
+        gap:0;
+
+        width: 90%;
+        height: 18rem;
+
+        color: white;
+        font-size: 2rem;
+        font-weight: 900;
+
+        // Challenger name
+        .challenger-name {
+            display: grid;
+            place-items: center;
+            
+            width: 100%;
+            height: 3rem;
+    
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 1rem 1rem 0 0;
+        }
+        .challenger-name-sm {
+            font-size: 1.5rem;
+        }
+
+        // Challenger Avatar container
+        .challenger-avatar-container {
+            display: grid;
+            place-items: center;
+    
+            width: 100%;
+            height: 60%;
+    
+            background-color: rgba(0, 0, 0, 0.2);
+
+            // The image itself
+            .challenger-pic {
+                height: 8rem;
+                width: 8rem;
+                border-radius: 50%;
+        
+                background-size: 150%;
+                background-position: center 33%;
+        
+                outline: 2px solid white;
+                filter: drop-shadow(10px 10px 30px black);
+        
+                transition: all 200ms ease;
+
+                // Hover effect
+                &:hover {
+                    border-radius: 25%;
+                    outline: 4px solid var(--colour-accent);
+                    filter: drop-shadow(10px 10px 30px black);
+                }
+            }
+        }
+
+        // Challenger Goal
+        .challenger-goal {
+            display: grid;
+            grid-template-columns: 2fr 3fr;
+            
+            width: 100%;
+            height: 4rem;
+    
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 1rem 1rem;
+
+            span {
+                display: grid;
+                place-items: center;
+            }
+
+            // Text that says "Goal"
+            .goal-text {
+                font-weight: normal;
+                justify-self: end;
+            }
+
+            // Goal number container
+            .goal-value-container {
+                display: grid;
+                place-items: center;
+            }
+
+            // Numerical value of the goal
+            .goal-value {
+                width: 80%;
+                border-radius: 1rem;
+                background-color: rgba(0, 0, 0, 0.5);
+                
+                font-weight: 700;
+                font-size: 2rem;
+            }
+        }
+    }
+
+    // Round Score container
+    .round-score-container {
+        display: grid;
+        place-items: center;
+
+        height: 10rem;
+        width: 90%;
+        
+        color: white;
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+
+        // Score grid
+        .round-score {
+            display: grid;
+            grid-auto-flow: row;
+            grid-template-rows: 2fr 3fr;
+    
+            justify-items: center;
+            align-items: start;
+    
+            width: 100%;
+            height: 100%;
+
+            // Final score
+            .round-score-total {
+                display: grid;
+                place-items: center;
+        
+                width: 100%;
+                height: 100%;
+        
+                background: #00000052;
+                border-radius: 1rem 1rem 0 0;
+
+                h1 {
+                    font-size: 4rem;
+                    color: var(--colour-accent);
+                    line-height: 3rem;
+                }
+            }
+
+            // Score History
+            .round-score-history {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+        
+                height: 100%;
+                width: 100%;
+        
+                font-size: 1.25rem;
+
+                // First child
+                p:first-child {
+                    font-weight: 700;
+                    opacity: 1;
+                }
+
+                // Others
+                p {
+                    opacity: 0.75;
+                }
+            }
+        }
+    }
+
+    // Container for Hands, Discards, Tenacity counters
+    .hands-discards-containers {
+        display: grid;
+        grid-auto-flow: row;
+        justify-items: center;
+        gap: 0.5rem;
+
+        width: 90%;
+
+        // Base style for Hands, Discards, Tenacity counters
+        .ui-hands-container, .ui-discards-container, .ui-tenacity-container {
+            display: grid;
+            grid-auto-flow: row;
+            justify-items: center;
+    
+            width: 100%;
+            height: 5rem;
+            padding: 0.25rem 0;
+            
+            color: white;
+            background-color: #2470af;
+            border-radius: 1rem;
+
+            // UI Value
+            .ui-hands-value, .ui-discards-value {
+                display: grid;
+                place-items: center;
+                grid-auto-flow: column;
+        
+                width: 90%;
+                height: 2.5rem;
+                margin-bottom: 0.25rem;
+                
+                font-size: 1.5rem;
+        
+                border-radius: 1rem;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        // Overrides
+        .ui-discards-container {
+            background-color: #cb3a63;
+        }
+        .ui-tenacity-container {
+            background-color: $colour-accent;
+            color: #a34d9d;
+        }
+    }
+
+    // Settings items
+    .settings-item {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: space-evenly;
+
+        width: 90%;
+        height: 3rem;
+        font-size: 1.25rem;
+
+        background-color: rgba(255, 255, 255, 0.375);
+        border-radius: 1rem;
+
+        transition: all 200ms ease;
+
+        // Hover effect
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+            cursor: pointer;
+        }
+    }
+}
+
+// // // ANIMATIONS // // //
+/* Hover outline */
+.hover-outline:hover {
+    outline: 2px solid white;
+    cursor: pointer;
+}
+
+/* Fade out animation */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.faded {
+    opacity: 0.33;
+}
+
+/* Spin animation */
+.spin {
+    animation: 600ms 2 alternate spin;
+}
+@keyframes spin {
+    from {
+        transform: rotate3d(0);
+    }
+
+    to {
+        transform: rotate3d(0,1,0,180deg)
+    }
+}
+
+/* Wiggle animation */
+.anim-wiggle {
+    animation: 2.5s infinite alternate linear wiggle;
+}
+@keyframes wiggle {
+    from {
+        transform: rotate(-2deg);
+    } to {
+        transform: rotate(2deg);
+    }
+}
+
+/* Wiggle animation subtler */
+.anim-wiggle-sm {
+    animation: 3s infinite alternate linear wiggle-sm;
+}
+@keyframes wiggle-sm {
+    from {
+        transform: rotate(-1deg);
+    } to {
+        transform: rotate(1deg);
+    }
+}
+
+/* Slide in animation */
+.anim-slide-in {
+    animation: 0.5s 1 ease-out slide-in;
+}
+@keyframes slide-in {
+    from {
+        transform: translateY(30rem);
+        opacity: 0;
+    } to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Disable animations */
+.ui-sidebar.no-anim .anim-wiggle-sm,
+.ui-sidebar.no-anim .tilt,
+.play-area.no-anim .card-image-small,
+.play-area.no-anim .anim-wiggle,
+.no-anim {
+    animation: none !important;
+    transform: none !important;
+}
