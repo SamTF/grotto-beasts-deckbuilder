@@ -214,6 +214,8 @@
         grid-template-columns: 5fr 1fr;
         place-items: center;
 
+        opacity: 0;
+
         .player-team {
             display: grid;
             place-items: center;
@@ -277,6 +279,7 @@
     margin-left: 2rem;
 
     filter: drop-shadow(0 10px 5px rgba(0, 0, 0, 0.5));
+    opacity: 0;
 
     // Round Counter
     .round-counter-container {
@@ -608,7 +611,29 @@
     }
 }
 
-/* Disable animations */
+/* Slide down animation */
+.anim-slide-down {
+    animation: 0.5s 1 ease-out slide-down;
+    animation-delay: 0.33s;
+    animation-fill-mode: forwards;
+}
+.anim-slide-down-2 {
+    animation: 0.5s 1 ease-out slide-down;
+    animation-delay: 0.66s;
+    animation-fill-mode: forwards;
+}
+@keyframes slide-down {
+    from {
+        transform: translateY(-30rem);
+        opacity: 0;
+    } to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+// DISABLE ANIMATIONS
 .ui-sidebar.no-anim .anim-wiggle-sm,
 .ui-sidebar.no-anim .tilt,
 .play-area.no-anim .card-image-small,
@@ -616,4 +641,14 @@
 .no-anim {
     animation: none !important;
     transform: none !important;
+}
+
+// Debugging
+.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.invisible {
+    opacity: 0;
+    visibility: hidden;
 }
