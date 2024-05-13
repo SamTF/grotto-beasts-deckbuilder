@@ -14,6 +14,7 @@
     import toast from 'svelte-french-toast'
     import { onMount } from "svelte"
     import svelteTilt from 'vanilla-tilt-svelte'
+    import { v4 as uuidv4 } from 'uuid';
 
     // drag and drop
     import {flip} from "svelte/animate"
@@ -21,6 +22,8 @@
     
     // Props
     export let data
+
+    console.log(uuidv4())
 
     // Create a deck from the given cards and their respective quantity
     const populateDeck = (cards) => {
@@ -37,7 +40,7 @@
             for (let i = 0; i < c.quantity; i++) {
                 // Create a new simplified card Object with a UUID
                 const { number, name, type, imageURL, cost, power } = c
-                const newCard = { number, name, type, imageURL, cost, power, id: Math.round(Math.random() * 1000) }
+                const newCard = { number, name, type, imageURL, cost, power, id: uuidv4() }
                 
                 // add card to deck
                 deck.push(newCard)
@@ -59,7 +62,7 @@
             // let card = deck[deck.length * Math.random() | 0]
             const i = Math.floor( Math.random() * (deck.length - 1))
             let card = deck[i]
-            card.id = `${card.id}${Math.round(Math.random() * 100)}`
+            // card.id = `${card.id}${Math.round(Math.random() * 100)}`
 
             // add card to hand
             hand.push(card)
@@ -280,7 +283,7 @@
         
         // draw random card and add it to hand
         let card = workingDeck[workingDeck.length * Math.random() | 0]
-        card.id = `${card.id}${Math.round(Math.random() * 100)}`
+        // card.id = `${card.id}${Math.round(Math.random() * 100)}`
         hand = [...hand, card]
 
         // remove that card from deck
@@ -739,8 +742,6 @@
 <Meta title={"Mr Greenz Blackjack Challenge!"} description={`Try your best to get a Lucky 21 using deck built by ${data.deck.expand.author.username}`} thumbnail="/images/blackjack/MrGreenz_480.webp" />
 
 <!-- HTML -->
-<!-- <DeckHeader name={data.deck.name} author={data.deck.expand.author.username} tags={data.deck.tags} authorID={data.deck.expand.author.id} fullCards={data.fullCards} deck={data.deck}/> -->
-
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="page-container center">
 <div class="game-wrapper desktop-only">
@@ -901,8 +902,7 @@
                 on:finalize="{dndPlayerTeamDrop}"
                 
             >
-                <!-- {#each playedCards as item, i (item.id)} -->
-                {#each playedCards as item, i (`${item.id}_${Math.random() * 100}`)}
+                {#each playedCards as item, i (item.id)}
                     <div
                         class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
@@ -938,25 +938,22 @@
         <div class="hand-and-deck anim-slide-in" on:contextmenu={deselectCards}>
             <!-- The Player's Hand AND Buttons-->
             <div class="player-hand-and-btns">
-                <!-- {#key hand} -->
                     <div
                         class="hand-container starting-hand"
                         use:dndzone="{{items: hand, flipDurationMs, dropFromOthersDisabled: handDropDisabled, dragDisabled: handDragDisabled, morphDisabled: true}}"
                         on:consider="{dndPlayerHand}"
                         on:finalize="{dndPlayerHand}"
                     >
-                        <!-- {#each hand as card, i (card.id)} -->
-                        {#each hand as card, i (`${card.id}_${Math.random() * 100}`)}
+                        {#each hand as card, i (card.id)}
                         <div
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
                             use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
                         >
-                            <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.name}
+                                title={card.id}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
@@ -966,7 +963,6 @@
                         </div>
                         {/each}
                     </div>
-                <!-- {/key} -->
 
                 <!-- Cards in hand -->
                 <div class="cards-in-hand center">
