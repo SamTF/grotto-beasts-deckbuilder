@@ -1,6 +1,6 @@
 {
 	"name": "grotto-builders",
-	"version": "2.3beta",
+	"version": "2.3beta1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
