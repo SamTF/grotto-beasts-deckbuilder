@@ -44,8 +44,6 @@
     <div
       slot="backdrop"
       class="backdrop"
-      on:click={closeModal}
-      on:keydown={closeModal}
     />
 </Modals>
 <Toaster />
