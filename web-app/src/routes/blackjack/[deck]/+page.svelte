@@ -745,7 +745,8 @@
 <div class="game-wrapper desktop-only">
 
     <!-- UI Sidebar -->
-    <div class="ui-sidebar" class:no-anim={reducedMotion}>
+    {#if loaded}
+    <div class="ui-sidebar anim-slide-down" class:no-anim={reducedMotion} class:invisible={!loaded}>
         <!-- Round Counter -->
         <div class="round-counter-container hover-outline" on:click={helpRound}>
             <span>✦✦✦ Round {roundCounter} ✦✦✦</span>
@@ -878,13 +879,14 @@
             <Checkbox bind:checked={reducedMotion} />
         </div>
     </div>
+    {/if}
 
 
     <!-- PLAY AREA -->
     <!-- Where the gaming takes place -->
     <div class="play-area" class:no-anim={reducedMotion} oncontextmenu="return false">
         <!-- TEAM -->
-        <div class="player-team-container">
+        <div class="player-team-container anim-slide-down-2" class:invisible={!loaded}>
             <!-- Played Cards -->
             <div class="player-team">
             <div
