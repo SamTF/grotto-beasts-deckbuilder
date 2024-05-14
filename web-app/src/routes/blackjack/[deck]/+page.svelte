@@ -20,6 +20,9 @@
     // drag and drop
     import {flip} from "svelte/animate"
     import {dndzone} from "svelte-dnd-action"
+
+    // BLACKJACK
+    import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound } from "$lib/blackjack/helpMessages"
     
     // Props
     export let data
@@ -599,88 +602,6 @@
         }
     }
 
-    // Help Tooltips
-    const helpTrainingMode = () => {
-        toast.success('Enables a real-time preview of each card\'s score', {
-            duration: 5000,
-            icon: '🐱'
-        })
-    }
-
-    const helpDancingMode = () => {
-        toast.success('Disables the smooth wiggling animation and 3D tilt effect :(', {
-            duration: 5000,
-            icon: '🐱'
-        })
-    }
-
-    const helpHands = () => {
-        toast.success('How many hands of cards you can play this round.\nOnce it is depleted, you can no longer play anything!', {
-            duration: 8000,
-            icon: '🙌'
-        })
-    }
-
-    const helpDiscards = () => {
-        toast.success('How many times you can discard cards from your hand.\nYou can discard up to 5 cards per discard!', {
-            duration: 8000,
-            icon: '🗑️'
-        })
-    }
-
-    const helpTenacity = () => {
-        toast.success("How many times you need to beat the Challenger's goal in order to defeat them.\n\nYou can think of it as their HP!", {
-            duration: 8000,
-            icon: '❤️'
-        })
-    }
-
-    const helpScore = () => {
-        toast.success("This tracks how many points you've scored with the current hand.\nWill stay blank until you score something!", {
-            duration: 8000,
-            icon: '💯'
-        })
-    }
-
-    const helpGoal = () => {
-        // NORMAL MODE
-        if (roundCounter <= 5) {
-            toast.success("Your score aim. Score this value or higher in order to win.\nBut be careful, if you go over 21 points you will bust out!", {
-                duration: 8000,
-                icon: '🐱'
-            })
-        }
-        // ENDLESS MODE
-        else {
-            toast.success(`Current Score goal: ${challengerGoal}\nCurrent Bust value: ${maxGoal}\n\nScore at least ${challengerGoal} without going over ${maxGoal}!`, {
-                duration: 8000,
-                icon: '🐱'
-            })
-        }
-        
-    }
-
-    const helpChallenger = () => {
-        toast.success("This is the Challenger you're up against now!\nDefeat them for a shot at winning a Grottillion Dollars in the grand finale!", {
-            duration: 8000,
-            icon: '🐱'
-        })
-    }
-
-    const helpRound = () => {
-        toast.success(`On every round you will face off against a random Challenger chosen from an increasingly difficult pool of Challengers.\n
-        Round 1 - Goal: 12-13 ${ roundCounter == 1 ? '<-- you are here' : ''}
-        Round 2 - Goal: 14-15 ${ roundCounter == 2 ? '<-- you are here' : ''}
-        Round 3 - Goal: 16 ${ roundCounter == 3 ? '<-- you are here' : ''}
-        Round 4 - Goal: 17-18 ${ roundCounter == 4 ? '<-- you are here' : ''}
-        Round 5 - MR GREENZ!!! ${ roundCounter == 5 ? '<-- you are here' : ''}
-        Round 6+ - ??? ${ roundCounter >= 6 ? '<-- you are here' : ''}
-        `, {
-            duration: 12000,
-            icon: '🐱'
-        })
-    }
-
     // CONSTANTS
     let deck = []
     let challenger = {}
@@ -788,7 +709,7 @@
     {#if loaded}
     <div class="ui-sidebar anim-slide-down" class:no-anim={reducedMotion} class:invisible={!loaded}>
         <!-- Round Counter -->
-        <div class="round-counter-container hover-outline" on:click={helpRound}>
+        <div class="round-counter-container hover-outline" on:click={ () => {helpRound(roundCounter)} }>
             <span>✦✦✦ Round {roundCounter} ✦✦✦</span>
         </div>
         <!-- Challenger Info Box -->
@@ -817,7 +738,7 @@
 
             <!-- Normal Mode -->
             {#if roundCounter <= 5}
-                <div class="challenger-goal hover-outline" on:click={helpGoal}>
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container">
                         <span
@@ -829,7 +750,7 @@
             
             <!-- Endless mode -->
             {:else}
-                <div class="challenger-goal hover-outline" on:click={helpGoal}>
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container goal-bust-value-container">
                         <div class="goal-bust-values tilt" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>
