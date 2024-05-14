@@ -416,14 +416,18 @@
             // Check if busted out or not enough score
             if (totalScore > maxGoal) {
                 toast.error(`Busted! You can't go over ${maxGoal} points`)
-            } else {
+            }
+            // Check if enough hands left to win
+            else if (challengerHP > handsLeft) {
+                toast.error(`Oops! You no longer have enough hands left to defeat ${challenger.name} :(`)
+            }
+            // Not Enough score
+            else {
                 toast.error(`Your score wasn't enough to beat ${challenger.name} :(`)
             }
 
-            console.log(`Hands played: ${handsPlayed}`)
-
             // Check if Game Over
-            if (handsPlayed >= maxHands) {
+            if (handsPlayed >= maxHands || challengerHP > handsLeft) {
                 openModal(PopupBlackjackLoss, {
                     challenger: challenger.name, round: roundCounter, icon: 'sad',
                     onConfirm: () => {
@@ -680,6 +684,8 @@
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
     $: grottoNum = countCardType(workingDeck, CardTypes.GROTTO)
     $: wishNum = countCardType(workingDeck, CardTypes.WISH)
+    $: challengerHP = challengerMaxHp - challengerHpLost
+    $: handsLeft = maxHands - handsPlayed
 
     // Set this stuff ONCE on page load
     onMount(async() => {
