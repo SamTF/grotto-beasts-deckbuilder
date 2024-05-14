@@ -23,8 +23,6 @@
     // Props
     export let data
 
-    console.log(uuidv4())
-
     // Create a deck from the given cards and their respective quantity
     const populateDeck = (cards) => {
         let deck = []
@@ -222,14 +220,14 @@
         // Wait 1 second
         await delay(500)
 
-        // remove the selected cards from hand by index
-        for (const i of selectedCards.reverse()) {
-            hand.splice(i, 1);
-        }
-        
         // remove the fade out class
         for (const card of cards) {
             card.classList.remove('fade-out')
+        }
+
+        // remove the selected cards from hand by index
+        for (const i of selectedCards.reverse()) {
+            hand.splice(i, 1);
         }
 
         // update reactive vars
@@ -249,30 +247,14 @@
             await delay(100)
         }
 
+        // Update reactive var
         hand = hand
-        return
-        
-        // remove the selected cards from hand by index
-        for (const i of selectedCards.reverse()) {
-            console.log(i)
-            hand.splice(i, 1);
+
+        // REMOVE FADE OUT CLASS!!! AAAAAA
+        const x = document.querySelectorAll('.playing-card')
+        for (const card of x) {
+            card.classList.remove('fade-out')
         }
-
-        // update reactive vars
-        hand = hand
-        selectedCards = []
-
-        console.log(hand)
-
-        // Wait 1 second
-        await delay(500)
-
-        for (let i = 0; i < numOfCards; i++) {
-            drawCard()
-            await delay(100)
-        }
-
-        hand = hand
     }
 
     // Add a new card to hand
@@ -285,7 +267,7 @@
         hand = [...hand, card]
 
         // remove that card from deck
-        const index = workingDeck.findIndex(x => x.number === card.number)
+        const index = workingDeck.findIndex(x => x.id === card.id)
         if (index !== -1) {
             workingDeck.splice(index, 1);
         }
@@ -498,6 +480,11 @@
         // Wait
         await delay(200)
 
+        // REMOVE FADE OUT CLASS!!! AAAAAA
+        for (const card of cards) {
+            card.classList.remove('fade-out')
+        }
+
         // reset vars
         playedCards = []
         cardsScored = 0
@@ -577,6 +564,13 @@
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
         challengerHpLost = 0
+
+        // 5. REMOVE FADE OUT CLASS!!! AAAAAA
+        const x = document.querySelectorAll('.playing-card')
+        for (const card of x) {
+            card.classList.remove('fade-out')
+            console.log(card)
+        }
     }
 
     // Help Tooltips
@@ -916,7 +910,7 @@
                             alt={item.name}
                             class='no-anim-wiggle'
                             class:selected={i+1 <= cardsScored}
-                            title={item.name}
+                            title={item.id}
                         >
 
                         <!-- Score preview -->
@@ -953,7 +947,7 @@
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.name}
+                                title={card.id}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
@@ -1078,6 +1072,7 @@
     /* Actual card image */
     .card-image-small img {
         max-height: 200px;
+        opacity: 1;
     }
 
     /* The score of each card */
@@ -1108,8 +1103,20 @@
     }
 
     /* Fade out animation */
-    .fade-out {
+    /* .fade-out {
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
+    } */
+
+    .fade-out {
+        animation: 0.5s 1 ease-out fadeout;
+        animation-fill-mode: forwards;
+    }
+    @keyframes fadeout {
+        from {
+            opacity: 1;
+        } to {
+            opacity: 0;
+        }
     }
 </style>
