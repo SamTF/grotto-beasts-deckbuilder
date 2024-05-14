@@ -49,8 +49,6 @@
             }
         })
 
-        console.log(deck)
-
         // return the populated deck
         return deck
     }
@@ -301,50 +299,6 @@
         workingDeck = workingDeck
     }
 
-    const playCards = async() => {
-        // check that the current play is valid
-        if (playedCards.length + selectedCards.length > maxPlayedCards) {
-            toast.error("You can only play a maximum of 5 cards per round!")
-            return
-        }
-        else if (selectedCards.length < 1) {
-            toast.error("You must play at least 1 card, silly :)")
-            return
-        }
-
-        // get info of selected cards
-        let cards = hand.filter((card, i) => selectedCards.includes(i))
-        cards = cards.map(card => ({...card, id: `${card.id}_${handsPlayed}_${discards}_${Math.random() * 100}`}))
-
-        // add them to the play area
-        playedCards = [...playedCards, ...cards]
-
-        // Instead of removing the card, make it invisible
-        const playingCards = document.querySelectorAll('.playing-card'); 
-        for (const i of selectedCards) {
-            const cardToRemove = playingCards[i]
-            // cardToRemove.style.visibility = 'hidden';
-            cardToRemove.classList.add('fade-out')
-        }
-
-        // Wait 1 second
-        await delay(500)
-
-        // remove the selected cards from hand by index
-        for (const i of selectedCards.reverse()) {
-            hand.splice(i, 1);
-        }
-        // remove the fade out class
-        for (const card of playingCards) {
-            card.classList.remove('fade-out')
-        }
-
-        // update reactive vars
-        selectedCards = []
-        hand = hand
-        handsPlayed++
-    }
-
     // Score Cards!
     const scoreCards = async() => {
         // Check if player has any hands left
@@ -456,7 +410,6 @@
                 openModal(PopupBlackjackLoss, {
                     challenger: challenger.name, round: roundCounter, icon: 'sad',
                     onConfirm: () => {
-                        console.log("Try again!!")
                         window.location.reload()
                     }
                 })
@@ -598,7 +551,6 @@
         const x = document.querySelectorAll('.playing-card')
         for (const card of x) {
             card.classList.remove('fade-out')
-            console.log(card)
         }
     }
 
@@ -877,7 +829,7 @@
                             alt={item.name}
                             class='no-anim-wiggle'
                             class:selected={i+1 <= cardsScored}
-                            title={item.id}
+                            title={item.name}
                         >
 
                         <!-- Score preview -->
@@ -914,7 +866,7 @@
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.id}
+                                title={card.name}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
