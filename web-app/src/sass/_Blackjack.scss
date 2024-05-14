@@ -176,15 +176,15 @@
 
     // Card images
     .card-image-small {
-        z-index: 10;
-        transition: transform 0.2s;
-        opacity: 1;
-        flex: 0 0 auto;
+        // z-index: 10;
+        // transition: transform 0.2s;
+        // opacity: 1;
+        // flex: 0 0 auto;
 
-        // Image tag
-        img {
-            max-height: 200px !important;
-        }
+        // // Image tag
+        // img {
+        //     max-height: 200px !important;
+        // }
 
         // Selected card
         .selected {
@@ -214,7 +214,7 @@
         grid-template-columns: 5fr 1fr;
         place-items: center;
 
-        opacity: 0;
+        // opacity: 0;
 
         .player-team {
             display: grid;
@@ -279,7 +279,7 @@
     margin-left: 2rem;
 
     filter: drop-shadow(0 10px 5px rgba(0, 0, 0, 0.5));
-    opacity: 0;
+    // opacity: 0;
 
     // Round Counter
     .round-counter-container {
@@ -549,11 +549,11 @@
     cursor: pointer;
 }
 
-/* Fade out animation */
-.fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
+// /* Fade out animation */
+// .fade-out {
+//     opacity: 0;
+//     transition: opacity 0.5s ease-in-out;
+// }
 
 .faded {
     opacity: 0.33;
@@ -614,13 +614,13 @@
 /* Slide down animation */
 .anim-slide-down {
     animation: 0.5s 1 ease-out slide-down;
-    animation-delay: 0.33s;
-    animation-fill-mode: forwards;
+    // animation-delay: 0.33s;
+    // animation-fill-mode: forwards;
 }
 .anim-slide-down-2 {
     animation: 0.5s 1 ease-out slide-down;
-    animation-delay: 0.66s;
-    animation-fill-mode: forwards;
+    // animation-delay: 0.66s;
+    // animation-fill-mode: forwards;
 }
 @keyframes slide-down {
     from {
