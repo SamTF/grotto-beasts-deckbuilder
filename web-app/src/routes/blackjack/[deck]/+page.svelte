@@ -115,32 +115,53 @@
         const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
         const challenger = challengersFiltered[i]
 
+        if (round <= 5) return challenger
+
         // Edit properties for Endless Mode
         if (round > 5) {
             switch (round) {
-                case 6:
-                    challenger.power = 2
-                    challenger.goal = 20
-                    break
-                
                 case 7:
                     challenger.power = 3
-                    challenger.goal = 20
+                    challenger.goal = 21
                     break
                 
                 case 8:
-                    challenger.power = 2
-                    challenger.goal = 21
+                    challenger.goal = 22
+                    maxGoal = 26
+                    toast.success('Bust out value has been INCREASED to 26!!', { duration: 2000 })
                     break
                 
                 case 9:
-                    challenger.power = 3
-                    challenger.goal = 21
+                    challenger.power = 2
+                    challenger.goal = 26
+                    maxGoal = 26
+                    break
+
+                case 10:
+                    challenger.power = 2
+                    challenger.goal = 28
+                    maxGoal = 31
+                    toast.success('Bust out value has been INCREASED to 31!!', { duration: 2000 })
                     break
                 
-                default:
+                case 11:
                     challenger.power = 3
-                    challenger.goal = 21
+                    challenger.goal = 13
+                    maxGoal = 13
+                    toast.success('Bust out value has been DECREASED to 13!!', { duration: 2000 })
+                    break
+                
+                case 12:
+                    challenger.goal = 42
+                    maxGoal = 45
+                    toast.success('Bust out value has been INCREASED to 45!!', { duration: 2000 })
+                
+                default:
+                    let x = [13, 18, 21, 28, 36, 42, 50]
+                    let y = Math.floor( Math.random() * (x.length - 1))
+                    challenger.power = 3
+                    challenger.goal = y
+                    maxGoal = y
                     break
             }
         }
@@ -622,10 +643,21 @@
     }
 
     const helpGoal = () => {
-        toast.success("Your score aim. Score this value or higher in order to win.\nBut be careful, if you go over 21 points you will bust out!", {
-            duration: 8000,
-            icon: '🐱'
-        })
+        // NORMAL MODE
+        if (roundCounter <= 5) {
+            toast.success("Your score aim. Score this value or higher in order to win.\nBut be careful, if you go over 21 points you will bust out!", {
+                duration: 8000,
+                icon: '🐱'
+            })
+        }
+        // ENDLESS MODE
+        else {
+            toast.success(`Current Score goal: ${challengerGoal}\nCurrent Bust value: ${maxGoal}\n\nScore at least ${challengerGoal} without going over ${maxGoal}!`, {
+                duration: 8000,
+                icon: '🐱'
+            })
+        }
+        
     }
 
     const helpChallenger = () => {
@@ -659,9 +691,10 @@
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
-    const maxGoal = 21
+    // const maxGoal = 21
 
     // Variables
+    let maxGoal = 21
     let workingDeck = []
     let hand = []
     let selectedCards = []
@@ -760,6 +793,7 @@
         </div>
         <!-- Challenger Info Box -->
         <div class="game-opponent-challenger anim-wiggle-sm" style={`animation-delay: ${Math.random() * -3}s;`}>
+            <!-- Challenger Name -->
             <div
                 class="challenger-name hover-outline"
                 class:challenger-name-sm={challenger.name?.length > 15}
@@ -768,6 +802,7 @@
                 <p>{challenger.name || ''}</p>
             </div>
 
+            <!-- Challanger Picture -->
             <div class="challenger-avatar-container">
                 <a href={`/card/${challenger.number}`} target="_blank">
                     <div
@@ -778,15 +813,33 @@
                 </a>
             </div>
 
-            <div class="challenger-goal hover-outline" on:click={helpGoal}>
-                <span class="goal-text">Goal:</span>
-                <div class="goal-value-container">
-                    <span
-                        class="goal-value tilt"
-                        use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
-                    >{challenger?.goal || ''}</span>
+            <!-- Challenger Goal -->
+
+            <!-- Normal Mode -->
+            {#if roundCounter <= 5}
+                <div class="challenger-goal hover-outline" on:click={helpGoal}>
+                    <span class="goal-text">Goal:</span>
+                    <div class="goal-value-container">
+                        <span
+                            class="goal-value tilt"
+                            use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
+                        >{challenger?.goal || ''}</span>
+                    </div>
                 </div>
-            </div>
+            
+            <!-- Endless mode -->
+            {:else}
+                <div class="challenger-goal hover-outline" on:click={helpGoal}>
+                    <span class="goal-text">Goal:</span>
+                    <div class="goal-value-container goal-bust-value-container">
+                        <div class="goal-bust-values tilt" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>
+                            <span class="endless-goal-value">{challengerGoal}</span>
+                            <span class="endless-bust-value">{maxGoal}</span>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+            
         </div>
 
         <!-- Challenger Tenacity -->
@@ -1112,4 +1165,25 @@
             opacity: 0;
         }
     }
+
+    /* Endless */
+    .goal-bust-values {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        width: 80%;
+    }
+    .goal-bust-values span {
+        width: 50%;
+    }
+    .goal-bust-values span:first-child {
+        background-color: var(--colour-blue-dark);
+        border-radius: 1rem 0 0 1rem;
+    }
+    .goal-bust-values span:nth-child(2) {
+        background-color: var(--colour-accent);
+        border-radius: 0 1rem 1rem 0;
+    }
+
+    
 </style>
