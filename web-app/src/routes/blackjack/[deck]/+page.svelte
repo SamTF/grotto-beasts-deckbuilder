@@ -4,6 +4,7 @@
     import DeckHeader from "$components/Deck/DeckHeader.svelte"
     import Meta from '$components/Meta/Meta.svelte'
     import Checkbox from '$components/UI/Checkbox.svelte'
+    import SettingsItem from "../../../components/Blackjack/SettingsItem.svelte"
     import { CardTypes, countCardType } from "$lib/cardUtils"
     import Popup from '$components/UI/Popups/Popup.svelte'
     import PopupBlackjackVictory from "$components/UI/Popups/PopupBlackjackVictory.svelte"
@@ -699,8 +700,14 @@
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
-        // await delay(500)
         loaded = true
+
+        // Remove intro animation classes (this is stupid)
+        await delay(500)
+        const x = document.querySelectorAll('.ui-sidebar')
+        for (const card of x) {
+            card.classList.remove('anim-slide-down')
+        }
     })
 
     // SVELTE-DND-ACTION
@@ -854,30 +861,10 @@
         </div>
 
         <!-- Settings -->
-        <div class="settings-item hover-outline anim-wiggle-sm" on:click={() => {window.open('help', '_blank').focus()}}>
-            <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
-                <img src="/images/emotes/Q.png" alt="meowdy" height="24">
-                <span>How To Play</span>
-            </span>
-        </div>
-
-        <div class="settings-item hover-outline anim-wiggle-sm">
-            <span class="center-row" style="gap: 0.5rem" on:click={helpTrainingMode}>
-                <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
-                <span>Training Wheels</span>
-            </span>
-
-            <Checkbox bind:checked={showScorePreview} />
-        </div>
-
-        <div class="settings-item hover-outline anim-wiggle-sm">
-            <span class="center-row" style="gap: 0.5rem" on:click={helpDancingMode}>
-                <img src="/images/emotes/meowdy.png" alt="meowdy" height="24">
-                <span>No Dancing</span>
-            </span>
-
-            <Checkbox bind:checked={reducedMotion} />
-        </div>
+        <SettingsItem text='How To Play' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('help', '_blank').focus()} } />
+        <SettingsItem text='Training Wheels' emote='meowdy.png' bind:toggle={showScorePreview} onClick={helpTrainingMode} />
+        <SettingsItem text='No Dancing' emote='meowdy.png' bind:toggle={reducedMotion} onClick={helpDancingMode} />
+        <SettingsItem text='Feedback Survey' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('survey', '_blank').focus()} } />
     </div>
     {/if}
 
