@@ -14,7 +14,7 @@
     import toast from 'svelte-french-toast'
     import { onMount } from "svelte"
     import svelteTilt from 'vanilla-tilt-svelte'
-    import { v4 as uuidv4 } from 'uuid';
+    import { nanoid } from 'nanoid'
 
     // drag and drop
     import {flip} from "svelte/animate"
@@ -38,7 +38,7 @@
             for (let i = 0; i < c.quantity; i++) {
                 // Create a new simplified card Object with a UUID
                 const { number, name, type, imageURL, cost, power } = c
-                const newCard = { number, name, type, imageURL, cost, power, id: uuidv4() }
+                const newCard = { number, name, type, imageURL, cost, power, id: nanoid() }
                 
                 // add card to deck
                 deck.push(newCard)
