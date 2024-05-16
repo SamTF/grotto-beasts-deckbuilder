@@ -547,6 +547,7 @@
 .hover-outline:hover {
     outline: 2px solid white;
     cursor: pointer;
+    z-index: 100;
 }
 
 // /* Fade out animation */
@@ -651,4 +652,49 @@
 .invisible {
     opacity: 0;
     visibility: hidden;
+}
+
+// CARD EFFECTS
+
+// 1. Debuffed Card Effect
+.playing-card.debuffed,
+.team-card.debuffed {
+    position: relative;
+    opacity: 0.75;
+    filter: brightness(0.5);
+    
+    img {
+        opacity: 0.75 !important;
+    }
+}
+// Overrides for played cards
+.team-card.debuffed {
+    &::after {
+        top: 50%;
+        left: 50%;
+    }
+
+    .score {
+        display: none !important;
+        visibility: none !important;
+    }
+}
+
+// 2. Negative
+.playing-card.negative,
+.team-card.negative {
+    filter: brightness(1) invert(1);
+}
+
+// 3. Half-Debuff
+.playing-card.debuff-half,
+.team-card.debuff-half {
+    filter: sepia(100%);
+}
+
+// UI EFFECTS
+.ui-sidebar .debuffed {
+    opacity: 0.5;
+    filter: brightness(0.5);
+    cursor: no-drop;
 }
