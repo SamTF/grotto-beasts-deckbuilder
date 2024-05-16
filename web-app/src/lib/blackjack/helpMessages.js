@@ -1,6 +1,8 @@
 // Help messages that pop up when clicking UI Sidebar elements
 
+// Imports
 import toast from 'svelte-french-toast'
+import challengerEffects from "$lib/blackjack/challengerEffects.js"
 
 export const helpTrainingMode = () => {
     toast.success('Enables a real-time preview of each card\'s score', {
@@ -78,6 +80,15 @@ export const helpRound = (round) => {
     Round 6+ - ??? ${ round >= 6 ? '<-- you are here' : ''}
     `, {
         duration: 12000,
+        icon: '🐱'
+    })
+}
+
+export const helpChallenger2 = ( challengerID = 0 ) => {
+    let msg = challengerEffects[challengerID] || "This is the Challenger you're up against now!\nDefeat them for a shot at winning a Grottillion Dollars in the grand finale!"
+
+    toast.success(msg, {
+        duration: 8000,
         icon: '🐱'
     })
 }
