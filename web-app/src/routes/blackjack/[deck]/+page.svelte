@@ -11,7 +11,7 @@
     import PopupBlackjackLoss from "$components/UI/Popups/PopupBlackjackLoss.svelte"
     import { openModal, closeModal } from 'svelte-modals'
     import { delay } from "$lib/utils"
-    import { fade } from "svelte/transition"
+    import { fade, slide } from "svelte/transition"
     import toast from 'svelte-french-toast'
     import { onMount } from "svelte"
     import svelteTilt from 'vanilla-tilt-svelte'
@@ -22,8 +22,10 @@
     import {dndzone} from "svelte-dnd-action"
 
     // BLACKJACK
-    import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound } from "$lib/blackjack/helpMessages"
-    
+    import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound, helpChallenger2 } from "$lib/blackjack/helpMessages"
+    import { findLastBeastIndex, findBeastIds } from "$lib/blackjack/utils"
+    import challengerEffects from "$lib/blackjack/challengerEffects.js"
+
     // Props
     export let data
 
@@ -58,7 +60,11 @@
         let deck = [...cards]  // copy the value, otherwise JS passes the variable as a reference... smh my head
         let hand = []
 
-        for (let i = 0; i < 8; i++) {
+        // Check for Debuffs - Grandpa
+        if (challenger.number == 3) maxCardsInHand = 6
+
+        // Draw random starting hand
+        for (let i = 0; i < maxCardsInHand; i++) {
             // let card = deck[deck.length * Math.random() | 0]
             const i = Math.floor( Math.random() * (deck.length - 1))
             let card = deck[i]
@@ -226,7 +232,7 @@
         }
         // const numOfCards = maxCardsInHand - hand.length
         const numOfCards = selectedCards.length
-        const cards = document.querySelectorAll('.playing-card');  
+        const cards = document.querySelectorAll('.playing-card')
 
         // notification
         toast.success(`Discarding and re-drawing ${numOfCards} cards...`, {
@@ -278,6 +284,10 @@
         for (const card of x) {
             card.classList.remove('fade-out')
         }
+
+        // Update stat trackers
+        cardsDiscardedThisRound += numOfCards
+        totalCardsDiscarded += numOfCards
     }
 
     // Add a new card to hand
@@ -321,8 +331,25 @@
         for (let i = 0; i < playedCards.length; i++) {
             const card = playedCards[i];
 
+            // CHECK FOR DEBUFFS
+            // 1. Glueman
+            if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
+                // card base stats
+                let mult = card.power
+
+                // increment ONLY mult
+                totalMult += mult
+            }
+            // 2. Bugleberry
+            else if (debuffBugleberry) {
+                let chips = 0
+                let mult = 0
+                card.scorePreview = 'debuffed!'
+            }
+
+            // NORMAL SCORING
             // SCORING BEASTS
-            if (card.type == "Beast") {
+            else if (card.type == "Beast") {
                 // card base stats
                 let chips = card.cost
                 let mult = card.power
@@ -419,6 +446,9 @@
         // Sidebar UI feedback
         handScore = totalScore
 
+        // POST-SCORE EFFECTS
+        await postScoreEffects()
+
         //// RESET PLAYING FIELD AND RE-DRAW CARDS
 
         // Wait
@@ -446,7 +476,8 @@
 
         // Draw new cards to replace discarded ones IF CHOSEN
         if (drawNewHand) {
-            const numOfCards = playedCards.length
+            // const numOfCards = playedCards.length
+            const numOfCards = maxCardsInHand - hand.length
             for (let i = 0; i < numOfCards; i++) {
                 drawCard()
                 await delay(100)
@@ -514,6 +545,12 @@
                     break;
             }
 
+            // CHECK FOR DEBUFFS
+            if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
+                let mult = card.power
+                cardScorePreview = `x${mult}`
+            }
+
             card.scorePreview = cardScorePreview
         }
     }
@@ -552,6 +589,43 @@
         for (const card of x) {
             card.classList.remove('fade-out')
         }
+
+        // 6. Reset stat trackers
+        cardsDiscardedThisRound = 0
+    }
+
+    const postScoreEffects = async() => {
+        if (debuffZeraxos) {
+            const beastsInHand = findBeastIds(hand)
+            const cards = document.querySelectorAll('.playing-card')
+
+            console.log("ZERAXOSSS!!!")
+            console.log(beastsInHand)
+
+            // Add styles
+            for (const i of beastsInHand) {
+                cards[i].classList.add('sacrifice')
+                await delay(250)
+                cards[i].classList.add('fade-out')
+            }
+
+            // Wait 1 second
+            await delay(500)
+
+            // remove styles
+            for (const card of cards) {
+                card.classList.remove('fade-out')
+                card.classList.remove('sacrifice')
+            }
+
+            // remove the selected cards from hand by index
+            for (const i of beastsInHand.reverse()) {
+                hand.splice(i, 1);
+            }
+
+            // update reactive vars
+            hand = hand
+        }
     }
 
     // CONSTANTS
@@ -559,7 +633,7 @@
     let challenger = {}
     let challengerGoal = 0
     let challengerMaxHp = 0
-    const maxCardsInHand = 8
+    const baseHandSize = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
     const maxHands = 3
@@ -567,9 +641,10 @@
     // const maxGoal = 21
 
     // Variables
-    let maxGoal = 21
     let workingDeck = []
     let hand = []
+    let maxGoal = 21
+    let maxCardsInHand = 8
     let selectedCards = []
     let playedCards = []
     let actualPlayedCards = []
@@ -586,6 +661,7 @@
     // User preferences
     let showScorePreview = true
     let reducedMotion = false
+    let showChallengerEffect = false
 
     // Reactive vars
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
@@ -594,18 +670,40 @@
     $: challengerHP = challengerMaxHp - challengerHpLost
     $: handsLeft = maxHands - handsPlayed
 
+    // CHALLENGER EFFECTS
+    // 1. Glueman
+    $: debuffGlueman = challenger.number == 1
+    $: lastBeastIndex = playedCards.length > 0 ? findLastBeastIndex(playedCards) : -1
+    // 2. Bugleberry
+    $: debuffBugleberry = challenger.number == 2 && cardsDiscardedThisRound < 3
+    // 3. Grandpa
+    $: debuffGrandpa = challenger.number == 3
+    $: debuffGrandpa ? maxCardsInHand = 6 : baseHandSize
+    // 4. Demond Lord Zeraxos
+    $: debuffZeraxos = challenger.number == 4
+    // 5. JEX
+    $: debuffJEX = challenger.number == 5
+    $: debuffJEX ? discards = 3 : 0
+
+    // Stats trackers
+    let totalHandsPlayed = 0
+    let totalDiscardsUsed = 0
+    let cardsDiscardedThisRound = 0
+    let totalCardsDiscarded = 0
+
     // Set this stuff ONCE on page load
     onMount(async() => {
-        // deck and starting hand
-        deck = populateDeck(data.fullCards)
-        workingDeck = [...deck]
-        hand = startingHand(deck)
-
         // challenger
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
+        // deck and starting hand
+        deck = populateDeck(data.fullCards)
+        workingDeck = [...deck]
+        hand = startingHand(deck)
+
+        // set loaded state
         loaded = true
 
         // Remove intro animation classes (this is stupid)
@@ -670,7 +768,7 @@
             <div
                 class="challenger-name hover-outline"
                 class:challenger-name-sm={challenger.name?.length > 15}
-                on:click={helpChallenger}
+                on:click={() => { helpChallenger2(challenger.number) }}
             >
                 <p>{challenger.name || ''}</p>
             </div>
@@ -681,13 +779,29 @@
                     <div
                         class="challenger-pic tilt"
                         style={`background-image: url("${challenger.imageURL?.small || 'https://imageplaceholder.net/1'}");`}
-                        use:svelteTilt={{ reverse: true, glare: true, "max-glare": 0.5 }}
+                        use:svelteTilt={{ max: 25, reverse: true, glare: true, "max-glare": 0.5 }}
                     ></div>
                 </a>
             </div>
 
-            <!-- Challenger Goal -->
+            <!-- Challenger Effect -->
+            {#if challenger.number in challengerEffects}
+                <div class="challenger-effect hover-outline" on:click={() => {showChallengerEffect = !showChallengerEffect}}>
+                    <div class="center">
+                        <span class="challenger-effect-header">EFFECT</span>
 
+                        {#if showChallengerEffect}
+                            <span
+                                class="challenger-effect-text"
+                                transition:slide
+                                use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
+                            >{challengerEffects[challenger.number]}</span>
+                        {/if}
+                    </div>
+                </div>
+            {/if}
+
+            <!-- Challenger Goal -->
             <!-- Normal Mode -->
             {#if roundCounter <= 5}
                 <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
@@ -775,6 +889,7 @@
                 class="ui-discards-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
                 on:click={helpDiscards}
+                class:debuffed={debuffJEX}
             >
                 <h2>Discards</h2>
 
@@ -791,6 +906,7 @@
         <SettingsItem text='Training Wheels' emote='meowdy.png' bind:toggle={showScorePreview} onClick={helpTrainingMode} />
         <SettingsItem text='No Dancing' emote='meowdy.png' bind:toggle={reducedMotion} onClick={helpDancingMode} />
         <SettingsItem text='Feedback Survey' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('survey', '_blank').focus()} } />
+        <SettingsItem text='NEXT ROUND' emote='Q.png' hasToggleBtn={false} onClick={ nextRound } />
     </div>
     {/if}
 
@@ -821,6 +937,8 @@
                         animate:flip={{duration:flipDurationMs}}
                         on:contextmenu={() => moveToHand(i)}
                         use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+                        class:debuffed={debuffBugleberry}
+                        class:debuff-half={debuffGlueman && item.type == "Beast" && i != lastBeastIndex}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
@@ -862,6 +980,7 @@
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
                             use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+                            class:debuffed={debuffBugleberry}
                         >
                             <img
                                 src={card.imageURL.small}
@@ -879,7 +998,7 @@
 
                 <!-- Cards in hand -->
                 <div class="cards-in-hand center">
-                    <span>{hand.length} / 8</span>
+                    <span>{hand.length} / {maxCardsInHand}</span>
                 </div>
 
                 <!-- The Play & Discard buttons -->
@@ -968,9 +1087,18 @@
 <span class="no-anim"></span>
 <span class="hover-outline"></span>
 <span class="anim-slide-in"></span>
+<span class="sacrifice" style="display: none;"><img src="" alt=""></span>
 
 <!-- CSS -->
 <style>
+    .sacrifice {
+        visibility: visible;
+    }
+    .sacrifice img {
+        filter: hue-rotate(100deg) contrast(200%) saturate(70%) invert(90%);
+        /* filter: brightness(0.7) contrast(1.2) sepia(1) saturate(3) hue-rotate(-10deg); */
+    }
+
     /* Card image page specific overrides */
     .card-image-small {
         transition: transform 0.2s;
@@ -1058,5 +1186,34 @@
         border-radius: 0 1rem 1rem 0;
     }
 
+    /* Challenger Effect Text */
+    .challenger-effect {
+        height: fit-content;
+
+        border-top: 2px solid var(--colour-accent);
+        border-bottom: 2px solid var(--colour-accent);
+        background-color: rgba(0,0,0,.2);
+
+        /* preserve line breaks */
+        white-space: pre-wrap; 
+    }
+    .challenger-effect-text {
+        width: 90%;
+
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+
+        font-size: 1.25rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        background-color: #123857a1;
+        border-radius: 1rem;
+
+        box-shadow: inset 8px 8px 17px #0f304a,
+                    inset -8px -8px 17px #154064;
+    }
+    /* no longer hard-code the height of the challenger box */
+    .ui-sidebar .game-opponent-challenger {
+        height: fit-content;
+    }
     
 </style>
