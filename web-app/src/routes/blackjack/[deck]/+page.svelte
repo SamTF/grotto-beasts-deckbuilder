@@ -365,6 +365,20 @@
                 let mult = 0
                 card.scorePreview = 'debuffed!'
             }
+            // 7. Jerma
+            else if (debuffJerma && card.type == "Wish") {
+                let chips = card.cost
+
+                // Negative Score
+                if (card.status == 'Negative') {
+                    totalScore -= chips
+                }
+                // Double Score
+                else if (card.status == 'Double') {
+                    chips = chips * 2
+                    totalScore += chips
+                }
+            }
 
             // NORMAL SCORING
             // SCORING BEASTS
@@ -568,6 +582,14 @@
             if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
                 let mult = card.power
                 cardScorePreview = `x${mult}`
+            }
+            else if (debuffJerma && card.type == "Wish") {
+                if (card.status == 'Negative') {
+                    cardScorePreview = `-${card.cost}`
+                }
+                else if (card.status == 'Double') {
+                    cardScorePreview = `+${card.cost * 2}`
+                }
             }
 
             card.scorePreview = cardScorePreview
