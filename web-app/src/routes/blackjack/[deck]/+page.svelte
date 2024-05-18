@@ -288,6 +288,7 @@
         // Update stat trackers
         cardsDiscardedThisRound += numOfCards
         totalCardsDiscarded += numOfCards
+        totalDiscardsUsed++
     }
 
     // Add a new card to hand
@@ -319,6 +320,7 @@
 
         // Increment hands played
         handsPlayed++
+        totalHandsPlayed++
 
         // init vars
         let totalScore = 0
@@ -684,6 +686,8 @@
     // 5. JEX
     $: debuffJEX = challenger.number == 5
     $: debuffJEX ? discards = 3 : 0
+    // 6. Mr Greenz
+    $: debuffMrGreenz = challenger.number == 6
 
     // Stats trackers
     let totalHandsPlayed = 0
