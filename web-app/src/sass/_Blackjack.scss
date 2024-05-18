@@ -700,6 +700,10 @@
     img {
         filter: drop-shadow(0 0 10px gold);
     }
+
+    .score {
+        filter: hue-rotate(30deg) contrast(66%) brightness(0.8);
+    }
 }
 
 // UI EFFECTS
