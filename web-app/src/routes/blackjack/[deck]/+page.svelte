@@ -23,7 +23,7 @@
 
     // BLACKJACK
     import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound, helpChallenger2 } from "$lib/blackjack/helpMessages"
-    import { findLastBeastIndex, findBeastIds } from "$lib/blackjack/utils"
+    import { findLastBeastIndex, findBeastIds, jermaEffect } from "$lib/blackjack/utils"
     import challengerEffects from "$lib/blackjack/challengerEffects.js"
 
     // Props
@@ -65,9 +65,16 @@
 
         // Draw random starting hand
         for (let i = 0; i < maxCardsInHand; i++) {
-            // let card = deck[deck.length * Math.random() | 0]
+            // get random card
             const i = Math.floor( Math.random() * (deck.length - 1))
             let card = deck[i]
+
+            // CHECK FOR CHALLENGERS EFFECTS
+            // 7. Jerma
+            if (challenger.number == 7 && card.type == 'Wish') {
+                console.log("JERMA")
+                card = jermaEffect(card)
+            }
 
             // add card to hand
             hand.push(card)
@@ -88,6 +95,8 @@
         // init vars
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
+
+        return challengersFiltered[6]
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -296,15 +305,23 @@
         // check if user hasn't exceeded maximum
         if (hand.length >+ maxCardsInHand) return
         
-        // draw random card and add it to hand
+        // draw random card
         let card = workingDeck[workingDeck.length * Math.random() | 0]
-        hand = [...hand, card]
-
+        
         // remove that card from deck
         const index = workingDeck.findIndex(x => x.id === card.id)
         if (index !== -1) {
             workingDeck.splice(index, 1);
         }
+
+        // CHECK FOR CHALLENGERS EFFECTS
+        if (debuffJerma && card.type == 'Wish') {
+            console.log("JERMA")
+            card = jermaEffect(card)
+        }
+        
+        // Add card to hand
+        hand = [...hand, card]
 
         // update reactive values
         workingDeck = workingDeck
@@ -597,12 +614,24 @@
     }
 
     const postScoreEffects = async() => {
+        // 4. Demond Lord Zeraxos
+        // -> Discard ALL Beasts in hand
         if (debuffZeraxos) {
+            // Find all Beasts in hand
             const beastsInHand = findBeastIds(hand)
             const cards = document.querySelectorAll('.playing-card')
 
-            console.log("ZERAXOSSS!!!")
-            console.log(beastsInHand)
+            // Check if there even are any Beasts in hand
+            if (beastsInHand.length <= 0) return
+
+            // UI Feedback
+            toast.success(
+                "Demon Lord Zeraxos has sacrificed all your unplayed Beasts!!",
+                {
+                    icon: '💀',
+                    duration: 2000
+                }
+            )
 
             // Add styles
             for (const i of beastsInHand) {
@@ -627,6 +656,21 @@
 
             // update reactive vars
             hand = hand
+        }
+
+        // 6. Mr Greenz
+        // -> Double Goal after every hand played
+        if (debuffMrGreenz) {
+            challengerGoal = 2 * challengerGoal
+
+            // UI Feedback
+            toast.success(
+                "Double or Nothing: Mr Greenz's Goal just doubled!!",
+                {
+                    icon: '💀',
+                    duration: 2000
+                }
+            )
         }
     }
 
@@ -688,6 +732,9 @@
     $: debuffJEX ? discards = 3 : 0
     // 6. Mr Greenz
     $: debuffMrGreenz = challenger.number == 6
+    // 7. Jerma
+    $: debuffJerma = challenger.number == 7
+    $: console.log(hand)
 
     // Stats trackers
     let totalHandsPlayed = 0
@@ -814,7 +861,7 @@
                         <span
                             class="goal-value tilt"
                             use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
-                        >{challenger?.goal || ''}</span>
+                        >{challengerGoal || ''}</span>
                     </div>
                 </div>
             
@@ -935,30 +982,33 @@
                 on:finalize="{dndPlayerTeamDrop}"
                 
             >
-                {#each playedCards as item, i (item.id)}
+                {#each playedCards as card, i (card.id)}
                     <div
                         class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
                         on:contextmenu={() => moveToHand(i)}
                         use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+
                         class:debuffed={debuffBugleberry}
-                        class:debuff-half={debuffGlueman && item.type == "Beast" && i != lastBeastIndex}
+                        class:debuff-half={debuffGlueman && card.type == "Beast" && i != lastBeastIndex}
+                        class:double={card.status == 'Double'}
+                        class:negative={card.status == 'Negative'}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
                         <img
-                            src={item.imageURL.small}
-                            alt={item.name}
+                            src={card.imageURL.small}
+                            alt={card.name}
                             class='no-anim-wiggle'
                             class:selected={i+1 <= cardsScored}
-                            title={item.name}
+                            title={card.name}
                         >
 
                         <!-- Score preview -->
                         <!-- A: Always Shown -->
-                        {#if (showScorePreview || i+1 <= cardsScored) && item.scorePreview}
+                        {#if (showScorePreview || i+1 <= cardsScored) && card.scorePreview}
                             <div class="score" class:selected-offset={i+1 <= cardsScored}>
-                                <span>{item.scorePreview}</span>
+                                <span>{card.scorePreview}</span>
                             </div>    
                         {/if}
                         {/key}
@@ -984,12 +1034,15 @@
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
                             use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+                            
                             class:debuffed={debuffBugleberry}
+                            class:double={card.status == 'Double'}
+                            class:negative={card.status == 'Negative'}
                         >
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.name}
+                                title={`${card.status == undefined ? card.name : card.status + ' ' + card.name}`}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
