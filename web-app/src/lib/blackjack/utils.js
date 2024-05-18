@@ -25,3 +25,18 @@ export const findBeastIds = (cards) => {
 
     return indices
 }
+
+export const jermaEffect = card => {
+    let status
+    const flip = Math.random()
+    
+    if (flip <= 0.5) {
+        status = 'Negative'
+    } else {
+        status = 'Double'
+    }
+
+    card.status = status
+
+    return card
+}
