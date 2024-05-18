@@ -683,13 +683,23 @@
 // 2. Negative
 .playing-card.negative,
 .team-card.negative {
-    filter: brightness(1) invert(1);
+    filter:  invert(0.8) brightness(1.2);
 }
 
 // 3. Half-Debuff
 .playing-card.debuff-half,
 .team-card.debuff-half {
     filter: sepia(100%);
+}
+
+// 4. Golden Card
+.playing-card.double,
+.team-card.double {
+    filter: hue-rotate(-30deg) contrast(150%) brightness(1.2);
+
+    img {
+        filter: drop-shadow(0 0 10px gold);
+    }
 }
 
 // UI EFFECTS
