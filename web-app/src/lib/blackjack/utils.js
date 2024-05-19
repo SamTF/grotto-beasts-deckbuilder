@@ -1,5 +1,8 @@
 // Random assortment of utility functions used only in the Blackjack game
 
+// Imports
+import StatusTypes from "$lib/blackjack/statusTypes.js"
+
 // Find the index of the last played Beast
 export const findLastBeastIndex = (cards) => {
     for (let i = cards.length - 1; i >= 0; i--) {
@@ -31,9 +34,9 @@ export const jermaEffect = card => {
     const flip = Math.random()
     
     if (flip <= 0.5) {
-        status = 'Negative'
+        status = StatusTypes.NEGATIVE
     } else {
-        status = 'Double'
+        status = StatusTypes.DOUBLE
     }
 
     card.status = status
