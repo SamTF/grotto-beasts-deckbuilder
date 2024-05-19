@@ -79,6 +79,10 @@
             else if (challenger.number == 9 && card.type == 'Grotto') {
                 card.status = StatusTypes.DOUBLE
             }
+            // 10. JermaVenus
+            else if (debuffVenus && card.type != 'Beast') {
+                card.status = StatusTypes.DEBUFFED
+            }
 
             // add card to hand
             hand.push(card)
@@ -100,7 +104,7 @@
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
 
-        return challengersFiltered[8]
+        return challengersFiltered[10]
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -327,6 +331,10 @@
         else if (debuffEarth && card.type == 'Grotto') {
             card.status = StatusTypes.DOUBLE
         }
+        // 10. JermaVenus
+        else if (debuffVenus && card.type != 'Beast') {
+            card.status = StatusTypes.DEBUFFED
+        }
         
         // Add card to hand
         hand = [...hand, card]
@@ -367,8 +375,8 @@
                 // increment ONLY mult
                 totalMult += mult
             }
-            // 2. Bugleberry
-            else if (debuffBugleberry) {
+            // 2. Bugleberry // DEBUFF in general
+            else if (debuffBugleberry || card.status == StatusTypes.DEBUFFED) {
                 let chips = 0
                 let mult = 0
                 card.scorePreview = 'debuffed!'
@@ -783,6 +791,8 @@
     $: debuffCarl ? challengerGoal = challenger.goal + cardsDiscardedThisRound : challenger.goal
     // 9. Jerma Earth
     $: debuffEarth = challenger.number == 9
+    // 11. Jerma Venus
+    $: debuffVenus = challenger.number == 11
 
     // Stats trackers
     let totalHandsPlayed = 0
@@ -1037,10 +1047,10 @@
                         on:contextmenu={() => moveToHand(i)}
                         use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
 
-                        class:debuffed={debuffBugleberry}
+                        class:debuffed={debuffBugleberry || card.status == StatusTypes.DEBUFFED}
                         class:debuff-half={debuffGlueman && card.type == "Beast" && i != lastBeastIndex}
-                        class:double={card.status == 'Double'}
-                        class:negative={card.status == 'Negative'}
+                        class:double={card.status == StatusTypes.DOUBLE}
+                        class:negative={card.status == StatusTypes.NEGATIVE}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
@@ -1083,9 +1093,9 @@
                             animate:flip={{duration:flipDurationMs}}
                             use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
                             
-                            class:debuffed={debuffBugleberry}
-                            class:double={card.status == 'Double'}
-                            class:negative={card.status == 'Negative'}
+                            class:debuffed={debuffBugleberry || card.status == StatusTypes.DEBUFFED}
+                            class:double={card.status == StatusTypes.DOUBLE}
+                            class:negative={card.status == StatusTypes.NEGATIVE}
                         >
                             <img
                                 src={card.imageURL.small}

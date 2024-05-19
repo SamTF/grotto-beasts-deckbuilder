@@ -8,6 +8,7 @@ const challengerEffects = {
     7: "All Wishes become either Negative or Doubled",
     8: "Gains +1 Goal per Discard used this game",
     9: "Grottos give Double Mult",
+    11: "All Non-Beast cards are Debuffed",
 }
 
 export default challengerEffects
