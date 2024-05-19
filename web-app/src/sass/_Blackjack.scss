@@ -13,7 +13,8 @@
 .play-area {
     width: 100%;
     display: grid;
-    grid-template-rows: 5fr 6fr;
+    // grid-template-rows: 5fr 6fr;
+    grid-template-rows: 4fr 6fr;
     align-items: start;
     justify-items: center;
 
@@ -661,7 +662,7 @@
 .team-card.debuffed {
     position: relative;
     opacity: 0.75;
-    filter: brightness(0.5);
+    filter: brightness(0.75) contrast(0.75) blur(1px);
     
     img {
         opacity: 0.75 !important;
