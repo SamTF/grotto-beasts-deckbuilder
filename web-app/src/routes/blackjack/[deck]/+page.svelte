@@ -59,43 +59,16 @@
     // Draw 8 random cards from the deck to create the starting hand
     const startingHand = (cards) => {
         let deck = [...cards]  // copy the value, otherwise JS passes the variable as a reference... smh my head
-        let hand = []
+        workingDeck = [...cards]
+        hand = []
 
         // Check for Debuffs - Grandpa
         if (challenger.number == 3) maxCardsInHand = 6
 
         // Draw random starting hand
         for (let i = 0; i < maxCardsInHand; i++) {
-            // get random card
-            const i = Math.floor( Math.random() * (deck.length - 1))
-            let card = deck[i]
-
-            // CHECK FOR CHALLENGERS EFFECTS
-            // 7. Jerma
-            if (challenger.number == 7 && card.type == 'Wish') {
-                card = jermaEffect(card)
-            }
-            // 9. JermaEarth
-            else if (challenger.number == 9 && card.type == 'Grotto') {
-                card.status = StatusTypes.DOUBLE
-            }
-            // 10. JermaVenus
-            else if (debuffVenus && card.type != 'Beast') {
-                card.status = StatusTypes.DEBUFFED
-            }
-
-            // add card to hand
-            hand.push(card)
-
-            // remove card from deck
-            deck.splice(i, 1)
+            drawCard()
         }
-
-        // save the remaining cards in the deck to the "working deck"
-        workingDeck = deck
-
-        // return cards in hand
-        return hand
     }
 
     // Choose a random challenger based on the current round
@@ -104,7 +77,7 @@
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
 
-        return challengersFiltered[10]
+        // return challengersFiltered[0]
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -530,7 +503,6 @@
 
         // Draw new cards to replace discarded ones IF CHOSEN
         if (drawNewHand) {
-            // const numOfCards = playedCards.length
             const numOfCards = maxCardsInHand - hand.length
             for (let i = 0; i < numOfCards; i++) {
                 drawCard()
@@ -646,8 +618,8 @@
         await delay(400)
 
         // 3. Shuffle the deck and deal new hand
-        workingDeck = [...deck]
-        hand = startingHand(deck)
+        // workingDeck = [...deck]
+        startingHand(deck)
 
         // 4. pick a new challenger
         challenger = getChallenger(roundCounter)
@@ -807,10 +779,12 @@
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
+        await delay(10)
+
         // deck and starting hand
         deck = populateDeck(data.fullCards)
         workingDeck = [...deck]
-        hand = startingHand(deck)
+        startingHand(deck)
 
         // set loaded state
         loaded = true
