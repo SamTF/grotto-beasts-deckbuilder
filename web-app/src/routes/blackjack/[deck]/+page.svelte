@@ -25,6 +25,7 @@
     import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound, helpChallenger2 } from "$lib/blackjack/helpMessages"
     import { findLastBeastIndex, findBeastIds, jermaEffect } from "$lib/blackjack/utils"
     import challengerEffects from "$lib/blackjack/challengerEffects.js"
+    import StatusTypes from "$lib/blackjack/statusTypes.js"
 
     // Props
     export let data
@@ -72,8 +73,11 @@
             // CHECK FOR CHALLENGERS EFFECTS
             // 7. Jerma
             if (challenger.number == 7 && card.type == 'Wish') {
-                console.log("JERMA")
                 card = jermaEffect(card)
+            }
+            // 9. JermaEarth
+            else if (challenger.number == 9 && card.type == 'Grotto') {
+                card.status = StatusTypes.DOUBLE
             }
 
             // add card to hand
@@ -96,7 +100,7 @@
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
 
-        return challengersFiltered[6]
+        return challengersFiltered[8]
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -315,9 +319,13 @@
         }
 
         // CHECK FOR CHALLENGERS EFFECTS
+        // 7. Jerma
         if (debuffJerma && card.type == 'Wish') {
-            console.log("JERMA")
             card = jermaEffect(card)
+        }
+        // 9. JermaEarth
+        else if (debuffEarth && card.type == 'Grotto') {
+            card.status = StatusTypes.DOUBLE
         }
         
         // Add card to hand
@@ -378,6 +386,11 @@
                     chips = chips * 2
                     totalScore += chips
                 }
+            }
+            // 9. Jerma Earth
+            else if (debuffEarth && card.type == 'Grotto') {
+                let mult = card.cost * 2
+                totalMult += mult
             }
 
             // NORMAL SCORING
@@ -579,10 +592,12 @@
             }
 
             // CHECK FOR DEBUFFS
+            // 1. Glueman
             if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
                 let mult = card.power
                 cardScorePreview = `x${mult}`
             }
+            // 7. Jerma
             else if (debuffJerma && card.type == "Wish") {
                 if (card.status == 'Negative') {
                     cardScorePreview = `-${card.cost}`
@@ -591,7 +606,14 @@
                     cardScorePreview = `+${card.cost * 2}`
                 }
             }
+            // 9. Jerma Earth
+            else if (debuffEarth && card.type == 'Grotto') {
+                let mult = card.cost
+                totalMult += mult
+                cardScorePreview = `x${mult * 2}`
+            }
 
+            // Set score preview on card
             card.scorePreview = cardScorePreview
         }
     }
@@ -756,7 +778,11 @@
     $: debuffMrGreenz = challenger.number == 6
     // 7. Jerma
     $: debuffJerma = challenger.number == 7
-    $: console.log(hand)
+    // 8. Carl Griffenstead
+    $: debuffCarl = challenger.number == 8
+    $: debuffCarl ? challengerGoal = challenger.goal + cardsDiscardedThisRound : challenger.goal
+    // 9. Jerma Earth
+    $: debuffEarth = challenger.number == 9
 
     // Stats trackers
     let totalHandsPlayed = 0
