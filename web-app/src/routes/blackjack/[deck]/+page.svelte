@@ -77,7 +77,6 @@
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
 
-        // return challengersFiltered[0]
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -373,7 +372,7 @@
                 let mult = card.cost * 2
                 totalMult += mult
             }
-
+            
             // NORMAL SCORING
             // SCORING BEASTS
             else if (card.type == "Beast") {
@@ -401,6 +400,13 @@
                 // increment mult
                 let mult = card.cost
                 totalMult += mult
+            }
+
+            // CHALLENGER EFFECTS PART 2
+            // 11. Jerma Pluto
+            if (debuffPluto) {
+                totalScore -= 2
+                toast.error("-2!")
             }
 
             
@@ -592,6 +598,10 @@
                 totalMult += mult
                 cardScorePreview = `x${mult * 2}`
             }
+            // 11. Jerma Pluto
+            else if (debuffPluto) {
+                cardScorePreview += ' (-2)'
+            }
 
             // Set score preview on card
             card.scorePreview = cardScorePreview
@@ -763,8 +773,13 @@
     $: debuffCarl ? challengerGoal = challenger.goal + cardsDiscardedThisRound : challenger.goal
     // 9. Jerma Earth
     $: debuffEarth = challenger.number == 9
+    // 10. Jerma Moon
+    $: debuffMoon = challenger.number == 10
+    $: debuffMoon ? challengerGoal = challenger.goal + findBeastIds(playedCards).length * 2 : challenger.goal
     // 11. Jerma Venus
     $: debuffVenus = challenger.number == 11
+    // 12. Jerma Pluto
+    $: debuffPluto = challenger.number == 12
 
     // Stats trackers
     let totalHandsPlayed = 0
@@ -1025,6 +1040,7 @@
                         class:debuff-half={debuffGlueman && card.type == "Beast" && i != lastBeastIndex}
                         class:double={card.status == StatusTypes.DOUBLE}
                         class:negative={card.status == StatusTypes.NEGATIVE}
+                        class:sad={debuffPluto || card.status == StatusTypes.SAD}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
