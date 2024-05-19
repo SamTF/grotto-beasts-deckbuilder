@@ -6,6 +6,8 @@ const challengerEffects = {
     5: "You have no Discards",
     6: "Goal doubles after every hand",
     7: "All Wishes become either Negative or Doubled",
+    8: "Gains +1 Goal per Discard used this game",
+    9: "Grottos give Double Mult",
 }
 
 export default challengerEffects
