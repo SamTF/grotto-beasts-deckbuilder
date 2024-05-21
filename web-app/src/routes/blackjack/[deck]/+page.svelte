@@ -402,6 +402,19 @@
             // Challenger loses HP
             challengerHpLost++
 
+            // BLACKJACK BUFF -> Challenger loses 1 extra hp
+            if (totalScore == 21) {
+                toast.success("BLACKJACK!!\nYou dazzle your opponent with your insane hand!", {
+                    duration: 2000
+                })
+                challengerHpLost++
+            
+                // check for overflow
+                if (challengerHpLost > 3) challengerHpLost = 3
+
+                await delay(2000)
+            }
+
             // Check if Challenger has any remaining Tenacity
             if (challengerHpLost >= challengerMaxHp) {
                 toast.success(`You defeated ${challenger.name}!`)
