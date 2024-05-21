@@ -16,6 +16,7 @@
     import { onMount } from "svelte"
     import svelteTilt from 'vanilla-tilt-svelte'
     import { nanoid } from 'nanoid'
+    import { deepClone } from '$lib/utils'
 
     // drag and drop
     import {flip} from "svelte/animate"
@@ -30,36 +31,10 @@
     // Props
     export let data
 
-    // Create a deck from the given cards and their respective quantity
-    const populateDeck = (cards) => {
-        let deck = []
-
-        // loop over all cards and append them to the deck according to their quantity
-        cards.forEach(c => {
-            // ignore challengers
-            if (c.type == "Challenger") {
-                return
-            }
-
-            // append cards to deck
-            for (let i = 0; i < c.quantity; i++) {
-                // Create a new simplified card Object with a UUID
-                const { number, name, type, imageURL, cost, power } = c
-                const newCard = { number, name, type, imageURL, cost, power, id: nanoid() }
-                
-                // add card to deck
-                deck.push(newCard)
-            }
-        })
-
-        // return the populated deck
-        return deck
-    }
 
     // Draw 8 random cards from the deck to create the starting hand
     const startingHand = (cards) => {
-        let deck = [...cards]  // copy the value, otherwise JS passes the variable as a reference... smh my head
-        workingDeck = [...cards]
+        workingDeck = deepClone(deck)
         hand = []
 
         // Check for Debuffs - Grandpa
@@ -303,8 +278,8 @@
         else if (debuffEarth && card.type == 'Grotto') {
             card.status = StatusTypes.DOUBLE
         }
-        // 10. JermaVenus
-        else if (debuffVenus && card.type != 'Beast') {
+        // 11. JermaVenus
+        else if (challenger.number == 11 && card.type != 'Beast') {
             card.status = StatusTypes.DEBUFFED
         }
         
@@ -408,7 +383,6 @@
                 totalScore -= 2
                 toast.error("-2!")
             }
-
             
             // Updating Sidebar UI
             handScore = totalScore
@@ -424,7 +398,8 @@
         await delay(500)
 
         // Check if the score was enough to win
-        if (totalScore >= challengerGoal && totalScore <= maxGoal) {
+        if (totalScore >= challengerGoal && totalScore <= maxGoal) {            
+            // Challenger loses HP
             challengerHpLost++
 
             // Check if Challenger has any remaining Tenacity
@@ -496,6 +471,9 @@
 
     // Reset playing field after scoring
     const resetPlayTeam = async(drawNewHand = true) => {
+        // De-select all cards
+        selectedCards = []
+
         // Discard played cards
         // Instead of removing the card, make it invisible
         const cards = document.querySelectorAll('.team-card')
@@ -627,15 +605,15 @@
 
         await delay(400)
 
-        // 3. Shuffle the deck and deal new hand
-        // workingDeck = [...deck]
-        startingHand(deck)
-
-        // 4. pick a new challenger
+        // 3. pick a new challenger
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
         challengerHpLost = 0
+
+        // 4. Shuffle the deck and deal new hand
+        workingDeck = deepClone(deck)
+        startingHand(deck)
 
         // 5. REMOVE FADE OUT CLASS!!! AAAAAA
         const x = document.querySelectorAll('.playing-card')
@@ -709,7 +687,8 @@
     }
 
     // CONSTANTS
-    let deck = []
+    // let deck = []
+    const deck = deepClone(data.populatedDeck)
     let challenger = {}
     let challengerGoal = 0
     let challengerMaxHp = 0
@@ -797,9 +776,9 @@
         await delay(10)
 
         // deck and starting hand
-        deck = populateDeck(data.fullCards)
-        workingDeck = [...deck]
-        startingHand(deck)
+        // deck = populateDeck(data.fullCards)
+        workingDeck = deepClone(deck)
+        startingHand()
 
         // set loaded state
         loaded = true
@@ -865,7 +844,7 @@
             <!-- Challenger Name -->
             <div
                 class="challenger-name hover-outline"
-                class:challenger-name-sm={challenger.name?.length > 15}
+                class:challenger-name-sm={challenger.name?.length > 16}
                 on:click={() => { helpChallenger2(challenger.number) }}
             >
                 <p>{challenger.name || ''}</p>
