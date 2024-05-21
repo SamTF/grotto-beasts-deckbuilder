@@ -25,6 +25,12 @@ export async function GET({ url, params }) {
 
     const card = result.items[0]
 
+    // set image URL
+    card.imageURL = { 
+        large: `/images/cards/digital/${card.number}.webp`,
+        small: `/images/cards/digital/360/${card.number}. ${card.name}.webp` 
+    }
+
     // Cache the results for 10 mins
     setHeaders({
         "cache-control": "max-age=600",

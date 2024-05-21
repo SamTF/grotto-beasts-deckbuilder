@@ -25,7 +25,7 @@ export async function load({ url, params}) {
     const card = results.items[0]
 
     // set the card's image URL directly on the object
-    card.imageURL = `/images/cards/${card.number}. ${card.name}.webp`
+    card.imageURL = `/images/cards/digital/${card.number}.webp`
 
     // check if it has other versions
     const altVersions = await pb.collection("cards_patched").getList(1, 1, {

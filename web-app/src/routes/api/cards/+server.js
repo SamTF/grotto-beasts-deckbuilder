@@ -21,8 +21,8 @@ export async function GET({ url, params, setHeaders }) {
     for (let i = 0; i < result.items.length; i++) {
         const card = result.items[i];
         card.imageURL = { 
-            large: `/images/cards/${card.number}. ${card.name}.webp`,
-            small: `/images/cards/360/${card.number}. ${card.name}.webp` 
+            large: `/images/cards/digital/${card.number}.webp`,
+            small: `/images/cards/digital/360/${card.number}. ${card.name}.webp` 
         }
     }
 
