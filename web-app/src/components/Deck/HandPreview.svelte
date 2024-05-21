@@ -38,7 +38,7 @@
         let deck = [...cards]  // copy the value, otherwise JS passes the variable as a reference... smh my head
         let hand = []
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < startingCardsInHand; i++) {
             // let card = deck[deck.length * Math.random() | 0]
             const i = Math.floor( Math.random() * (deck.length - 1));
             let card = deck[i]
@@ -62,12 +62,20 @@
         // check if user hasn't exceeded maximum
         if (hand.length >+ maxCardsInHand) return
         
+        // draw card and add to hand
         let card = workingDeck[workingDeck.length * Math.random() | 0]
         hand = [...hand, card]
+
+        // remove that card from deck
+        const index = workingDeck.findIndex(x => x.id === card.id)
+        if (index !== -1) {
+            workingDeck.splice(index, 1);
+        }
     }
 
     // Constants
-    const maxCardsInHand = 12
+    const startingCardsInHand = 6
+    const maxCardsInHand = 15
     const deck = populateDeck(cards)
 
     // Variables
@@ -85,7 +93,9 @@
     <div class="starting-hand">
         {#each hand as card}
             <div class="card-image">
-                <a href={`/card/${card.id}`}><img src={`/images/cards/360/${card.id}. ${card.name}.webp`} alt={card.name}></a>
+                <a href={`/card/${card.id}`} target="_blank">
+                    <img src={`/images/cards/digital/360/${card.id}. ${card.name}.webp`} alt={card.name}>
+                </a>
             </div> 
         {/each}
     </div>
