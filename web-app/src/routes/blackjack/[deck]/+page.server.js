@@ -1,5 +1,6 @@
 import { pb } from '$lib/pocketbase.js'
 import { json, error, redirect } from "@sveltejs/kit"
+import { populateDeck } from '$lib/blackjack/utils'
 
 export async function load({ url, params, setHeaders}) {
     console.log(url.origin)
@@ -39,12 +40,15 @@ export async function load({ url, params, setHeaders}) {
         element.quantity = deck.cards_json.deck[i].quantity
     }
 
-    // Choose a random challenger
+    // List of all Challengers
     const challengers = allCards.original.filter(x => x.type == 'Challenger')
+
+    // Populate the deck!
+    const populatedDeck = populateDeck(fullCards)
 
     // Return simplified deck and full expanded cards
     // return { deck: deck, fullCards: fullCards, challengers: challengers }
 
     // Return serialized data
-    return { deck: structuredClone(deck), fullCards: structuredClone(fullCards), challengers: structuredClone(challengers) }
+    return { deck: structuredClone(deck), fullCards: structuredClone(fullCards), challengers: structuredClone(challengers), populatedDeck: structuredClone(populatedDeck) }
 }
