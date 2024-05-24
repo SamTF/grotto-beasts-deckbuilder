@@ -52,6 +52,10 @@
         let challengersFiltered = [...data.challengers]
         let [min, max] = [0, 21]
 
+        // ENDLESS BETA: Use only first 11 challengers in ENDLESS MODE
+        if (round > 5) {
+            challengersFiltered = challengersFiltered.slice(0, 11)
+        }
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -84,52 +88,68 @@
 
         // Get random challenger
         const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
-        const challenger = challengersFiltered[i]
+        let challenger = challengersFiltered[i]
 
         if (round <= 5) return challenger
 
         // Edit properties for Endless Mode
         if (round > 5) {
             switch (round) {
+                case 6:
+                    challenger.power = 2
+                    challenger.goal = 21
+                    break
+
                 case 7:
+                    challenger.power = 2
+                    challenger.goal = 21
+                    break
+
+                case 8:
                     challenger.power = 3
                     challenger.goal = 21
                     break
                 
-                case 8:
+                case 9:
+                    challenger = challengersFiltered[5]
+                    challenger.power = 3
+                    challenger.goal = 21
+                    break
+                
+                case 10:
                     challenger.goal = 22
                     maxGoal = 26
                     toast.success('Bust out value has been INCREASED to 26!!', { duration: 2000 })
                     break
                 
-                case 9:
+                case 11:
                     challenger.power = 2
                     challenger.goal = 26
                     maxGoal = 26
                     break
 
-                case 10:
+                case 12:
                     challenger.power = 2
                     challenger.goal = 28
                     maxGoal = 31
                     toast.success('Bust out value has been INCREASED to 31!!', { duration: 2000 })
                     break
                 
-                case 11:
+                case 13:
                     challenger.power = 3
                     challenger.goal = 13
                     maxGoal = 13
                     toast.success('Bust out value has been DECREASED to 13!!', { duration: 2000 })
                     break
                 
-                case 12:
+                case 14:
                     challenger.goal = 42
                     maxGoal = 45
                     toast.success('Bust out value has been INCREASED to 45!!', { duration: 2000 })
                 
                 default:
                     let x = [13, 18, 21, 28, 36, 42, 50]
-                    let y = Math.floor( Math.random() * (x.length - 1))
+                    let y = x[Math.floor( Math.random() * (x.length - 1))]
                     challenger.power = 3
                     challenger.goal = y
                     maxGoal = y
@@ -271,11 +291,11 @@
 
         // CHECK FOR CHALLENGERS EFFECTS
         // 7. Jerma
-        if (debuffJerma && card.type == 'Wish') {
+        if (challenger.number == 7 && card.type == 'Wish') {
             card = jermaEffect(card)
         }
         // 9. JermaEarth
-        else if (debuffEarth && card.type == 'Grotto') {
+        else if (challenger.number == 9 && card.type == 'Grotto') {
             card.status = StatusTypes.DOUBLE
         }
         // 11. JermaVenus
@@ -398,12 +418,13 @@
         await delay(500)
 
         // Check if the score was enough to win
+        console.log(`Total Score: ${totalScore}\nBust value: ${maxGoal}\nChallenger Goal: ${challengerGoal}`)
         if (totalScore >= challengerGoal && totalScore <= maxGoal) {            
             // Challenger loses HP
             challengerHpLost++
 
             // BLACKJACK BUFF -> Challenger loses 1 extra hp
-            if (totalScore == 21) {
+            if (totalScore == maxGoal) {
                 toast.success("BLACKJACK!!\nYou dazzle your opponent with your insane hand!", {
                     duration: 2000
                 })
@@ -638,6 +659,7 @@
         cardsDiscardedThisRound = 0
     }
 
+    // Challenger Effects that happen after scoring a hand
     const postScoreEffects = async() => {
         // 4. Demond Lord Zeraxos
         // -> Discard ALL Beasts in hand
@@ -683,9 +705,9 @@
             hand = hand
         }
 
-        // 6. Mr Greenz
+        // 6. Mr Greenz (ONLY IN ENDLESS)
         // -> Double Goal after every hand played
-        if (debuffMrGreenz) {
+        if (debuffMrGreenz && roundCounter > 5) {
             challengerGoal = 2 * challengerGoal
 
             // UI Feedback
@@ -741,6 +763,8 @@
     $: wishNum = countCardType(workingDeck, CardTypes.WISH)
     $: challengerHP = challengerMaxHp - challengerHpLost
     $: handsLeft = maxHands - handsPlayed
+    // Dynamically scale Max Goal if challenger goals overtakes it
+    $: if (challengerGoal > maxGoal) maxGoal = challengerGoal
 
     // CHALLENGER EFFECTS
     // 1. Glueman
@@ -762,7 +786,7 @@
     $: debuffJerma = challenger.number == 7
     // 8. Carl Griffenstead
     $: debuffCarl = challenger.number == 8
-    $: debuffCarl ? challengerGoal = challenger.goal + cardsDiscardedThisRound : challenger.goal
+    $: debuffCarl ? challengerGoal = challenger.goal + Math.floor(cardsDiscardedThisRound * 0.5) : challenger.goal
     // 9. Jerma Earth
     $: debuffEarth = challenger.number == 9
     // 10. Jerma Moon
@@ -893,8 +917,8 @@
 
             <!-- Challenger Goal -->
             <!-- Normal Mode -->
-            {#if roundCounter <= 5}
-                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
+            {#if roundCounter <= 0}
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container">
                         <span
@@ -906,7 +930,7 @@
             
             <!-- Endless mode -->
             {:else}
-                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container goal-bust-value-container">
                         <div class="goal-bust-values tilt" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>
@@ -1112,7 +1136,7 @@
                         <button
                             class="play-btn"
                             on:click={discardSelection}
-                            class:disabled={discards >= maxDiscards || selectedCards < 1}
+                            class:disabled={discards >= maxDiscards || selectedCards.length < 1}
                         >Discard</button>
                     </div>
                 </div>
