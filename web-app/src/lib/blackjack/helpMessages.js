@@ -46,21 +46,11 @@ export const helpScore = () => {
     })
 }
 
-export const helpGoal = (challengerGoal, maxGoal, round) => {
-    // NORMAL MODE
-    if (round <= 5) {
-        toast.success("Your score aim. Score this value or higher in order to win.\nBut be careful, if you go over 21 points you will bust out!", {
-            duration: 8000,
-            icon: '🐱'
-        })
-    }
-    // ENDLESS MODE
-    else {
-        toast.success(`Current Score goal: ${challengerGoal}\nCurrent Bust value: ${maxGoal}\n\nScore at least ${challengerGoal} without going over ${maxGoal}!`, {
-            duration: 8000,
-            icon: '🐱'
-        })
-    }   
+export const helpGoal = (challengerGoal, maxGoal) => {
+    toast.success(`Current Score goal: ${challengerGoal}\nCurrent Bust value: ${maxGoal}\n\nScore at least ${challengerGoal} without going over ${maxGoal}!`, {
+        duration: 8000,
+        icon: '🐱'
+    })   
 }
 
 export const helpChallenger = () => {
