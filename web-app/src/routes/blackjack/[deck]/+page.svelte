@@ -56,9 +56,9 @@
         let challengersFiltered = deepClone(data.challengers)
         let [min, max] = [0, 21]
 
-        // ENDLESS BETA: Use only first 11 challengers in ENDLESS MODE
+        // ENDLESS BETA: Use only first 12 challengers in ENDLESS MODE
         if (round > 5) {
-            challengersFiltered = challengersFiltered.slice(0, 11)
+            challengersFiltered = challengersFiltered.slice(0, 12)
         }
 
         // Filter Challengers by their Goal value depending on the current round
