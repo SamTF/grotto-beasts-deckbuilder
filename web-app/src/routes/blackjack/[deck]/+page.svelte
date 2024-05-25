@@ -38,7 +38,11 @@
         hand = []
 
         // Check for Debuffs - Grandpa
-        if (challenger.number == 3) maxCardsInHand = 6
+        if (challenger.number == 3) {
+            maxCardsInHand = 6
+        } else {
+            maxCardsInHand = baseHandSize
+        }
 
         // Draw random starting hand
         for (let i = 0; i < maxCardsInHand; i++) {
@@ -49,7 +53,7 @@
     // Choose a random challenger based on the current round
     const getChallenger = (round = 0) => {
         // init vars
-        let challengersFiltered = [...data.challengers]
+        let challengersFiltered = deepClone(data.challengers)
         let [min, max] = [0, 21]
 
         // ENDLESS BETA: Use only first 11 challengers in ENDLESS MODE
@@ -80,15 +84,21 @@
                 break
         
             default:
-                break;
+                [min, max] = [0, 20];
+                break
         }
 
-        // Filter array
-        challengersFiltered = data.challengers.filter(x => x.goal >= min && x.goal <= max)
+        // Filter array by goal
+        challengersFiltered = challengersFiltered.filter(x => x.goal >= min && x.goal <= max)
+        // Filter out the previous challenger
+        challengersFiltered = challengersFiltered.filter(challenger => challenger.number !== previousChallenger)
 
         // Get random challenger
         const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
         let challenger = challengersFiltered[i]
+
+        // Reset max goal just in case
+        maxGoal = 21
 
         if (round <= 5) return challenger
 
@@ -97,55 +107,114 @@
             switch (round) {
                 case 6:
                     challenger.power = 2
-                    challenger.goal = 21
+                    challenger.goal = 18
+                    maxGoal = 21
                     break
 
                 case 7:
                     challenger.power = 2
-                    challenger.goal = 21
+                    challenger.goal = 20
+                    maxGoal = 21
                     break
 
                 case 8:
                     challenger.power = 3
-                    challenger.goal = 21
+                    challenger.goal = 20
+                    maxGoal = 21
                     break
-                
+
                 case 9:
-                    challenger = challengersFiltered[5]
-                    challenger.power = 3
+                    challenger = data.challengers[5]
+                    challenger.power = 2
                     challenger.goal = 21
+                    maxGoal = 21
                     break
+                    
                 
                 case 10:
+                    challenger.power = 2
                     challenger.goal = 22
                     maxGoal = 26
-                    toast.success('Bust out value has been INCREASED to 26!!', { duration: 2000 })
+                    toast.success('Bust value has been INCREASED to 26!!', { duration: 2000 })
                     break
                 
                 case 11:
-                    challenger.power = 2
-                    challenger.goal = 26
+                    challenger.power = 3
+                    challenger.goal = 22
                     maxGoal = 26
                     break
+                
 
                 case 12:
                     challenger.power = 2
-                    challenger.goal = 28
+                    challenger.goal = 26
                     maxGoal = 31
-                    toast.success('Bust out value has been INCREASED to 31!!', { duration: 2000 })
+                    toast.success('Bust value has been INCREASED to 31!!', { duration: 2000 })
                     break
                 
                 case 13:
                     challenger.power = 3
-                    challenger.goal = 13
-                    maxGoal = 13
-                    toast.success('Bust out value has been DECREASED to 13!!', { duration: 2000 })
+                    challenger.goal = 28
+                    maxGoal = 31
                     break
                 
                 case 14:
+                    challenger.power = 3
+                    challenger.goal = 13
+                    maxGoal = 13
+                    toast.success('Bust value has been DECREASED to 13!!', { duration: 2000 })
+                    break
+                
+                case 15:
+                    challenger = data.challengers[5]
+                    challenger.power = 3
+                    maxGoal = 21
+                    toast.success('Somehow, Mr Greenz returned...', { duration: 3000 })
+                    break
+                
+                case 16:
+                    challenger.goal = 40
+                    challenger.power = 2
+                    maxGoal = 48
+                    toast.success('Bust value has been INCREASED to 45!!', { duration: 2000 })
+                    break
+                
+                case 17:
                     challenger.goal = 42
-                    maxGoal = 45
-                    toast.success('Bust out value has been INCREASED to 45!!', { duration: 2000 })
+                    challenger.power = 3
+                    maxGoal = 48
+                    break
+                
+                case 18:
+                    challenger.goal = 12
+                    challenger.power = 3
+                    maxGoal = 12
+                    break
+                
+                case 19:
+                    challenger.goal = 15
+                    challenger.power = 3
+                    maxGoal = 15
+                    break
+                
+                case 20:
+                    challenger.goal = 16
+                    challenger.power = 3
+                    maxGoal = 16
+                    break
+                
+                case 21:
+                    challenger.goal = 18
+                    challenger.power = 3
+                    maxGoal = 18
+                    break
+                
+                case 22:
+                    challenger = data.challengers[5]
+                    challenger.power = 3
+                    maxGoal = 21
+                    toast.success('Somehow, Mr Greenz returned...', { duration: 3000 })
+                    break
                 
                 default:
                     let x = [13, 18, 21, 28, 36, 42, 50]
@@ -156,6 +225,10 @@
                     break
             }
         }
+
+        // Set stat trackers
+        baseMaxGoal = maxGoal
+        previousChallenger = challenger.number
 
         // Return challenger
         return challenger
@@ -181,7 +254,7 @@
         hand=hand
     }
 
-    // Dselects all cards if any are selected
+    // Deselects all cards if any are selected
     const deselectCards = () => {
         if (selectedCards.length > 0) {
             selectedCards = []
@@ -732,12 +805,12 @@
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
-    // const maxGoal = 21
 
     // Variables
     let workingDeck = []
     let hand = []
     let maxGoal = 21
+    let baseMaxGoal = 21
     let maxCardsInHand = 8
     let selectedCards = []
     let playedCards = []
@@ -764,7 +837,11 @@
     $: challengerHP = challengerMaxHp - challengerHpLost
     $: handsLeft = maxHands - handsPlayed
     // Dynamically scale Max Goal if challenger goals overtakes it
-    $: if (challengerGoal > maxGoal) maxGoal = challengerGoal
+    $: if (challengerGoal > maxGoal) {
+        maxGoal = challengerGoal
+    } else {
+        maxGoal = baseMaxGoal
+    }
 
     // CHALLENGER EFFECTS
     // 1. Glueman
@@ -802,6 +879,7 @@
     let totalDiscardsUsed = 0
     let cardsDiscardedThisRound = 0
     let totalCardsDiscarded = 0
+    let previousChallenger = 0
 
     // Set this stuff ONCE on page load
     onMount(async() => {
@@ -1021,6 +1099,7 @@
         <SettingsItem text='No Dancing' emote='meowdy.png' bind:toggle={reducedMotion} onClick={helpDancingMode} />
         <SettingsItem text='Feedback Survey' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('survey', '_blank').focus()} } />
         <SettingsItem text='NEXT ROUND' emote='Q.png' hasToggleBtn={false} onClick={ nextRound } />
+        <SettingsItem text='Endless Skip' emote='meowdy.png' hasToggleBtn={false} onClick={ () => {roundCounter=5; nextRound()} } />
     </div>
     {/if}
 
