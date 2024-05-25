@@ -1098,8 +1098,8 @@
         <SettingsItem text='Training Wheels' emote='meowdy.png' bind:toggle={showScorePreview} onClick={helpTrainingMode} />
         <SettingsItem text='No Dancing' emote='meowdy.png' bind:toggle={reducedMotion} onClick={helpDancingMode} />
         <SettingsItem text='Feedback Survey' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('survey', '_blank').focus()} } />
-        <SettingsItem text='NEXT ROUND' emote='Q.png' hasToggleBtn={false} onClick={ nextRound } />
-        <SettingsItem text='Endless Skip' emote='meowdy.png' hasToggleBtn={false} onClick={ () => {roundCounter=5; nextRound()} } />
+        <!-- <SettingsItem text='NEXT ROUND' emote='Q.png' hasToggleBtn={false} onClick={ nextRound } /> -->
+        <SettingsItem text='Endless Skip' emote='meowdy.png' hasToggleBtn={false} onClick={ () => {roundCounter=4; nextRound()} } />
     </div>
     {/if}
 
