@@ -11,77 +11,55 @@
     import PopupBlackjackLoss from "$components/UI/Popups/PopupBlackjackLoss.svelte"
     import { openModal, closeModal } from 'svelte-modals'
     import { delay } from "$lib/utils"
-    import { fade } from "svelte/transition"
+    import { fade, slide } from "svelte/transition"
     import toast from 'svelte-french-toast'
     import { onMount } from "svelte"
     import svelteTilt from 'vanilla-tilt-svelte'
     import { nanoid } from 'nanoid'
+    import { deepClone } from '$lib/utils'
 
     // drag and drop
     import {flip} from "svelte/animate"
     import {dndzone} from "svelte-dnd-action"
 
     // BLACKJACK
-    import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound } from "$lib/blackjack/helpMessages"
-    
+    import { helpTrainingMode, helpDancingMode, helpHands, helpDiscards, helpTenacity, helpScore, helpChallenger, helpGoal, helpRound, helpChallenger2 } from "$lib/blackjack/helpMessages"
+    import { findLastBeastIndex, findBeastIds, jermaEffect } from "$lib/blackjack/utils"
+    import challengerEffects from "$lib/blackjack/challengerEffects.js"
+    import StatusTypes from "$lib/blackjack/statusTypes.js"
+
     // Props
     export let data
 
-    // Create a deck from the given cards and their respective quantity
-    const populateDeck = (cards) => {
-        let deck = []
-
-        // loop over all cards and append them to the deck according to their quantity
-        cards.forEach(c => {
-            // ignore challengers
-            if (c.type == "Challenger") {
-                return
-            }
-
-            // append cards to deck
-            for (let i = 0; i < c.quantity; i++) {
-                // Create a new simplified card Object with a UUID
-                const { number, name, type, imageURL, cost, power } = c
-                const newCard = { number, name, type, imageURL, cost, power, id: nanoid() }
-                
-                // add card to deck
-                deck.push(newCard)
-            }
-        })
-
-        // return the populated deck
-        return deck
-    }
 
     // Draw 8 random cards from the deck to create the starting hand
     const startingHand = (cards) => {
-        let deck = [...cards]  // copy the value, otherwise JS passes the variable as a reference... smh my head
-        let hand = []
+        workingDeck = deepClone(deck)
+        hand = []
 
-        for (let i = 0; i < 8; i++) {
-            // let card = deck[deck.length * Math.random() | 0]
-            const i = Math.floor( Math.random() * (deck.length - 1))
-            let card = deck[i]
-
-            // add card to hand
-            hand.push(card)
-
-            // remove card from deck
-            deck.splice(i, 1)
+        // Check for Debuffs - Grandpa
+        if (challenger.number == 3) {
+            maxCardsInHand = 6
+        } else {
+            maxCardsInHand = baseHandSize
         }
 
-        // save the remaining cards in the deck to the "working deck"
-        workingDeck = deck
-
-        // return cards in hand
-        return hand
+        // Draw random starting hand
+        for (let i = 0; i < maxCardsInHand; i++) {
+            drawCard()
+        }
     }
 
     // Choose a random challenger based on the current round
     const getChallenger = (round = 0) => {
         // init vars
-        let challengersFiltered = [...data.challengers]
+        let challengersFiltered = deepClone(data.challengers)
         let [min, max] = [0, 21]
+
+        // ENDLESS BETA: Use only first 12 challengers in ENDLESS MODE
+        if (round > 5) {
+            challengersFiltered = challengersFiltered.slice(0, 12)
+        }
 
         // Filter Challengers by their Goal value depending on the current round
         switch (round) {
@@ -106,66 +84,151 @@
                 break
         
             default:
-                break;
+                [min, max] = [0, 20];
+                break
         }
 
-        // Filter array
-        challengersFiltered = data.challengers.filter(x => x.goal >= min && x.goal <= max)
+        // Filter array by goal
+        challengersFiltered = challengersFiltered.filter(x => x.goal >= min && x.goal <= max)
+        // Filter out the previous challenger
+        challengersFiltered = challengersFiltered.filter(challenger => challenger.number !== previousChallenger)
 
         // Get random challenger
         const i = Math.floor( Math.random() * (challengersFiltered.length - 1))
-        const challenger = challengersFiltered[i]
+        let challenger = challengersFiltered[i]
+
+        // Reset max goal just in case
+        maxGoal = 21
 
         if (round <= 5) return challenger
 
         // Edit properties for Endless Mode
         if (round > 5) {
             switch (round) {
-                case 7:
-                    challenger.power = 3
-                    challenger.goal = 21
-                    break
-                
-                case 8:
-                    challenger.goal = 22
-                    maxGoal = 26
-                    toast.success('Bust out value has been INCREASED to 26!!', { duration: 2000 })
-                    break
-                
-                case 9:
+                case 6:
                     challenger.power = 2
-                    challenger.goal = 26
-                    maxGoal = 26
+                    challenger.goal = 18
+                    maxGoal = 21
                     break
 
+                case 7:
+                    challenger.power = 2
+                    challenger.goal = 20
+                    maxGoal = 21
+                    break
+
+                case 8:
+                    challenger.power = 3
+                    challenger.goal = 20
+                    maxGoal = 21
+                    break
+
+                case 9:
+                    challenger = data.challengers[5]
+                    challenger.power = 2
+                    challenger.goal = 21
+                    maxGoal = 21
+                    break
+                    
+                
                 case 10:
                     challenger.power = 2
-                    challenger.goal = 28
-                    maxGoal = 31
-                    toast.success('Bust out value has been INCREASED to 31!!', { duration: 2000 })
+                    challenger.goal = 22
+                    maxGoal = 26
+                    toast.success('Bust value has been INCREASED to 26!!', { duration: 2000 })
                     break
                 
                 case 11:
                     challenger.power = 3
-                    challenger.goal = 13
-                    maxGoal = 13
-                    toast.success('Bust out value has been DECREASED to 13!!', { duration: 2000 })
+                    challenger.goal = 22
+                    maxGoal = 26
                     break
                 
+
                 case 12:
+                    challenger.power = 2
+                    challenger.goal = 26
+                    maxGoal = 31
+                    toast.success('Bust value has been INCREASED to 31!!', { duration: 2000 })
+                    break
+                
+                case 13:
+                    challenger.power = 3
+                    challenger.goal = 28
+                    maxGoal = 31
+                    break
+                
+                case 14:
+                    challenger.power = 3
+                    challenger.goal = 13
+                    maxGoal = 13
+                    toast.success('Bust value has been DECREASED to 13!!', { duration: 2000 })
+                    break
+                
+                case 15:
+                    challenger = data.challengers[5]
+                    challenger.power = 3
+                    maxGoal = 21
+                    toast.success('Somehow, Mr Greenz returned...', { duration: 3000 })
+                    break
+                
+                case 16:
+                    challenger.goal = 40
+                    challenger.power = 2
+                    maxGoal = 48
+                    toast.success('Bust value has been INCREASED to 45!!', { duration: 2000 })
+                    break
+                
+                case 17:
                     challenger.goal = 42
-                    maxGoal = 45
-                    toast.success('Bust out value has been INCREASED to 45!!', { duration: 2000 })
+                    challenger.power = 3
+                    maxGoal = 48
+                    break
+                
+                case 18:
+                    challenger.goal = 12
+                    challenger.power = 3
+                    maxGoal = 12
+                    break
+                
+                case 19:
+                    challenger.goal = 15
+                    challenger.power = 3
+                    maxGoal = 15
+                    break
+                
+                case 20:
+                    challenger.goal = 16
+                    challenger.power = 3
+                    maxGoal = 16
+                    break
+                
+                case 21:
+                    challenger.goal = 18
+                    challenger.power = 3
+                    maxGoal = 18
+                    break
+                
+                case 22:
+                    challenger = data.challengers[5]
+                    challenger.power = 3
+                    maxGoal = 21
+                    toast.success('Somehow, Mr Greenz returned...', { duration: 3000 })
+                    break
                 
                 default:
                     let x = [13, 18, 21, 28, 36, 42, 50]
-                    let y = Math.floor( Math.random() * (x.length - 1))
+                    let y = x[Math.floor( Math.random() * (x.length - 1))]
                     challenger.power = 3
                     challenger.goal = y
                     maxGoal = y
                     break
             }
         }
+
+        // Set stat trackers
+        baseMaxGoal = maxGoal
+        previousChallenger = challenger.number
 
         // Return challenger
         return challenger
@@ -191,7 +254,7 @@
         hand=hand
     }
 
-    // Dselects all cards if any are selected
+    // Deselects all cards if any are selected
     const deselectCards = () => {
         if (selectedCards.length > 0) {
             selectedCards = []
@@ -226,7 +289,7 @@
         }
         // const numOfCards = maxCardsInHand - hand.length
         const numOfCards = selectedCards.length
-        const cards = document.querySelectorAll('.playing-card');  
+        const cards = document.querySelectorAll('.playing-card')
 
         // notification
         toast.success(`Discarding and re-drawing ${numOfCards} cards...`, {
@@ -278,6 +341,11 @@
         for (const card of x) {
             card.classList.remove('fade-out')
         }
+
+        // Update stat trackers
+        cardsDiscardedThisRound += numOfCards
+        totalCardsDiscarded += numOfCards
+        totalDiscardsUsed++
     }
 
     // Add a new card to hand
@@ -285,15 +353,31 @@
         // check if user hasn't exceeded maximum
         if (hand.length >+ maxCardsInHand) return
         
-        // draw random card and add it to hand
+        // draw random card
         let card = workingDeck[workingDeck.length * Math.random() | 0]
-        hand = [...hand, card]
-
+        
         // remove that card from deck
         const index = workingDeck.findIndex(x => x.id === card.id)
         if (index !== -1) {
             workingDeck.splice(index, 1);
         }
+
+        // CHECK FOR CHALLENGERS EFFECTS
+        // 7. Jerma
+        if (challenger.number == 7 && card.type == 'Wish') {
+            card = jermaEffect(card)
+        }
+        // 9. JermaEarth
+        else if (challenger.number == 9 && card.type == 'Grotto') {
+            card.status = StatusTypes.DOUBLE
+        }
+        // 11. JermaVenus
+        else if (challenger.number == 11 && card.type != 'Beast') {
+            card.status = StatusTypes.DEBUFFED
+        }
+        
+        // Add card to hand
+        hand = [...hand, card]
 
         // update reactive values
         workingDeck = workingDeck
@@ -309,6 +393,7 @@
 
         // Increment hands played
         handsPlayed++
+        totalHandsPlayed++
 
         // init vars
         let totalScore = 0
@@ -321,8 +406,44 @@
         for (let i = 0; i < playedCards.length; i++) {
             const card = playedCards[i];
 
+            // CHECK FOR DEBUFFS
+            // 1. Glueman
+            if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
+                // card base stats
+                let mult = card.power
+
+                // increment ONLY mult
+                totalMult += mult
+            }
+            // 2. Bugleberry // DEBUFF in general
+            else if (debuffBugleberry || card.status == StatusTypes.DEBUFFED) {
+                let chips = 0
+                let mult = 0
+                card.scorePreview = 'debuffed!'
+            }
+            // 7. Jerma
+            else if (debuffJerma && card.type == "Wish") {
+                let chips = card.cost
+
+                // Negative Score
+                if (card.status == 'Negative') {
+                    totalScore -= chips
+                }
+                // Double Score
+                else if (card.status == 'Double') {
+                    chips = chips * 2
+                    totalScore += chips
+                }
+            }
+            // 9. Jerma Earth
+            else if (debuffEarth && card.type == 'Grotto') {
+                let mult = card.cost * 2
+                totalMult += mult
+            }
+            
+            // NORMAL SCORING
             // SCORING BEASTS
-            if (card.type == "Beast") {
+            else if (card.type == "Beast") {
                 // card base stats
                 let chips = card.cost
                 let mult = card.power
@@ -349,6 +470,12 @@
                 totalMult += mult
             }
 
+            // CHALLENGER EFFECTS PART 2
+            // 11. Jerma Pluto
+            if (debuffPluto) {
+                totalScore -= 2
+                toast.error("-2!")
+            }
             
             // Updating Sidebar UI
             handScore = totalScore
@@ -364,8 +491,23 @@
         await delay(500)
 
         // Check if the score was enough to win
-        if (totalScore >= challengerGoal && totalScore <= maxGoal) {
+        console.log(`Total Score: ${totalScore}\nBust value: ${maxGoal}\nChallenger Goal: ${challengerGoal}`)
+        if (totalScore >= challengerGoal && totalScore <= maxGoal) {            
+            // Challenger loses HP
             challengerHpLost++
+
+            // BLACKJACK BUFF -> Challenger loses 1 extra hp
+            if (totalScore == maxGoal) {
+                toast.success("BLACKJACK!!\nYou dazzle your opponent with your insane hand!", {
+                    duration: 2000
+                })
+                challengerHpLost++
+            
+                // check for overflow
+                if (challengerHpLost > 3) challengerHpLost = 3
+
+                await delay(2000)
+            }
 
             // Check if Challenger has any remaining Tenacity
             if (challengerHpLost >= challengerMaxHp) {
@@ -419,6 +561,9 @@
         // Sidebar UI feedback
         handScore = totalScore
 
+        // POST-SCORE EFFECTS
+        await postScoreEffects()
+
         //// RESET PLAYING FIELD AND RE-DRAW CARDS
 
         // Wait
@@ -433,6 +578,9 @@
 
     // Reset playing field after scoring
     const resetPlayTeam = async(drawNewHand = true) => {
+        // De-select all cards
+        selectedCards = []
+
         // Discard played cards
         // Instead of removing the card, make it invisible
         const cards = document.querySelectorAll('.team-card')
@@ -446,7 +594,7 @@
 
         // Draw new cards to replace discarded ones IF CHOSEN
         if (drawNewHand) {
-            const numOfCards = playedCards.length
+            const numOfCards = maxCardsInHand - hand.length
             for (let i = 0; i < numOfCards; i++) {
                 drawCard()
                 await delay(100)
@@ -514,6 +662,33 @@
                     break;
             }
 
+            // CHECK FOR DEBUFFS
+            // 1. Glueman
+            if (debuffGlueman && card.type == "Beast" && i != lastBeastIndex) {
+                let mult = card.power
+                cardScorePreview = `x${mult}`
+            }
+            // 7. Jerma
+            else if (debuffJerma && card.type == "Wish") {
+                if (card.status == 'Negative') {
+                    cardScorePreview = `-${card.cost}`
+                }
+                else if (card.status == 'Double') {
+                    cardScorePreview = `+${card.cost * 2}`
+                }
+            }
+            // 9. Jerma Earth
+            else if (debuffEarth && card.type == 'Grotto') {
+                let mult = card.cost
+                totalMult += mult
+                cardScorePreview = `x${mult * 2}`
+            }
+            // 11. Jerma Pluto
+            else if (debuffPluto) {
+                cardScorePreview += ' (-2)'
+            }
+
+            // Set score preview on card
             card.scorePreview = cardScorePreview
         }
     }
@@ -537,39 +712,106 @@
 
         await delay(400)
 
-        // 3. Shuffle the deck and deal new hand
-        workingDeck = [...deck]
-        hand = startingHand(deck)
-
-        // 4. pick a new challenger
+        // 3. pick a new challenger
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
         challengerHpLost = 0
+
+        // 4. Shuffle the deck and deal new hand
+        workingDeck = deepClone(deck)
+        startingHand(deck)
 
         // 5. REMOVE FADE OUT CLASS!!! AAAAAA
         const x = document.querySelectorAll('.playing-card')
         for (const card of x) {
             card.classList.remove('fade-out')
         }
+
+        // 6. Reset stat trackers
+        cardsDiscardedThisRound = 0
+    }
+
+    // Challenger Effects that happen after scoring a hand
+    const postScoreEffects = async() => {
+        // 4. Demond Lord Zeraxos
+        // -> Discard ALL Beasts in hand
+        if (debuffZeraxos) {
+            // Find all Beasts in hand
+            const beastsInHand = findBeastIds(hand)
+            const cards = document.querySelectorAll('.playing-card')
+
+            // Check if there even are any Beasts in hand
+            if (beastsInHand.length <= 0) return
+
+            // UI Feedback
+            toast.success(
+                "Demon Lord Zeraxos has sacrificed all your unplayed Beasts!!",
+                {
+                    icon: '💀',
+                    duration: 2000
+                }
+            )
+
+            // Add styles
+            for (const i of beastsInHand) {
+                cards[i].classList.add('sacrifice')
+                await delay(250)
+                cards[i].classList.add('fade-out')
+            }
+
+            // Wait 1 second
+            await delay(500)
+
+            // remove styles
+            for (const card of cards) {
+                card.classList.remove('fade-out')
+                card.classList.remove('sacrifice')
+            }
+
+            // remove the selected cards from hand by index
+            for (const i of beastsInHand.reverse()) {
+                hand.splice(i, 1);
+            }
+
+            // update reactive vars
+            hand = hand
+        }
+
+        // 6. Mr Greenz (ONLY IN ENDLESS)
+        // -> Double Goal after every hand played
+        if (debuffMrGreenz && roundCounter > 5) {
+            challengerGoal = 2 * challengerGoal
+
+            // UI Feedback
+            toast.success(
+                "Double or Nothing: Mr Greenz's Goal just doubled!!",
+                {
+                    icon: '💀',
+                    duration: 2000
+                }
+            )
+        }
     }
 
     // CONSTANTS
-    let deck = []
+    // let deck = []
+    const deck = deepClone(data.populatedDeck)
     let challenger = {}
     let challengerGoal = 0
     let challengerMaxHp = 0
-    const maxCardsInHand = 8
+    const baseHandSize = 8
     const maxSelectedCards = 5
     const maxDiscards = 3
     const maxHands = 3
     const maxPlayedCards = 5
-    // const maxGoal = 21
 
     // Variables
-    let maxGoal = 21
     let workingDeck = []
     let hand = []
+    let maxGoal = 21
+    let baseMaxGoal = 21
+    let maxCardsInHand = 8
     let selectedCards = []
     let playedCards = []
     let actualPlayedCards = []
@@ -586,6 +828,7 @@
     // User preferences
     let showScorePreview = true
     let reducedMotion = false
+    let showChallengerEffect = false
 
     // Reactive vars
     $: beastNum = countCardType(workingDeck, CardTypes.BEAST)
@@ -593,19 +836,66 @@
     $: wishNum = countCardType(workingDeck, CardTypes.WISH)
     $: challengerHP = challengerMaxHp - challengerHpLost
     $: handsLeft = maxHands - handsPlayed
+    // Dynamically scale Max Goal if challenger goals overtakes it
+    $: if (challengerGoal > maxGoal) {
+        maxGoal = challengerGoal
+    } else {
+        maxGoal = baseMaxGoal
+    }
+
+    // CHALLENGER EFFECTS
+    // 1. Glueman
+    $: debuffGlueman = challenger.number == 1
+    $: lastBeastIndex = playedCards.length > 0 ? findLastBeastIndex(playedCards) : -1
+    // 2. Bugleberry
+    $: debuffBugleberry = challenger.number == 2 && cardsDiscardedThisRound < 3
+    // 3. Grandpa
+    $: debuffGrandpa = challenger.number == 3
+    $: debuffGrandpa ? maxCardsInHand = 6 : baseHandSize
+    // 4. Demond Lord Zeraxos
+    $: debuffZeraxos = challenger.number == 4
+    // 5. JEX
+    $: debuffJEX = challenger.number == 5
+    $: debuffJEX ? discards = 3 : 0
+    // 6. Mr Greenz
+    $: debuffMrGreenz = challenger.number == 6
+    // 7. Jerma
+    $: debuffJerma = challenger.number == 7
+    // 8. Carl Griffenstead
+    $: debuffCarl = challenger.number == 8
+    $: debuffCarl ? challengerGoal = challenger.goal + Math.floor(cardsDiscardedThisRound * 0.5) : challenger.goal
+    // 9. Jerma Earth
+    $: debuffEarth = challenger.number == 9
+    // 10. Jerma Moon
+    $: debuffMoon = challenger.number == 10
+    $: debuffMoon ? challengerGoal = challenger.goal + findBeastIds(playedCards).length * 2 : challenger.goal
+    // 11. Jerma Venus
+    $: debuffVenus = challenger.number == 11
+    // 12. Jerma Pluto
+    $: debuffPluto = challenger.number == 12
+
+    // Stats trackers
+    let totalHandsPlayed = 0
+    let totalDiscardsUsed = 0
+    let cardsDiscardedThisRound = 0
+    let totalCardsDiscarded = 0
+    let previousChallenger = 0
 
     // Set this stuff ONCE on page load
     onMount(async() => {
-        // deck and starting hand
-        deck = populateDeck(data.fullCards)
-        workingDeck = [...deck]
-        hand = startingHand(deck)
-
         // challenger
         challenger = getChallenger(roundCounter)
         challengerGoal = challenger.goal
         challengerMaxHp = Math.min(Math.max(challenger.power, 1), 3)
 
+        await delay(10)
+
+        // deck and starting hand
+        // deck = populateDeck(data.fullCards)
+        workingDeck = deepClone(deck)
+        startingHand()
+
+        // set loaded state
         loaded = true
 
         // Remove intro animation classes (this is stupid)
@@ -669,8 +959,8 @@
             <!-- Challenger Name -->
             <div
                 class="challenger-name hover-outline"
-                class:challenger-name-sm={challenger.name?.length > 15}
-                on:click={helpChallenger}
+                class:challenger-name-sm={challenger.name?.length > 16}
+                on:click={() => { helpChallenger2(challenger.number) }}
             >
                 <p>{challenger.name || ''}</p>
             </div>
@@ -681,28 +971,44 @@
                     <div
                         class="challenger-pic tilt"
                         style={`background-image: url("${challenger.imageURL?.small || 'https://imageplaceholder.net/1'}");`}
-                        use:svelteTilt={{ reverse: true, glare: true, "max-glare": 0.5 }}
+                        use:svelteTilt={{ max: 25, reverse: true, glare: true, "max-glare": 0.5 }}
                     ></div>
                 </a>
             </div>
 
-            <!-- Challenger Goal -->
+            <!-- Challenger Effect -->
+            {#if challenger.number in challengerEffects}
+                <div class="challenger-effect hover-outline" on:click={() => {showChallengerEffect = !showChallengerEffect}}>
+                    <div class="center">
+                        <span class="challenger-effect-header">EFFECT</span>
 
+                        {#if showChallengerEffect}
+                            <span
+                                class="challenger-effect-text"
+                                transition:slide
+                                use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
+                            >{challengerEffects[challenger.number]}</span>
+                        {/if}
+                    </div>
+                </div>
+            {/if}
+
+            <!-- Challenger Goal -->
             <!-- Normal Mode -->
-            {#if roundCounter <= 5}
-                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
+            {#if roundCounter <= 0}
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container">
                         <span
                             class="goal-value tilt"
                             use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}
-                        >{challenger?.goal || ''}</span>
+                        >{challengerGoal || ''}</span>
                     </div>
                 </div>
             
             <!-- Endless mode -->
             {:else}
-                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal, roundCounter) } }>
+                <div class="challenger-goal hover-outline" on:click={ () => { helpGoal(challengerGoal, maxGoal) } }>
                     <span class="goal-text">Goal:</span>
                     <div class="goal-value-container goal-bust-value-container">
                         <div class="goal-bust-values tilt" use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.1 }}>
@@ -775,6 +1081,7 @@
                 class="ui-discards-container hover-outline tilt"
                 use:svelteTilt={{ max: 10, reverse: true, scale: 1.05, glare: true, "max-glare": 0.25 }}
                 on:click={helpDiscards}
+                class:debuffed={debuffJEX}
             >
                 <h2>Discards</h2>
 
@@ -791,6 +1098,8 @@
         <SettingsItem text='Training Wheels' emote='meowdy.png' bind:toggle={showScorePreview} onClick={helpTrainingMode} />
         <SettingsItem text='No Dancing' emote='meowdy.png' bind:toggle={reducedMotion} onClick={helpDancingMode} />
         <SettingsItem text='Feedback Survey' emote='Q.png' hasToggleBtn={false} onClick={ () => {window.open('survey', '_blank').focus()} } />
+        <!-- <SettingsItem text='NEXT ROUND' emote='Q.png' hasToggleBtn={false} onClick={ nextRound } /> -->
+        <SettingsItem text='Endless Skip' emote='meowdy.png' hasToggleBtn={false} onClick={ () => {roundCounter=4; nextRound()} } />
     </div>
     {/if}
 
@@ -815,28 +1124,34 @@
                 on:finalize="{dndPlayerTeamDrop}"
                 
             >
-                {#each playedCards as item, i (item.id)}
+                {#each playedCards as card, i (card.id)}
                     <div
                         class="card-image-small team-card"
                         animate:flip={{duration:flipDurationMs}}
                         on:contextmenu={() => moveToHand(i)}
                         use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+
+                        class:debuffed={debuffBugleberry || card.status == StatusTypes.DEBUFFED}
+                        class:debuff-half={debuffGlueman && card.type == "Beast" && i != lastBeastIndex}
+                        class:double={card.status == StatusTypes.DOUBLE}
+                        class:negative={card.status == StatusTypes.NEGATIVE}
+                        class:sad={debuffPluto || card.status == StatusTypes.SAD}
                     >
                         <!-- Card image -->
                         {#key cardsScored}
                         <img
-                            src={item.imageURL.small}
-                            alt={item.name}
+                            src={card.imageURL.small}
+                            alt={card.name}
                             class='no-anim-wiggle'
                             class:selected={i+1 <= cardsScored}
-                            title={item.name}
+                            title={card.name}
                         >
 
                         <!-- Score preview -->
                         <!-- A: Always Shown -->
-                        {#if (showScorePreview || i+1 <= cardsScored) && item.scorePreview}
+                        {#if (showScorePreview || i+1 <= cardsScored) && card.scorePreview}
                             <div class="score" class:selected-offset={i+1 <= cardsScored}>
-                                <span>{item.scorePreview}</span>
+                                <span>{card.scorePreview}</span>
                             </div>    
                         {/if}
                         {/key}
@@ -862,11 +1177,15 @@
                             class="card-image-small playing-card"
                             animate:flip={{duration:flipDurationMs}}
                             use:svelteTilt={{ reverse: true, max: 15, glare: false, scale: 1 }}
+                            
+                            class:debuffed={debuffBugleberry || card.status == StatusTypes.DEBUFFED}
+                            class:double={card.status == StatusTypes.DOUBLE}
+                            class:negative={card.status == StatusTypes.NEGATIVE}
                         >
                             <img
                                 src={card.imageURL.small}
                                 alt={card.name}
-                                title={card.name}
+                                title={`${card.status == undefined ? card.name : card.status + ' ' + card.name}`}
                                 class="anim-wiggle"
                                 style={`animation-delay: ${Math.random() * -2.5}s;`}
                                 on:click={() => selectCard(i)}
@@ -879,7 +1198,7 @@
 
                 <!-- Cards in hand -->
                 <div class="cards-in-hand center">
-                    <span>{hand.length} / 8</span>
+                    <span>{hand.length} / {maxCardsInHand}</span>
                 </div>
 
                 <!-- The Play & Discard buttons -->
@@ -896,7 +1215,7 @@
                         <button
                             class="play-btn"
                             on:click={discardSelection}
-                            class:disabled={discards >= maxDiscards || selectedCards < 1}
+                            class:disabled={discards >= maxDiscards || selectedCards.length < 1}
                         >Discard</button>
                     </div>
                 </div>
@@ -968,9 +1287,18 @@
 <span class="no-anim"></span>
 <span class="hover-outline"></span>
 <span class="anim-slide-in"></span>
+<span class="sacrifice" style="display: none;"><img src="" alt=""></span>
 
 <!-- CSS -->
 <style>
+    .sacrifice {
+        visibility: visible;
+    }
+    .sacrifice img {
+        filter: hue-rotate(100deg) contrast(200%) saturate(70%) invert(90%);
+        /* filter: brightness(0.7) contrast(1.2) sepia(1) saturate(3) hue-rotate(-10deg); */
+    }
+
     /* Card image page specific overrides */
     .card-image-small {
         transition: transform 0.2s;
@@ -1058,5 +1386,34 @@
         border-radius: 0 1rem 1rem 0;
     }
 
+    /* Challenger Effect Text */
+    .challenger-effect {
+        height: fit-content;
+
+        border-top: 2px solid var(--colour-accent);
+        border-bottom: 2px solid var(--colour-accent);
+        background-color: rgba(0,0,0,.2);
+
+        /* preserve line breaks */
+        white-space: pre-wrap; 
+    }
+    .challenger-effect-text {
+        width: 90%;
+
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+
+        font-size: 1.25rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        background-color: #123857a1;
+        border-radius: 1rem;
+
+        box-shadow: inset 8px 8px 17px #0f304a,
+                    inset -8px -8px 17px #154064;
+    }
+    /* no longer hard-code the height of the challenger box */
+    .ui-sidebar .game-opponent-challenger {
+        height: fit-content;
+    }
     
 </style>

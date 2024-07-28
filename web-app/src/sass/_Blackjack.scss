@@ -13,7 +13,8 @@
 .play-area {
     width: 100%;
     display: grid;
-    grid-template-rows: 5fr 6fr;
+    // grid-template-rows: 5fr 6fr;
+    grid-template-rows: 4fr 6fr;
     align-items: start;
     justify-items: center;
 
@@ -37,6 +38,13 @@
         .player-hand-and-btns {
             display: grid;
             place-items: center;
+
+            // Override max width
+            .starting-hand {
+                max-width: 100vw;
+                min-height: none;
+                height: 225px;
+            }
 
             // Cards in the player's hand
             .hand-container {
@@ -316,13 +324,13 @@
             place-items: center;
             
             width: 100%;
-            height: 3rem;
+            height: 4rem;
     
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 1rem 1rem 0 0;
         }
         .challenger-name-sm {
-            font-size: 1.5rem;
+            font-size: 1.33rem;
         }
 
         // Challenger Avatar container
@@ -331,7 +339,7 @@
             place-items: center;
     
             width: 100%;
-            height: 60%;
+            height: 80%;
     
             background-color: rgba(0, 0, 0, 0.2);
 
@@ -364,7 +372,7 @@
             grid-template-columns: 2fr 3fr;
             
             width: 100%;
-            height: 4rem;
+            height: 6rem;
     
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 0 0 1rem 1rem;
@@ -547,6 +555,7 @@
 .hover-outline:hover {
     outline: 2px solid white;
     cursor: pointer;
+    z-index: 100;
 }
 
 // /* Fade out animation */
@@ -653,6 +662,90 @@
     visibility: hidden;
 }
 
+// CARD EFFECTS
+
+// 1. Debuffed Card Effect
+.playing-card.debuffed,
+.team-card.debuffed {
+    position: relative;
+    opacity: 0.75;
+    filter: brightness(0.75) contrast(0.75) blur(1px);
+    
+    img {
+        opacity: 0.75 !important;
+    }
+}
+// Overrides for played cards
+.team-card.debuffed {
+    &::after {
+        top: 50%;
+        left: 50%;
+    }
+
+    .score {
+        display: none !important;
+        visibility: none !important;
+    }
+}
+
+// 2. Negative
+.playing-card.negative,
+.team-card.negative {
+    filter:  invert(0.8) brightness(1.2);
+    filter: grayscale(0.75) invert(1);
+}
+
+// 3. Half-Debuff
+.playing-card.debuff-half,
+.team-card.debuff-half {
+    filter: sepia(100%);
+}
+
+// 4. Golden Card
+.playing-card.double,
+.team-card.double {
+    filter: hue-rotate(-30deg) contrast(150%) brightness(1.2);
+
+    img {
+        filter: drop-shadow(0 0 10px gold);
+    }
+
+    .score {
+        filter: hue-rotate(30deg) contrast(66%) brightness(0.8);
+    }
+}
+
+// 5. Sadness
+.team-card.sad {
+    position: relative;
+    filter: grayscale(0.75) hue-rotate(180deg);
+
+    &::after {
+        position: absolute;
+        top: 5%;
+        left: 65%;
+
+        content: "😓";
+        font-size: 2rem;
+        font-weight: 900;
+    }
+
+    // Rendered if team-card has an img child and a .selected child
+    &:has(img):has(.selected-offset) {
+        &::after {
+            transform: translate(0, -3rem) !important;
+            -moz-transform: translate(0, -3rem) !important;
+        }
+    }
+}
+
+// UI EFFECTS
+.ui-sidebar .debuffed {
+    opacity: 0.5;
+    filter: brightness(0.5);
+    cursor: no-drop;
+}
+
 // LARGE SCREENS
 @include screen-min(1920px) {
     // Game Wrapper - more compact
@@ -676,10 +769,16 @@
         }
     }
 
+    // Hand contianer - Taller
+    .hand-container {
+        height: 100% !important;
+    }
+
     // Card images - bigger
     .hand-container .card-image-small,
     .starting-hand .card-image-small {
         max-height: none !important;
+        width: 110px !important;
     }
     .card-image-small img {
         max-height: 250px !important;
