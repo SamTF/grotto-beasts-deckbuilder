@@ -652,3 +652,45 @@
     opacity: 0;
     visibility: hidden;
 }
+
+// LARGE SCREENS
+@include screen-min(1920px) {
+    // Game Wrapper - more compact
+    .game-wrapper {
+        width: 80% !important;
+        height: 85dvh;
+    }
+
+    // Play Area - even
+    .play-area {
+        grid-template-rows: 1fr 1fr;
+    }
+
+    // Player Team - larger
+    .player-team-container {
+        height: 100% !important;
+
+        .player-team {
+            width: 90% !important;
+            height: 60% !important;
+        }
+    }
+
+    // Card images - bigger
+    .hand-container .card-image-small,
+    .starting-hand .card-image-small {
+        max-height: none !important;
+    }
+    .card-image-small img {
+        max-height: 250px !important;
+    }
+
+    // Taller deck container
+    .blackjack-deck-container {
+        height: 20rem !important;
+
+        .card-image-small {
+            margin-top: 1rem;
+        }
+    }
+}
